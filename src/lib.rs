@@ -1,4 +1,5 @@
 mod deserializer;
+mod id;
 
 extern crate serde;
 
@@ -9,9 +10,11 @@ use std::borrow::Cow;
 use std::fmt;
 use std::marker::PhantomData;
 
+pub use crate::id::Id;
+
 #[derive(Debug)]
 pub struct Node<T> {
-    pub id: String,
+    pub id: Id,
     pub kind: T,
     pub inner: Vec<Node<T>>,
 }
