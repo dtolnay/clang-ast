@@ -7,6 +7,3 @@ publish = false
 
 [lib]
 path = "lib.rs"
-
-[build-dependencies]
-scratch = "1.0"
