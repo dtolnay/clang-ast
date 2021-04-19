@@ -7,3 +7,6 @@ publish = false
 
 [lib]
 path = "lib.rs"
+
+[dependencies]
+memmap = "0.7"

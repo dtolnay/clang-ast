@@ -30,5 +30,5 @@ pub struct EnumConstantDecl {
 #[test]
 fn test() {
     let json = clang_ast_test_suite::cxx_ast_json();
-    let _: Node = serde_json::from_str(&json).unwrap();
+    let _: Node = serde_json::from_slice(&json).unwrap();
 }
