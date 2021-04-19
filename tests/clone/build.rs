@@ -1,5 +1,5 @@
 use std::env;
-use std::fs::File;
+use std::fs::{self, File};
 use std::io::ErrorKind;
 use std::path::Path;
 use std::process::Command;
@@ -38,10 +38,15 @@ fn main() {
                 .status()
             {
                 Ok(status) => {
-                    assert!(status.success());
-                    break;
+                    if status.success() {
+                        break;
+                    } else {
+                        let _ = fs::remove_file(&ast_json);
+                        assert!(status.success());
+                    }
                 }
                 Err(error) => {
+                    let _ = fs::remove_file(&ast_json);
                     if error.kind() == ErrorKind::NotFound && !clangs.as_slice().is_empty() {
                         continue;
                     } else {
