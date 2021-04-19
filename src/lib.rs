@@ -1,16 +1,18 @@
 mod deserializer;
 mod id;
+mod kind;
 
 extern crate serde;
 
 use crate::deserializer::NodeDeserializer;
+use crate::kind::AnyKind;
 use serde::de::{Deserializer, MapAccess, Visitor};
 use serde::Deserialize;
-use std::borrow::Cow;
 use std::fmt;
 use std::marker::PhantomData;
 
 pub use crate::id::Id;
+pub use crate::kind::Kind;
 
 #[derive(Debug)]
 pub struct Node<T> {
@@ -50,7 +52,7 @@ where
         let kind = loop {
             match map.next_key()? {
                 None => {
-                    let kind = Cow::Borrowed("null");
+                    let kind = AnyKind::Kind(Kind::null);
                     let deserializer = NodeDeserializer::new(kind, &mut inner, map);
                     break T::deserialize(deserializer)?;
                 }
@@ -61,7 +63,7 @@ where
                     id = Some(map.next_value()?);
                 }
                 Some(FirstField::Kind) => {
-                    let kind: Cow<str> = map.next_value()?;
+                    let kind: AnyKind = map.next_value()?;
                     let deserializer = NodeDeserializer::new(kind, &mut inner, map);
                     break T::deserialize(deserializer)?;
                 }

@@ -1,3 +1,4 @@
+use crate::kind::{AnyKind, BorrowedCowStrDeserializer, Kind};
 use crate::Node;
 use serde::de::value::BorrowedStrDeserializer;
 use serde::de::{
@@ -10,13 +11,13 @@ use std::fmt;
 use std::marker::PhantomData;
 
 pub(crate) struct NodeDeserializer<'de, 'a, T, M> {
-    kind: Cow<'de, str>,
+    kind: AnyKind<'de>,
     inner: &'a mut Vec<Node<T>>,
     map: M,
 }
 
 impl<'de, 'a, T, M> NodeDeserializer<'de, 'a, T, M> {
-    pub(crate) fn new(kind: Cow<'de, str>, inner: &'a mut Vec<Node<T>>, map: M) -> Self {
+    pub(crate) fn new(kind: AnyKind<'de>, inner: &'a mut Vec<Node<T>>, map: M) -> Self {
         NodeDeserializer { kind, inner, map }
     }
 }
@@ -45,7 +46,7 @@ where
         V: Visitor<'de>,
     {
         let _ = name;
-        let expected = &*self.kind;
+        let expected = self.kind.as_str();
         let mut expects_the_unexpected = None;
         for &variant in variants {
             if variant == expected {
@@ -103,7 +104,15 @@ where
     where
         V: DeserializeSeed<'de>,
     {
-        let deserializer = (*self.kind).into_deserializer();
+        let cow;
+        let borrowed_kind = match &self.kind {
+            AnyKind::Kind(kind) => {
+                cow = Cow::Borrowed(kind.as_str());
+                &cow
+            }
+            AnyKind::Other(cow) => cow,
+        };
+        let deserializer = BorrowedCowStrDeserializer::new(borrowed_kind);
         let value = seed.deserialize(deserializer)?;
         Ok((value, self))
     }
@@ -134,7 +143,7 @@ where
     {
         let _ = len;
         let _ = visitor;
-        let kind = &*self.kind;
+        let kind = self.kind.as_str();
         let expected = ExpectedTupleVariant { kind };
         Err(Error::invalid_type(Unexpected::StructVariant, &expected))
     }
@@ -163,7 +172,7 @@ where
     where
         K: DeserializeSeed<'de>,
     {
-        if self.kind == "null" {
+        if let AnyKind::Kind(Kind::null) = &self.kind {
             loop {
                 seed = match self.map.next_key_seed(NodeFieldSeed { seed })? {
                     None => return Ok(None),
@@ -184,12 +193,20 @@ where
     where
         V: DeserializeSeed<'de>,
     {
-        if self.kind == "null" {
+        if let AnyKind::Kind(Kind::null) = &self.kind {
             self.map.next_value_seed(seed)
         } else {
-            let deserializer = (*self.kind).into_deserializer();
+            let cow;
+            let borrowed_kind = match &self.kind {
+                AnyKind::Kind(kind) => {
+                    cow = Cow::Borrowed(kind.as_str());
+                    &cow
+                }
+                AnyKind::Other(cow) => cow,
+            };
+            let deserializer = BorrowedCowStrDeserializer::new(borrowed_kind);
             let value = seed.deserialize(deserializer);
-            self.kind = Cow::Borrowed("null");
+            self.kind = AnyKind::Kind(Kind::null);
             value
         }
     }
