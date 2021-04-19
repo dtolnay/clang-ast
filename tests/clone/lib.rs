@@ -1,3 +1,5 @@
+#![allow(clippy::missing_panics_doc, clippy::must_use_candidate)]
+
 use memmap::Mmap;
 use std::fs::File;
 use std::ops::Deref;

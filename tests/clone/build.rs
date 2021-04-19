@@ -1,3 +1,5 @@
+#![allow(clippy::let_underscore_drop, clippy::redundant_else)]
+
 use std::env;
 use std::fs::{self, File};
 use std::io::ErrorKind;
