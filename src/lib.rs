@@ -1,5 +1,6 @@
 mod deserializer;
 mod id;
+mod intern;
 mod kind;
 mod loc;
 
@@ -89,6 +90,7 @@ where
     where
         D: Deserializer<'de>,
     {
+        let _intern = intern::activate();
         let marker = PhantomData;
         let visitor = NodeVisitor { marker };
         deserializer.deserialize_map(visitor)

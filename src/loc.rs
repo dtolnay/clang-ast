@@ -1,7 +1,9 @@
+use crate::intern::{self, InternVisitor};
 use serde::de::{Deserializer, Error, MapAccess, Visitor};
 use serde::Deserialize;
 use std::cell::{Cell, RefCell};
 use std::fmt::{self, Debug};
+use std::sync::Arc;
 
 #[derive(Deserialize, Default)]
 #[serde(deny_unknown_fields)]
@@ -19,9 +21,9 @@ pub struct SourceLocation {
 #[derive(Clone, Debug)]
 pub struct BareSourceLocation {
     pub offset: usize,
-    pub file: String,
+    pub file: Arc<str>,
     pub line: usize,
-    pub presumed_file: Option<String>,
+    pub presumed_file: Option<Arc<str>>,
     pub presumed_line: Option<usize>,
     pub col: usize,
     pub tok_len: usize,
@@ -34,11 +36,12 @@ pub struct BareSourceLocation {
 pub struct IncludedFrom {
     #[serde(rename = "includedFrom", skip_deserializing)]
     pub included_from: Option<Box<IncludedFrom>>,
-    pub file: String,
+    #[serde(deserialize_with = "intern::de")]
+    pub file: Arc<str>,
 }
 
 thread_local! {
-    static LAST_LOC_FILENAME: RefCell<String> = RefCell::new(String::new());
+    static LAST_LOC_FILENAME: RefCell<Arc<str>> = RefCell::new(Arc::from(""));
     static LAST_LOC_LINE: Cell<usize> = Cell::new(0);
 }
 
@@ -144,7 +147,7 @@ where
 {
     let offset: usize = map.next_value()?;
 
-    let mut file = None::<String>;
+    let mut file = None;
     let mut line = None;
     let mut presumed_file = None;
     let mut presumed_line = None;
@@ -156,10 +159,10 @@ where
     while let Some(field) = map.next_key()? {
         match field {
             SourceLocationField::Offset => return Err(Error::duplicate_field("offset")),
-            SourceLocationField::File => file = Some(map.next_value()?),
+            SourceLocationField::File => file = Some(map.next_value_seed(InternVisitor)?),
             SourceLocationField::Line => line = Some(map.next_value()?),
             SourceLocationField::PresumedFile => {
-                presumed_file = Some(map.next_value()?);
+                presumed_file = Some(map.next_value_seed(InternVisitor)?);
             }
             SourceLocationField::PresumedLine => presumed_line = Some(map.next_value()?),
             SourceLocationField::Col => col = Some(map.next_value()?),
@@ -176,10 +179,10 @@ where
 
     let file = LAST_LOC_FILENAME.with(|last_loc_filename| match file {
         Some(file) => {
-            *last_loc_filename.borrow_mut() = file.clone();
+            *last_loc_filename.borrow_mut() = Arc::clone(&file);
             file
         }
-        None => last_loc_filename.borrow().clone(),
+        None => Arc::clone(&last_loc_filename.borrow()),
     });
 
     let line = LAST_LOC_LINE.with(|last_loc_line| match line {
