@@ -1,3 +1,4 @@
+#![doc(html_root_url = "https://docs.rs/clang-ast/0.0.0")]
 #![allow(
     clippy::let_underscore_drop,
     clippy::must_use_candidate,
