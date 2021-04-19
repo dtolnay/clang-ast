@@ -1,7 +1,11 @@
 use std::env;
 use std::fs::File;
+use std::io::ErrorKind;
 use std::path::Path;
 use std::process::Command;
+
+// Executable names to try.
+static CLANG: &[&str] = &["clang++-12", "clang++-11", "clang++"];
 
 fn main() {
     let out_dir = env::var_os("OUT_DIR").unwrap();
@@ -22,16 +26,30 @@ fn main() {
     let ast_json = Path::new(&out_dir).join("ast.json");
     if !ast_json.exists() {
         let input = cxx_dir.join("src").join("cxx.cc");
-        let output = File::create(ast_json).unwrap();
-        let status = Command::new("clang++")
-            .arg("-Xclang")
-            .arg("-ast-dump=json")
-            .arg("-fsyntax-only")
-            .arg(input)
-            .stdout(output)
-            .status()
-            .unwrap();
-        assert!(status.success());
+        let mut clangs = CLANG.iter();
+        while let Some(&clang) = clangs.next() {
+            let output = File::create(&ast_json).unwrap();
+            match Command::new(clang)
+                .arg("-Xclang")
+                .arg("-ast-dump=json")
+                .arg("-fsyntax-only")
+                .arg(&input)
+                .stdout(output)
+                .status()
+            {
+                Ok(status) => {
+                    assert!(status.success());
+                    break;
+                }
+                Err(error) => {
+                    if error.kind() == ErrorKind::NotFound && !clangs.as_slice().is_empty() {
+                        continue;
+                    } else {
+                        panic!("{:?}", error);
+                    }
+                }
+            }
+        }
     }
 
     // Disable rerun on changes to Cargo.toml and lib.rs.
