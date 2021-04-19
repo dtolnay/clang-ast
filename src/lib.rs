@@ -1,6 +1,7 @@
 mod deserializer;
 mod id;
 mod kind;
+mod loc;
 
 extern crate serde;
 
@@ -13,6 +14,7 @@ use std::marker::PhantomData;
 
 pub use crate::id::Id;
 pub use crate::kind::Kind;
+pub use crate::loc::{BareSourceLocation, IncludedFrom, SourceLocation, SourceRange};
 
 #[derive(Debug)]
 pub struct Node<T> {
