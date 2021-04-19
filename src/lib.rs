@@ -1,3 +1,10 @@
+#![allow(
+    clippy::let_underscore_drop,
+    clippy::must_use_candidate,
+    clippy::option_if_let_else,
+    clippy::ptr_arg
+)]
+
 mod deserializer;
 mod id;
 mod intern;
