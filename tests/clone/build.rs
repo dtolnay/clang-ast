@@ -33,4 +33,7 @@ fn main() {
             .unwrap();
         assert!(status.success());
     }
+
+    // Disable rerun on changes to Cargo.toml and lib.rs.
+    println!("cargo:rerun-if-changed=build.rs");
 }
