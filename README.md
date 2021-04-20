@@ -11,7 +11,7 @@ This library provides deserialization logic for efficiently processing Clang's
 
 ```toml
 [dependencies]
-clang-ast = "0.0"
+clang-ast = "0.1"
 ```
 
 <br>
