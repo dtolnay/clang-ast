@@ -215,6 +215,7 @@ kind! {
     UsingShadowDecl,
     VarDecl,
     VarTemplateDecl,
+    VarTemplateSpecializationDecl,
     VisibilityAttr,
     WarnUnusedResultAttr,
     WeakRefAttr,

@@ -179,6 +179,7 @@ pub enum Clang {
     UsingShadowDecl(UsingShadowDecl),
     VarDecl(VarDecl),
     VarTemplateDecl(VarTemplateDecl),
+    VarTemplateSpecializationDecl(VarTemplateSpecializationDecl),
     VisibilityAttr(VisibilityAttr),
     WarnUnusedResultAttr(WarnUnusedResultAttr),
     WeakRefAttr(WeakRefAttr),
@@ -2228,6 +2229,21 @@ pub struct VarTemplateDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
     pub name: String,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct VarTemplateSpecializationDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    #[serde(rename = "isUsed", default)]
+    pub is_used: bool,
+    pub name: String,
+    #[serde(rename = "mangledName")]
+    pub mangled_name: Option<String>,
+    pub r#type: Type,
+    pub init: InitStyle,
 }
 
 #[derive(Deserialize, Debug)]
