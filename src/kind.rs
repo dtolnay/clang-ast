@@ -2,6 +2,7 @@ use serde::de::{
     DeserializeSeed, Deserializer, EnumAccess, Expected, IntoDeserializer, Unexpected,
     VariantAccess, Visitor,
 };
+use serde::ser::{Serialize, Serializer};
 use serde::{forward_to_deserialize_any, Deserialize};
 use std::borrow::Cow;
 use std::fmt::{self, Debug, Display};
@@ -270,6 +271,19 @@ impl<'de> Visitor<'de> for KindVisitor {
             Err(ParseKindError { .. }) => {
                 Err(serde::de::Error::unknown_variant(kind, self::VARIANTS))
             }
+        }
+    }
+}
+
+impl Serialize for Kind {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if let Kind::null = self {
+            serializer.serialize_unit()
+        } else {
+            serializer.serialize_str(self.as_str())
         }
     }
 }
