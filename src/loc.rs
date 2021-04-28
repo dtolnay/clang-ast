@@ -1,12 +1,10 @@
-use crate::intern::{self, InternVisitor};
-use serde::de::{Deserializer, Error, MapAccess, Visitor};
-use serde::Deserialize;
+use crate::intern::InternVisitor;
+use serde::de::{Deserialize, Deserializer, Error, IgnoredAny, MapAccess, Visitor};
 use std::cell::{Cell, RefCell};
 use std::fmt::{self, Debug};
 use std::sync::Arc;
 
-#[derive(Deserialize, Default)]
-#[serde(deny_unknown_fields)]
+#[derive(Default)]
 pub struct SourceRange {
     pub begin: SourceLocation,
     pub end: SourceLocation,
@@ -31,12 +29,9 @@ pub struct BareSourceLocation {
     pub is_macro_arg_expansion: bool,
 }
 
-#[derive(Deserialize, Clone, Debug)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug)]
 pub struct IncludedFrom {
-    #[serde(rename = "includedFrom", skip_deserializing)]
     pub included_from: Option<Box<IncludedFrom>>,
-    #[serde(deserialize_with = "intern::de")]
     pub file: Arc<str>,
 }
 
@@ -45,8 +40,6 @@ thread_local! {
     static LAST_LOC_LINE: Cell<usize> = Cell::new(0);
 }
 
-#[derive(Deserialize)]
-#[serde(field_identifier, rename_all = "camelCase")]
 enum SourceLocationField {
     SpellingLoc,
     ExpansionLoc,
@@ -138,6 +131,225 @@ impl<'de> Deserialize<'de> for BareSourceLocation {
         }
 
         deserializer.deserialize_map(BareSourceLocationVisitor)
+    }
+}
+
+impl<'de> Deserialize<'de> for SourceRange {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        enum SourceRangeField {
+            Begin,
+            End,
+        }
+
+        struct SourceRangeFieldVisitor;
+
+        impl<'de> Visitor<'de> for SourceRangeFieldVisitor {
+            type Value = SourceRangeField;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("field identifier")
+            }
+
+            fn visit_str<E>(self, field: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                static FIELDS: &[&str] = &["begin", "end"];
+                match field {
+                    "begin" => Ok(SourceRangeField::Begin),
+                    "end" => Ok(SourceRangeField::End),
+                    _ => Err(E::unknown_field(field, FIELDS)),
+                }
+            }
+        }
+
+        impl<'de> Deserialize<'de> for SourceRangeField {
+            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+            where
+                D: Deserializer<'de>,
+            {
+                deserializer.deserialize_identifier(SourceRangeFieldVisitor)
+            }
+        }
+
+        struct SourceRangeVisitor;
+
+        impl<'de> Visitor<'de> for SourceRangeVisitor {
+            type Value = SourceRange;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct SourceRange")
+            }
+
+            fn visit_map<M>(self, mut map: M) -> Result<Self::Value, M::Error>
+            where
+                M: MapAccess<'de>,
+            {
+                let mut begin = None;
+                let mut end = None;
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        SourceRangeField::Begin => {
+                            if begin.is_some() {
+                                return Err(Error::duplicate_field("begin"));
+                            }
+                            begin = Some(map.next_value()?);
+                        }
+                        SourceRangeField::End => {
+                            if end.is_some() {
+                                return Err(Error::duplicate_field("end"));
+                            }
+                            end = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let begin = begin.ok_or_else(|| Error::missing_field("begin"))?;
+                let end = end.ok_or_else(|| Error::missing_field("end"))?;
+                Ok(SourceRange { begin, end })
+            }
+        }
+
+        deserializer.deserialize_map(SourceRangeVisitor)
+    }
+}
+
+impl<'de> Deserialize<'de> for IncludedFrom {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        enum IncludedFromField {
+            IncludedFrom,
+            File,
+        }
+
+        struct IncludedFromFieldVisitor;
+
+        impl<'de> Visitor<'de> for IncludedFromFieldVisitor {
+            type Value = IncludedFromField;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("field identifier")
+            }
+
+            fn visit_str<E>(self, field: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                static FIELDS: &[&str] = &["includedFrom", "file"];
+                match field {
+                    "includedFrom" => Ok(IncludedFromField::IncludedFrom),
+                    "file" => Ok(IncludedFromField::File),
+                    _ => Err(E::unknown_field(field, FIELDS)),
+                }
+            }
+        }
+
+        impl<'de> Deserialize<'de> for IncludedFromField {
+            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+            where
+                D: Deserializer<'de>,
+            {
+                deserializer.deserialize_identifier(IncludedFromFieldVisitor)
+            }
+        }
+
+        struct IncludedFromVisitor;
+
+        impl<'de> Visitor<'de> for IncludedFromVisitor {
+            type Value = IncludedFrom;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct IncludedFrom")
+            }
+
+            fn visit_map<M>(self, mut map: M) -> Result<Self::Value, M::Error>
+            where
+                M: MapAccess<'de>,
+            {
+                let mut has_included_from = false;
+                let mut file = None;
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        IncludedFromField::IncludedFrom => {
+                            if has_included_from {
+                                return Err(Error::duplicate_field("includedFrom"));
+                            }
+                            map.next_value::<IgnoredAny>()?;
+                            has_included_from = true;
+                        }
+                        IncludedFromField::File => {
+                            if file.is_some() {
+                                return Err(Error::duplicate_field("file"));
+                            }
+                            file = Some(map.next_value_seed(InternVisitor)?);
+                        }
+                    }
+                }
+                let file = file.ok_or_else(|| Error::missing_field("file"))?;
+                Ok(IncludedFrom {
+                    included_from: None,
+                    file,
+                })
+            }
+        }
+
+        deserializer.deserialize_map(IncludedFromVisitor)
+    }
+}
+
+impl<'de> Deserialize<'de> for SourceLocationField {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct SourceLocationFieldVisitor;
+
+        impl<'de> Visitor<'de> for SourceLocationFieldVisitor {
+            type Value = SourceLocationField;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("field identifier")
+            }
+
+            fn visit_str<E>(self, field: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                static FIELDS: &[&str] = &[
+                    "spellingLoc",
+                    "expansionLoc",
+                    "offset",
+                    "file",
+                    "line",
+                    "presumedFile",
+                    "presumedLine",
+                    "col",
+                    "tokLen",
+                    "includedFrom",
+                    "isMacroArgExpansion",
+                ];
+                match field {
+                    "spellingLoc" => Ok(SourceLocationField::SpellingLoc),
+                    "expansionLoc" => Ok(SourceLocationField::ExpansionLoc),
+                    "offset" => Ok(SourceLocationField::Offset),
+                    "file" => Ok(SourceLocationField::File),
+                    "line" => Ok(SourceLocationField::Line),
+                    "presumedFile" => Ok(SourceLocationField::PresumedFile),
+                    "presumedLine" => Ok(SourceLocationField::PresumedLine),
+                    "col" => Ok(SourceLocationField::Col),
+                    "tokLen" => Ok(SourceLocationField::TokLen),
+                    "includedFrom" => Ok(SourceLocationField::IncludedFrom),
+                    "isMacroArgExpansion" => Ok(SourceLocationField::IsMacroArgExpansion),
+                    _ => Err(E::unknown_field(field, FIELDS)),
+                }
+            }
+        }
+
+        deserializer.deserialize_identifier(SourceLocationFieldVisitor)
     }
 }
 

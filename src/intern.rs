@@ -82,10 +82,3 @@ impl<'de> DeserializeSeed<'de> for InternVisitor {
         deserializer.deserialize_str(self)
     }
 }
-
-pub(crate) fn de<'de, D>(deserializer: D) -> Result<Arc<str>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    InternVisitor.deserialize(deserializer)
-}

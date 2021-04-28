@@ -404,8 +404,7 @@ extern crate serde;
 
 use crate::deserializer::NodeDeserializer;
 use crate::kind::AnyKind;
-use serde::de::{Deserializer, MapAccess, Visitor};
-use serde::Deserialize;
+use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
 use std::fmt;
 use std::marker::PhantomData;
 
@@ -439,12 +438,42 @@ where
     where
         M: MapAccess<'de>,
     {
-        #[derive(Deserialize)]
-        #[serde(field_identifier, rename_all = "lowercase")]
         enum FirstField {
             Id,
             Kind,
             Inner,
+        }
+
+        struct FirstFieldVisitor;
+
+        impl<'de> Visitor<'de> for FirstFieldVisitor {
+            type Value = FirstField;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("field identifier")
+            }
+
+            fn visit_str<E>(self, field: &str) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                static FIELDS: &[&str] = &["id", "kind", "inner"];
+                match field {
+                    "id" => Ok(FirstField::Id),
+                    "kind" => Ok(FirstField::Kind),
+                    "inner" => Ok(FirstField::Inner),
+                    _ => Err(E::unknown_field(field, FIELDS)),
+                }
+            }
+        }
+
+        impl<'de> Deserialize<'de> for FirstField {
+            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+            where
+                D: Deserializer<'de>,
+            {
+                deserializer.deserialize_identifier(FirstFieldVisitor)
+            }
         }
 
         let mut id = None;
