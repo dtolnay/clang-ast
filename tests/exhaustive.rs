@@ -3167,6 +3167,9 @@ fn default_true() -> bool {
     true
 }
 
+#[cfg(target_pointer_width = "64")]
+const _: [(); std::mem::size_of::<Node>()] = [(); 1568];
+
 #[test]
 fn test() {
     let json = clang_ast_test_suite::cxx_ast_json();
