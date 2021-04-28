@@ -388,23 +388,28 @@
 
 #![doc(html_root_url = "https://docs.rs/clang-ast/0.1.2")]
 #![allow(
+    clippy::blocks_in_if_conditions,
     clippy::let_underscore_drop,
     clippy::must_use_candidate,
     clippy::option_if_let_else,
     clippy::ptr_arg
 )]
 
+mod dedup;
 mod deserializer;
 mod id;
 mod intern;
 mod kind;
 mod loc;
+mod serializer;
 
 extern crate serde;
 
 use crate::deserializer::NodeDeserializer;
 use crate::kind::AnyKind;
+use crate::serializer::NodeSerializer;
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
+use serde::ser::{Serialize, SerializeMap, Serializer};
 use std::fmt;
 use std::marker::PhantomData;
 
@@ -520,5 +525,24 @@ where
         let marker = PhantomData;
         let visitor = NodeVisitor { marker };
         deserializer.deserialize_map(visitor)
+    }
+}
+
+impl<T> Serialize for Node<T>
+where
+    T: Serialize,
+{
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let _dedup = dedup::activate();
+        let mut map = serializer.serialize_map(None)?;
+        map.serialize_entry("id", &self.id)?;
+        T::serialize(&self.kind, NodeSerializer::new(&mut map))?;
+        if !self.inner.is_empty() {
+            map.serialize_entry("inner", &self.inner)?;
+        }
+        map.end()
     }
 }

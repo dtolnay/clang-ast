@@ -1,5 +1,6 @@
 use crate::intern::InternVisitor;
 use serde::de::{Deserialize, Deserializer, Error, IgnoredAny, MapAccess, Visitor};
+use serde::ser::{Serialize, SerializeMap, Serializer};
 use std::cell::{Cell, RefCell};
 use std::fmt::{self, Debug};
 use std::sync::Arc;
@@ -461,6 +462,169 @@ impl SourceLocationField {
                 "isMacroArgExpansion",
             ],
         )
+    }
+}
+
+impl Serialize for SourceRange {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(None)?;
+        map.serialize_entry("begin", &self.begin)?;
+        map.serialize_entry("end", &self.end)?;
+        map.end()
+    }
+}
+
+impl Serialize for SourceLocation {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        fn same_bare_source_location(
+            spelling_loc: &BareSourceLocation,
+            expansion_loc: &BareSourceLocation,
+        ) -> bool {
+            let BareSourceLocation {
+                offset: spelling_offset,
+                file: spelling_file,
+                line: spelling_line,
+                presumed_file: spelling_presumed_file,
+                presumed_line: spelling_presumed_line,
+                col: spelling_col,
+                tok_len: spelling_tok_len,
+                included_from: spelling_included_from,
+                is_macro_arg_expansion: spelling_is_macro_arg_expansion,
+            } = spelling_loc;
+            let BareSourceLocation {
+                offset: expansion_offset,
+                file: expansion_file,
+                line: expansion_line,
+                presumed_file: expansion_presumed_file,
+                presumed_line: expansion_presumed_line,
+                col: expansion_col,
+                tok_len: expansion_tok_len,
+                included_from: expansion_included_from,
+                is_macro_arg_expansion: expansion_is_macro_arg_expansion,
+            } = expansion_loc;
+            spelling_offset == expansion_offset
+                && spelling_file == expansion_file
+                && spelling_line == expansion_line
+                && spelling_presumed_file == expansion_presumed_file
+                && spelling_presumed_line == expansion_presumed_line
+                && spelling_col == expansion_col
+                && spelling_tok_len == expansion_tok_len
+                && same_opt_included_from(
+                    spelling_included_from.as_ref(),
+                    expansion_included_from.as_ref(),
+                )
+                && spelling_is_macro_arg_expansion == expansion_is_macro_arg_expansion
+        }
+
+        fn same_opt_included_from(
+            spelling_included_from: Option<&IncludedFrom>,
+            expansion_included_from: Option<&IncludedFrom>,
+        ) -> bool {
+            spelling_included_from.zip(expansion_included_from).map_or(
+                false,
+                |(spelling_included_from, expansion_included_from)| {
+                    let IncludedFrom {
+                        included_from: spelling_included_from,
+                        file: spelling_file,
+                    } = spelling_included_from;
+                    let IncludedFrom {
+                        included_from: expansion_included_from,
+                        file: expansion_file,
+                    } = expansion_included_from;
+                    same_opt_included_from(
+                        spelling_included_from.as_ref().map(Box::as_ref),
+                        expansion_included_from.as_ref().map(Box::as_ref),
+                    ) && spelling_file == expansion_file
+                },
+            )
+        }
+
+        let serialize_separately = self
+            .spelling_loc
+            .as_ref()
+            .zip(self.expansion_loc.as_ref())
+            .map_or(true, |(spelling_loc, expansion_loc)| {
+                !same_bare_source_location(spelling_loc, expansion_loc)
+            });
+
+        if serialize_separately {
+            let mut map = serializer.serialize_map(None)?;
+            if let Some(spelling_loc) = &self.spelling_loc {
+                map.serialize_entry("spellingLoc", spelling_loc)?;
+            }
+            if let Some(expansion_loc) = &self.expansion_loc {
+                map.serialize_entry("expansionLoc", expansion_loc)?;
+            }
+            map.end()
+        } else {
+            self.spelling_loc.serialize(serializer)
+        }
+    }
+}
+
+impl Serialize for BareSourceLocation {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(None)?;
+        map.serialize_entry("offset", &self.offset)?;
+        if LAST_LOC_FILENAME.with(|last_loc_filename| {
+            let mut last_loc_filename = last_loc_filename.borrow_mut();
+            if *last_loc_filename == self.file {
+                false
+            } else {
+                *last_loc_filename = Arc::clone(&self.file);
+                true
+            }
+        }) {
+            map.serialize_entry("file", &*self.file)?;
+            map.serialize_entry("line", &self.line)?;
+        } else if LAST_LOC_LINE.with(|last_loc_line| {
+            if last_loc_line.get() == self.line {
+                false
+            } else {
+                last_loc_line.set(self.line);
+                true
+            }
+        }) {
+            map.serialize_entry("line", &self.line)?;
+        }
+        if let Some(presumed_file) = &self.presumed_file {
+            map.serialize_entry("presumedFile", &**presumed_file)?;
+        }
+        if let Some(presumed_line) = &self.presumed_line {
+            map.serialize_entry("presumedLine", presumed_line)?;
+        }
+        map.serialize_entry("col", &self.col)?;
+        map.serialize_entry("tokLen", &self.tok_len)?;
+        if let Some(included_from) = &self.included_from {
+            map.serialize_entry("includedFrom", included_from)?;
+        }
+        if self.is_macro_arg_expansion {
+            map.serialize_entry("isMacroArgExpansion", &true)?;
+        }
+        map.end()
+    }
+}
+
+impl Serialize for IncludedFrom {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(None)?;
+        if let Some(included_from) = &self.included_from {
+            map.serialize_entry("includedFrom", included_from)?;
+        }
+        map.serialize_entry("file", &*self.file)?;
+        map.end()
     }
 }
 
