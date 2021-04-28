@@ -400,11 +400,13 @@ mod id;
 mod intern;
 mod kind;
 mod loc;
+mod serializer;
 
 extern crate serde;
 
 use crate::deserializer::NodeDeserializer;
 use crate::kind::AnyKind;
+use crate::serializer::NodeSerializer;
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
 use serde::ser::{Serialize, SerializeMap, Serializer};
 use std::fmt;
@@ -536,7 +538,7 @@ where
         let _dedup = dedup::activate();
         let mut map = serializer.serialize_map(None)?;
         map.serialize_entry("id", &self.id)?;
-        //FIXME &self.kind;
+        T::serialize(&self.kind, NodeSerializer::new(&mut map))?;
         map.serialize_entry("inner", &self.inner)?;
         map.end()
     }
