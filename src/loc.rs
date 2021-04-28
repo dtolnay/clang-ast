@@ -5,8 +5,7 @@ use std::cell::{Cell, RefCell};
 use std::fmt::{self, Debug};
 use std::sync::Arc;
 
-#[derive(Deserialize, Default)]
-#[serde(deny_unknown_fields)]
+#[derive(Default)]
 pub struct SourceRange {
     pub begin: SourceLocation,
     pub end: SourceLocation,
@@ -138,6 +137,88 @@ impl<'de> Deserialize<'de> for BareSourceLocation {
         }
 
         deserializer.deserialize_map(BareSourceLocationVisitor)
+    }
+}
+
+impl<'de> Deserialize<'de> for SourceRange {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        enum SourceRangeField {
+            Begin,
+            End,
+        }
+
+        struct SourceRangeFieldVisitor;
+
+        impl<'de> Visitor<'de> for SourceRangeFieldVisitor {
+            type Value = SourceRangeField;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("field identifier")
+            }
+
+            fn visit_str<E>(self, field: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                static FIELDS: &[&str] = &["begin", "end"];
+                match field {
+                    "begin" => Ok(SourceRangeField::Begin),
+                    "end" => Ok(SourceRangeField::End),
+                    _ => Err(E::unknown_field(field, FIELDS)),
+                }
+            }
+        }
+
+        impl<'de> Deserialize<'de> for SourceRangeField {
+            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+            where
+                D: Deserializer<'de>,
+            {
+                deserializer.deserialize_identifier(SourceRangeFieldVisitor)
+            }
+        }
+
+        struct SourceRangeVisitor;
+
+        impl<'de> Visitor<'de> for SourceRangeVisitor {
+            type Value = SourceRange;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct SourceRange")
+            }
+
+            fn visit_map<M>(self, mut map: M) -> Result<Self::Value, M::Error>
+            where
+                M: MapAccess<'de>,
+            {
+                let mut begin = None;
+                let mut end = None;
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        SourceRangeField::Begin => {
+                            if begin.is_some() {
+                                return Err(Error::duplicate_field("begin"));
+                            }
+                            begin = Some(map.next_value()?);
+                        }
+                        SourceRangeField::End => {
+                            if end.is_some() {
+                                return Err(Error::duplicate_field("end"));
+                            }
+                            end = Some(map.next_value()?);
+                        }
+                    }
+                }
+                let begin = begin.ok_or_else(|| Error::missing_field("begin"))?;
+                let end = end.ok_or_else(|| Error::missing_field("end"))?;
+                Ok(SourceRange { begin, end })
+            }
+        }
+
+        deserializer.deserialize_map(SourceRangeVisitor)
     }
 }
 
