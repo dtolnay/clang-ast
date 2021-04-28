@@ -1,4 +1,5 @@
 use serde::de::{Deserialize, Deserializer, Error, Unexpected, Visitor};
+use serde::ser::{Serialize, Serializer};
 use std::fmt::{self, Debug, Display};
 
 #[derive(Copy, Clone, Default, Eq, PartialEq, Ord, PartialOrd, Hash)]
@@ -49,5 +50,14 @@ impl<'de> Deserialize<'de> for Id {
         }
 
         deserializer.deserialize_str(IdVisitor)
+    }
+}
+
+impl Serialize for Id {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.collect_str(self)
     }
 }
