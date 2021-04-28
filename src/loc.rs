@@ -465,6 +465,18 @@ impl SourceLocationField {
     }
 }
 
+impl Serialize for SourceRange {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(None)?;
+        map.serialize_entry("begin", &self.begin)?;
+        map.serialize_entry("end", &self.end)?;
+        map.end()
+    }
+}
+
 impl Serialize for SourceLocation {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
