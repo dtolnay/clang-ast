@@ -465,6 +465,103 @@ impl SourceLocationField {
     }
 }
 
+impl Serialize for SourceLocation {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        fn same_bare_source_location(
+            spelling_loc: &BareSourceLocation,
+            expansion_loc: &BareSourceLocation,
+        ) -> bool {
+            let BareSourceLocation {
+                offset: spelling_offset,
+                file: spelling_file,
+                line: spelling_line,
+                presumed_file: spelling_presumed_file,
+                presumed_line: spelling_presumed_line,
+                col: spelling_col,
+                tok_len: spelling_tok_len,
+                included_from: spelling_included_from,
+                is_macro_arg_expansion: spelling_is_macro_arg_expansion,
+            } = spelling_loc;
+            let BareSourceLocation {
+                offset: expansion_offset,
+                file: expansion_file,
+                line: expansion_line,
+                presumed_file: expansion_presumed_file,
+                presumed_line: expansion_presumed_line,
+                col: expansion_col,
+                tok_len: expansion_tok_len,
+                included_from: expansion_included_from,
+                is_macro_arg_expansion: expansion_is_macro_arg_expansion,
+            } = expansion_loc;
+            spelling_offset == expansion_offset
+                && spelling_file == expansion_file
+                && spelling_line == expansion_line
+                && spelling_presumed_file == expansion_presumed_file
+                && spelling_presumed_line == expansion_presumed_line
+                && spelling_col == expansion_col
+                && spelling_tok_len == expansion_tok_len
+                && spelling_included_from
+                    .as_ref()
+                    .zip(expansion_included_from.as_ref())
+                    .map_or(
+                        false,
+                        |(spelling_included_from, expansion_included_from)| {
+                            same_included_from(spelling_included_from, expansion_included_from)
+                        },
+                    )
+                && spelling_is_macro_arg_expansion == expansion_is_macro_arg_expansion
+        }
+
+        fn same_included_from(
+            spelling_included_from: &IncludedFrom,
+            expansion_included_from: &IncludedFrom,
+        ) -> bool {
+            let IncludedFrom {
+                included_from: spelling_included_from,
+                file: spelling_file,
+            } = spelling_included_from;
+            let IncludedFrom {
+                included_from: expansion_included_from,
+                file: expansion_file,
+            } = expansion_included_from;
+            spelling_included_from
+                .as_ref()
+                .zip(expansion_included_from.as_ref())
+                .map_or(
+                    false,
+                    |(spelling_included_from, expansion_included_from)| {
+                        same_included_from(spelling_included_from, expansion_included_from)
+                    },
+                )
+                && spelling_file == expansion_file
+        }
+
+        let serialize_separately = self
+            .spelling_loc
+            .as_ref()
+            .zip(self.expansion_loc.as_ref())
+            .map_or(true, |(spelling_loc, expansion_loc)| {
+                !same_bare_source_location(spelling_loc, expansion_loc)
+            });
+
+        if serialize_separately {
+            let mut map = serializer.serialize_map(None)?;
+            if let Some(spelling_loc) = &self.spelling_loc {
+                map.serialize_entry("spellingLoc", spelling_loc)?;
+            }
+            if let Some(expansion_loc) = &self.expansion_loc {
+                map.serialize_entry("expansionLoc", expansion_loc)?;
+            }
+            map.end()
+        } else {
+            self.spelling_loc.serialize(serializer)
+        }
+    }
+}
+
 impl Serialize for BareSourceLocation {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
