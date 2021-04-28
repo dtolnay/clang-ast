@@ -404,8 +404,7 @@ extern crate serde;
 
 use crate::deserializer::NodeDeserializer;
 use crate::kind::AnyKind;
-use serde::de::{Deserializer, MapAccess, Visitor};
-use serde::Deserialize;
+use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
 use std::fmt;
 use std::marker::PhantomData;
 

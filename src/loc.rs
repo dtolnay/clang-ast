@@ -1,6 +1,5 @@
 use crate::intern::InternVisitor;
-use serde::de::{Deserializer, Error, IgnoredAny, MapAccess, Visitor};
-use serde::Deserialize;
+use serde::de::{Deserialize, Deserializer, Error, IgnoredAny, MapAccess, Visitor};
 use std::cell::{Cell, RefCell};
 use std::fmt::{self, Debug};
 use std::sync::Arc;
