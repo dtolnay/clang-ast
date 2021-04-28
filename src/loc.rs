@@ -465,6 +465,33 @@ impl SourceLocationField {
     }
 }
 
+impl Serialize for BareSourceLocation {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(None)?;
+        map.serialize_entry("offset", &self.offset)?;
+        map.serialize_entry("file", &*self.file)?;
+        map.serialize_entry("line", &self.line)?;
+        if let Some(presumed_file) = &self.presumed_file {
+            map.serialize_entry("presumedFile", &**presumed_file)?;
+        }
+        if let Some(presumed_line) = &self.presumed_line {
+            map.serialize_entry("presumedLine", presumed_line)?;
+        }
+        map.serialize_entry("col", &self.col)?;
+        map.serialize_entry("tokLen", &self.tok_len)?;
+        if let Some(included_from) = &self.included_from {
+            map.serialize_entry("includedFrom", included_from)?;
+        }
+        if self.is_macro_arg_expansion {
+            map.serialize_entry("isMacroArgExpansion", &true)?;
+        }
+        map.end()
+    }
+}
+
 impl Serialize for IncludedFrom {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
