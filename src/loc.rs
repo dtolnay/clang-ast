@@ -1,5 +1,6 @@
 use crate::intern::InternVisitor;
 use serde::de::{Deserialize, Deserializer, Error, IgnoredAny, MapAccess, Visitor};
+use serde::ser::{Serialize, SerializeMap, Serializer};
 use std::cell::{Cell, RefCell};
 use std::fmt::{self, Debug};
 use std::sync::Arc;
@@ -461,6 +462,20 @@ impl SourceLocationField {
                 "isMacroArgExpansion",
             ],
         )
+    }
+}
+
+impl Serialize for IncludedFrom {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(None)?;
+        if let Some(included_from) = &self.included_from {
+            map.serialize_entry("includedFrom", included_from)?;
+        }
+        map.serialize_entry("file", &*self.file)?;
+        map.end()
     }
 }
 
