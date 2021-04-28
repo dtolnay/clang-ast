@@ -405,6 +405,7 @@ extern crate serde;
 use crate::deserializer::NodeDeserializer;
 use crate::kind::AnyKind;
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
+use serde::ser::{Serialize, SerializeMap, Serializer};
 use std::fmt;
 use std::marker::PhantomData;
 
@@ -520,5 +521,21 @@ where
         let marker = PhantomData;
         let visitor = NodeVisitor { marker };
         deserializer.deserialize_map(visitor)
+    }
+}
+
+impl<T> Serialize for Node<T>
+where
+    T: Serialize,
+{
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(None)?;
+        map.serialize_entry("id", &self.id)?;
+        //FIXME &self.kind;
+        map.serialize_entry("inner", &self.inner)?;
+        map.end()
     }
 }
