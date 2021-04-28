@@ -1,4 +1,7 @@
-use serde::de::{Deserializer, Expected, IntoDeserializer, Unexpected, Visitor};
+use serde::de::{
+    DeserializeSeed, Deserializer, EnumAccess, Expected, IntoDeserializer, Unexpected,
+    VariantAccess, Visitor,
+};
 use serde::{forward_to_deserialize_any, Deserialize};
 use std::borrow::Cow;
 use std::fmt::{self, Debug, Display};
@@ -451,9 +454,87 @@ where
         visitor.visit_some(self)
     }
 
+    fn deserialize_enum<V>(
+        self,
+        name: &'static str,
+        variants: &'static [&'static str],
+        visitor: V,
+    ) -> Result<V::Value, Self::Error>
+    where
+        V: Visitor<'de>,
+    {
+        let _ = name;
+        let _ = variants;
+        visitor.visit_enum(self)
+    }
+
     forward_to_deserialize_any! {
         bool i8 i16 i32 i64 i128 u8 u16 u32 u64 u128 f32 f64 char str string
         bytes byte_buf unit unit_struct newtype_struct seq tuple tuple_struct
-        map struct enum identifier ignored_any
+        map struct identifier ignored_any
+    }
+}
+
+impl<'a, 'de, E> EnumAccess<'de> for BorrowedCowStrDeserializer<'a, 'de, E>
+where
+    E: serde::de::Error,
+{
+    type Error = E;
+    type Variant = UnitOnly<E>;
+
+    fn variant_seed<V>(self, seed: V) -> Result<(V::Value, Self::Variant), Self::Error>
+    where
+        V: DeserializeSeed<'de>,
+    {
+        let value = seed.deserialize(self)?;
+        let variant = UnitOnly {
+            marker: PhantomData,
+        };
+        Ok((value, variant))
+    }
+}
+
+pub(crate) struct UnitOnly<E> {
+    marker: PhantomData<E>,
+}
+
+impl<'de, E> VariantAccess<'de> for UnitOnly<E>
+where
+    E: serde::de::Error,
+{
+    type Error = E;
+
+    fn unit_variant(self) -> Result<(), Self::Error> {
+        Ok(())
+    }
+
+    fn newtype_variant_seed<T>(self, seed: T) -> Result<T::Value, Self::Error>
+    where
+        T: DeserializeSeed<'de>,
+    {
+        let _ = seed;
+        Err(E::invalid_type(Unexpected::UnitVariant, &"newtype variant"))
+    }
+
+    fn tuple_variant<V>(self, len: usize, visitor: V) -> Result<V::Value, Self::Error>
+    where
+        V: Visitor<'de>,
+    {
+        let _ = len;
+        let _ = visitor;
+        Err(E::invalid_type(Unexpected::UnitVariant, &"tuple variant"))
+    }
+
+    fn struct_variant<V>(
+        self,
+        fields: &'static [&'static str],
+        visitor: V,
+    ) -> Result<V::Value, Self::Error>
+    where
+        V: Visitor<'de>,
+    {
+        let _ = fields;
+        let _ = visitor;
+        Err(E::invalid_type(Unexpected::UnitVariant, &"struct variant"))
     }
 }
