@@ -40,6 +40,16 @@ thread_local! {
     static LAST_LOC_LINE: Cell<usize> = Cell::new(0);
 }
 
+pub(crate) fn thread_local_reset() {
+    LAST_LOC_FILENAME.with(|last_loc_filename| {
+        let mut last_loc_filename = last_loc_filename.borrow_mut();
+        if !last_loc_filename.is_empty() {
+            *last_loc_filename = Arc::from("");
+        }
+    });
+    LAST_LOC_LINE.with(|last_loc_line| last_loc_line.set(0));
+}
+
 enum SourceLocationField {
     SpellingLoc,
     ExpansionLoc,

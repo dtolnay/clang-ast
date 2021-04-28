@@ -43,6 +43,7 @@ impl Drop for Guard {
     fn drop(&mut self) {
         let prev = REFCOUNT.with(|refcount| refcount.replace(refcount.get() - 1));
         if prev == 1 {
+            crate::loc::thread_local_reset();
             INTERN.with(|intern| intern.borrow_mut().clear());
         }
     }
