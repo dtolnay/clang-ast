@@ -515,40 +515,34 @@ impl Serialize for SourceLocation {
                 && spelling_presumed_line == expansion_presumed_line
                 && spelling_col == expansion_col
                 && spelling_tok_len == expansion_tok_len
-                && spelling_included_from
-                    .as_ref()
-                    .zip(expansion_included_from.as_ref())
-                    .map_or(
-                        false,
-                        |(spelling_included_from, expansion_included_from)| {
-                            same_included_from(spelling_included_from, expansion_included_from)
-                        },
-                    )
+                && same_opt_included_from(
+                    spelling_included_from.as_ref(),
+                    expansion_included_from.as_ref(),
+                )
                 && spelling_is_macro_arg_expansion == expansion_is_macro_arg_expansion
         }
 
-        fn same_included_from(
-            spelling_included_from: &IncludedFrom,
-            expansion_included_from: &IncludedFrom,
+        fn same_opt_included_from(
+            spelling_included_from: Option<&IncludedFrom>,
+            expansion_included_from: Option<&IncludedFrom>,
         ) -> bool {
-            let IncludedFrom {
-                included_from: spelling_included_from,
-                file: spelling_file,
-            } = spelling_included_from;
-            let IncludedFrom {
-                included_from: expansion_included_from,
-                file: expansion_file,
-            } = expansion_included_from;
-            spelling_included_from
-                .as_ref()
-                .zip(expansion_included_from.as_ref())
-                .map_or(
-                    false,
-                    |(spelling_included_from, expansion_included_from)| {
-                        same_included_from(spelling_included_from, expansion_included_from)
-                    },
-                )
-                && spelling_file == expansion_file
+            spelling_included_from.zip(expansion_included_from).map_or(
+                false,
+                |(spelling_included_from, expansion_included_from)| {
+                    let IncludedFrom {
+                        included_from: spelling_included_from,
+                        file: spelling_file,
+                    } = spelling_included_from;
+                    let IncludedFrom {
+                        included_from: expansion_included_from,
+                        file: expansion_file,
+                    } = expansion_included_from;
+                    same_opt_included_from(
+                        spelling_included_from.as_ref().map(Box::as_ref),
+                        expansion_included_from.as_ref().map(Box::as_ref),
+                    ) && spelling_file == expansion_file
+                },
+            )
         }
 
         let serialize_separately = self
