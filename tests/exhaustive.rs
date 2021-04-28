@@ -309,7 +309,7 @@ pub struct BuiltinTemplateDecl {
     pub range: SourceRange,
     #[serde(rename = "isImplicit", default)]
     pub is_implicit: bool,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -420,9 +420,9 @@ pub struct CXXConstructorDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "mangledName")]
-    pub mangled_name: Option<String>,
+    pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
     #[serde(rename = "storageClass", default)]
     pub storage_class: StorageClass,
@@ -450,9 +450,9 @@ pub struct CXXConversionDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "mangledName")]
-    pub mangled_name: Option<String>,
+    pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
     #[serde(default)]
     pub inline: bool,
@@ -519,7 +519,7 @@ pub struct CXXDependentScopeMemberExpr {
     pub value_category: ValueCategory,
     #[serde(rename = "isArrow")]
     pub is_arrow: bool,
-    pub member: String,
+    pub member: Box<str>,
     #[serde(rename = "hasTemplateKeyword", default)]
     pub has_template_keyword: bool,
     #[serde(rename = "hasExplicitTemplateArgs", default)]
@@ -544,9 +544,9 @@ pub struct CXXDestructorDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "mangledName")]
-    pub mangled_name: Option<String>,
+    pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
     #[serde(default)]
     pub inline: bool,
@@ -629,9 +629,9 @@ pub struct CXXMethodDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "mangledName")]
-    pub mangled_name: Option<String>,
+    pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
     #[serde(rename = "storageClass", default)]
     pub storage_class: StorageClass,
@@ -729,7 +729,7 @@ pub struct CXXRecordDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
     #[serde(rename = "tagUsed")]
     pub tag_used: TagTypeKind,
     #[serde(rename = "completeDefinition", default)]
@@ -904,7 +904,7 @@ pub struct ClassTemplateDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -917,7 +917,7 @@ pub struct ClassTemplatePartialSpecializationDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "tagUsed")]
     pub tag_used: TagTypeKind,
     #[serde(rename = "completeDefinition", default)]
@@ -940,7 +940,7 @@ pub struct ClassTemplateSpecializationDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "tagUsed")]
     pub tag_used: Option<TagTypeKind>,
     #[serde(rename = "completeDefinition", default)]
@@ -1008,7 +1008,7 @@ pub struct ConstantArrayType {
     #[serde(rename = "sizeModifier", default)]
     pub size_modifier: ArrayType,
     #[serde(rename = "indexTypeQualifiers")]
-    pub index_type_qualifiers: Option<String>,
+    pub index_type_qualifiers: Option<Box<str>>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1019,7 +1019,7 @@ pub struct ConstantExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
-    pub value: String,
+    pub value: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1149,7 +1149,7 @@ pub struct ElaboratedType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
-    pub qualifier: Option<String>,
+    pub qualifier: Option<Box<str>>,
     #[serde(rename = "ownedTagDecl")]
     pub owned_tag_decl: Option<Decl>,
 }
@@ -1170,7 +1170,7 @@ pub struct EnumConstantDecl {
     pub range: SourceRange,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
-    pub name: String,
+    pub name: Box<str>,
     pub r#type: Type,
 }
 
@@ -1182,7 +1182,7 @@ pub struct EnumDecl {
     pub range: SourceRange,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
     #[serde(rename = "fixedUnderlyingType")]
     pub fixed_underlying_type: Option<Type>,
     #[serde(rename = "scopedEnumTag", default)]
@@ -1219,7 +1219,7 @@ pub struct FieldDecl {
     pub is_implicit: bool,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
     pub r#type: Type,
     #[serde(default)]
     pub mutable: bool,
@@ -1244,7 +1244,7 @@ pub struct FloatingLiteral {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
-    pub value: String,
+    pub value: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1299,9 +1299,9 @@ pub struct FunctionDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "mangledName")]
-    pub mangled_name: Option<String>,
+    pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
     #[serde(rename = "storageClass", default)]
     pub storage_class: StorageClass,
@@ -1342,7 +1342,7 @@ pub struct FunctionProtoType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
-    pub cc: String,
+    pub cc: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1357,7 +1357,7 @@ pub struct FunctionTemplateDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1432,7 +1432,7 @@ pub struct IndirectFieldDecl {
     pub range: SourceRange,
     #[serde(rename = "isImplicit", default)]
     pub is_implicit: bool,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1468,7 +1468,7 @@ pub struct IntegerLiteral {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
-    pub value: String,
+    pub value: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1536,7 +1536,7 @@ pub struct MemberExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "isArrow")]
     pub is_arrow: bool,
     #[serde(rename = "referencedMemberDecl")]
@@ -1575,7 +1575,7 @@ pub struct NamespaceDecl {
     pub range: SourceRange,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
     #[serde(rename = "isInline", default)]
     pub is_inline: bool,
     #[serde(rename = "originalNamespace")]
@@ -1608,7 +1608,7 @@ pub struct NonTypeTemplateParmDecl {
     pub is_implicit: bool,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
     pub r#type: Type,
     pub depth: usize,
     pub index: usize,
@@ -1719,9 +1719,9 @@ pub struct ParmVarDecl {
     pub is_used: bool,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
     #[serde(rename = "mangledName")]
-    pub mangled_name: Option<String>,
+    pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
     #[serde(default)]
     pub init: InitStyle,
@@ -1759,7 +1759,7 @@ pub struct PredefinedExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1776,7 +1776,7 @@ pub struct PureAttr {
 #[non_exhaustive]
 pub struct QualType {
     pub r#type: Type,
-    pub qualifiers: String,
+    pub qualifiers: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1852,7 +1852,7 @@ pub struct SizeOfPackExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1871,7 +1871,7 @@ pub struct StringLiteral {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
-    pub value: String,
+    pub value: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1939,7 +1939,7 @@ pub struct TemplateSpecializationType {
     #[serde(rename = "isAlias", default)]
     pub is_alias: bool,
     #[serde(rename = "templateName")]
-    pub template_name: String,
+    pub template_name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1950,7 +1950,7 @@ pub struct TemplateTemplateParmDecl {
     pub range: SourceRange,
     #[serde(rename = "isImplicit", default)]
     pub is_implicit: bool,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
     pub depth: usize,
     pub index: usize,
 }
@@ -1965,7 +1965,7 @@ pub struct TemplateTypeParmDecl {
     pub is_implicit: bool,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
     #[serde(rename = "tagUsed")]
     pub tag_used: TemplateTypeParmTag,
     pub depth: usize,
@@ -2010,7 +2010,7 @@ pub struct TypeAliasDecl {
     pub range: SourceRange,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
-    pub name: String,
+    pub name: Box<str>,
     pub r#type: Type,
 }
 
@@ -2020,7 +2020,7 @@ pub struct TypeAliasDecl {
 pub struct TypeAliasTemplateDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2056,7 +2056,7 @@ pub struct TypedefDecl {
     pub is_referenced: bool,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: String,
+    pub name: Box<str>,
     pub r#type: Type,
 }
 
@@ -2080,7 +2080,7 @@ pub struct UnaryExprOrTypeTraitExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "argType")]
     pub arg_type: Option<Type>,
 }
@@ -2123,7 +2123,7 @@ pub struct UnresolvedLookupExpr {
     pub value_category: ValueCategory,
     #[serde(rename = "usesADL")]
     pub uses_adl: bool,
-    pub name: String,
+    pub name: Box<str>,
     pub lookups: Vec<Node>,
 }
 
@@ -2143,7 +2143,7 @@ pub struct UnresolvedMemberExpr {
 pub struct UnresolvedUsingValueDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2159,7 +2159,7 @@ pub struct UnusedAttr {
 pub struct UsingDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2187,7 +2187,7 @@ pub struct UsingShadowDecl {
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
     pub target: Option<Decl>,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2206,9 +2206,9 @@ pub struct VarDecl {
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
     #[serde(rename = "mangledName")]
-    pub mangled_name: Option<String>,
+    pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
     #[serde(rename = "storageClass", default)]
     pub storage_class: StorageClass,
@@ -2228,7 +2228,7 @@ pub struct VarDecl {
 pub struct VarTemplateDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2239,9 +2239,9 @@ pub struct VarTemplateSpecializationDecl {
     pub range: SourceRange,
     #[serde(rename = "isUsed", default)]
     pub is_used: bool,
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "mangledName")]
-    pub mangled_name: Option<String>,
+    pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
     pub init: InitStyle,
 }
@@ -2705,7 +2705,7 @@ pub enum CastKind {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct CastPath {
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "isVirtual", default)]
     pub is_virtual: bool,
 }
@@ -2841,7 +2841,7 @@ pub struct Decl {
     pub id: Id,
     #[serde(default)]
     pub kind: Kind,
-    pub name: Option<String>,
+    pub name: Option<Box<str>>,
     pub r#type: Option<Type>,
 }
 
@@ -3109,9 +3109,9 @@ impl Default for TLSKind {
 #[non_exhaustive]
 pub struct Type {
     #[serde(rename = "qualType")]
-    pub qual_type: String,
+    pub qual_type: Box<str>,
     #[serde(rename = "desugaredQualType")]
-    pub desugared_qual_type: Option<String>,
+    pub desugared_qual_type: Option<Box<str>>,
     #[serde(rename = "typeAliasDeclId")]
     pub type_alias_decl_id: Option<Id>,
 }
@@ -3168,7 +3168,7 @@ fn default_true() -> bool {
 }
 
 #[cfg(target_pointer_width = "64")]
-const _: [(); std::mem::size_of::<Node>()] = [(); 1568];
+const _: [(); std::mem::size_of::<Node>()] = [(); 1480];
 
 #[test]
 fn test() {
