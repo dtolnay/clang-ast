@@ -41,8 +41,6 @@ thread_local! {
     static LAST_LOC_LINE: Cell<usize> = Cell::new(0);
 }
 
-#[derive(Deserialize)]
-#[serde(field_identifier, rename_all = "camelCase")]
 enum SourceLocationField {
     SpellingLoc,
     ExpansionLoc,
@@ -301,6 +299,58 @@ impl<'de> Deserialize<'de> for IncludedFrom {
         }
 
         deserializer.deserialize_map(IncludedFromVisitor)
+    }
+}
+
+impl<'de> Deserialize<'de> for SourceLocationField {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct SourceLocationFieldVisitor;
+
+        impl<'de> Visitor<'de> for SourceLocationFieldVisitor {
+            type Value = SourceLocationField;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("field identifier")
+            }
+
+            fn visit_str<E>(self, field: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                static FIELDS: &[&str] = &[
+                    "spellingLoc",
+                    "expansionLoc",
+                    "offset",
+                    "file",
+                    "line",
+                    "presumedFile",
+                    "presumedLine",
+                    "col",
+                    "tokLen",
+                    "includedFrom",
+                    "isMacroArgExpansion",
+                ];
+                match field {
+                    "spellingLoc" => Ok(SourceLocationField::SpellingLoc),
+                    "expansionLoc" => Ok(SourceLocationField::ExpansionLoc),
+                    "offset" => Ok(SourceLocationField::Offset),
+                    "file" => Ok(SourceLocationField::File),
+                    "line" => Ok(SourceLocationField::Line),
+                    "presumedFile" => Ok(SourceLocationField::PresumedFile),
+                    "presumedLine" => Ok(SourceLocationField::PresumedLine),
+                    "col" => Ok(SourceLocationField::Col),
+                    "tokLen" => Ok(SourceLocationField::TokLen),
+                    "includedFrom" => Ok(SourceLocationField::IncludedFrom),
+                    "isMacroArgExpansion" => Ok(SourceLocationField::IsMacroArgExpansion),
+                    _ => Err(E::unknown_field(field, FIELDS)),
+                }
+            }
+        }
+
+        deserializer.deserialize_identifier(SourceLocationFieldVisitor)
     }
 }
 
