@@ -41,7 +41,12 @@ thread_local! {
 }
 
 pub(crate) fn thread_local_reset() {
-    LAST_LOC_FILENAME.with(|last_loc_filename| *last_loc_filename.borrow_mut() = Arc::from(""));
+    LAST_LOC_FILENAME.with(|last_loc_filename| {
+        let mut last_loc_filename = last_loc_filename.borrow_mut();
+        if !last_loc_filename.is_empty() {
+            *last_loc_filename = Arc::from("");
+        }
+    });
     LAST_LOC_LINE.with(|last_loc_line| last_loc_line.set(0));
 }
 
