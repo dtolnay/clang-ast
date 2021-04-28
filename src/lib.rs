@@ -388,6 +388,7 @@
 
 #![doc(html_root_url = "https://docs.rs/clang-ast/0.1.2")]
 #![allow(
+    clippy::blocks_in_if_conditions,
     clippy::let_underscore_drop,
     clippy::must_use_candidate,
     clippy::option_if_let_else,
