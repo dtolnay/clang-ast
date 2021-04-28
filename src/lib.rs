@@ -539,7 +539,9 @@ where
         let mut map = serializer.serialize_map(None)?;
         map.serialize_entry("id", &self.id)?;
         T::serialize(&self.kind, NodeSerializer::new(&mut map))?;
-        map.serialize_entry("inner", &self.inner)?;
+        if !self.inner.is_empty() {
+            map.serialize_entry("inner", &self.inner)?;
+        }
         map.end()
     }
 }
