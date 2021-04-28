@@ -394,6 +394,7 @@
     clippy::ptr_arg
 )]
 
+mod dedup;
 mod deserializer;
 mod id;
 mod intern;
@@ -532,6 +533,7 @@ where
     where
         S: Serializer,
     {
+        let _dedup = dedup::activate();
         let mut map = serializer.serialize_map(None)?;
         map.serialize_entry("id", &self.id)?;
         //FIXME &self.kind;

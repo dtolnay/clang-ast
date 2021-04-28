@@ -575,8 +575,27 @@ impl Serialize for BareSourceLocation {
     {
         let mut map = serializer.serialize_map(None)?;
         map.serialize_entry("offset", &self.offset)?;
-        map.serialize_entry("file", &*self.file)?;
-        map.serialize_entry("line", &self.line)?;
+        if LAST_LOC_FILENAME.with(|last_loc_filename| {
+            let mut last_loc_filename = last_loc_filename.borrow_mut();
+            if *last_loc_filename == self.file {
+                false
+            } else {
+                *last_loc_filename = Arc::clone(&self.file);
+                true
+            }
+        }) {
+            map.serialize_entry("file", &*self.file)?;
+            map.serialize_entry("line", &self.line)?;
+        } else if LAST_LOC_LINE.with(|last_loc_line| {
+            if last_loc_line.get() == self.line {
+                false
+            } else {
+                last_loc_line.set(self.line);
+                true
+            }
+        }) {
+            map.serialize_entry("line", &self.line)?;
+        }
         if let Some(presumed_file) = &self.presumed_file {
             map.serialize_entry("presumedFile", &**presumed_file)?;
         }
