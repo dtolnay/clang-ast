@@ -1680,6 +1680,8 @@ pub struct NamespaceDecl {
 #[non_exhaustive]
 pub struct NoSanitizeAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
