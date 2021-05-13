@@ -577,6 +577,7 @@ pub struct CXXDynamicCastExpr {
 #[non_exhaustive]
 pub struct CXXFoldExpr {
     pub range: SourceRange,
+    pub r#type: Type,
 }
 
 #[derive(Deserialize, Debug)]
