@@ -2451,6 +2451,7 @@ pub struct VarTemplatePartialSpecializationDecl {
     pub inline: bool,
     #[serde(default)]
     pub constexpr: bool,
+    pub init: InitStyle,
 }
 
 #[derive(Deserialize, Debug)]
