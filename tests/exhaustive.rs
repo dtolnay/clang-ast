@@ -128,6 +128,7 @@ pub enum Clang {
     MemberPointerType(MemberPointerType),
     ModeAttr(ModeAttr),
     NamespaceDecl(NamespaceDecl),
+    NoSanitizeAttr(NoSanitizeAttr),
     NoThrowAttr(NoThrowAttr),
     NoUniqueAddressAttr(NoUniqueAddressAttr),
     NonNullAttr(NonNullAttr),
@@ -1612,6 +1613,11 @@ pub struct NamespaceDecl {
     #[serde(rename = "originalNamespace")]
     pub original_namespace: Option<Decl>,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct NoSanitizeAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

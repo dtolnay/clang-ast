@@ -167,6 +167,7 @@ kind! {
     MemberPointerType,
     ModeAttr,
     NamespaceDecl,
+    NoSanitizeAttr,
     NoThrowAttr,
     NoUniqueAddressAttr,
     NonNullAttr,
