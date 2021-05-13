@@ -491,6 +491,8 @@ pub enum CXXCtorInitializer {
 pub struct CXXDeductionGuideDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
+    #[serde(rename = "isImplicit", default)]
+    pub is_implicit: bool,
 }
 
 #[derive(Deserialize, Debug)]
