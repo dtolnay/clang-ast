@@ -57,6 +57,7 @@ kind! {
     AccessSpecDecl,
     AliasAttr,
     AlignedAttr,
+    AllocAlignAttr,
     AllocSizeAttr,
     AlwaysInlineAttr,
     ArrayInitIndexExpr,

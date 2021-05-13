@@ -18,6 +18,7 @@ pub enum Clang {
     AccessSpecDecl(AccessSpecDecl),
     AliasAttr(AliasAttr),
     AlignedAttr(AlignedAttr),
+    AllocAlignAttr(AllocAlignAttr),
     AllocSizeAttr(AllocSizeAttr),
     AlwaysInlineAttr(AlwaysInlineAttr),
     ArrayInitIndexExpr(ArrayInitIndexExpr),
@@ -226,6 +227,11 @@ pub struct AliasAttr {
 pub struct AlignedAttr {
     pub range: SourceRange,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct AllocAlignAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
