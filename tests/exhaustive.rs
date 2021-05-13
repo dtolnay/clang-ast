@@ -193,6 +193,7 @@ pub enum Clang {
     UsingShadowDecl(UsingShadowDecl),
     VarDecl(VarDecl),
     VarTemplateDecl(VarTemplateDecl),
+    VarTemplatePartialSpecializationDecl(VarTemplatePartialSpecializationDecl),
     VarTemplateSpecializationDecl(VarTemplateSpecializationDecl),
     VisibilityAttr(VisibilityAttr),
     WarnUnusedResultAttr(WarnUnusedResultAttr),
@@ -2371,6 +2372,11 @@ pub struct VarTemplateDecl {
     pub range: SourceRange,
     pub name: Box<str>,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct VarTemplatePartialSpecializationDecl {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

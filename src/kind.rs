@@ -232,6 +232,7 @@ kind! {
     UsingShadowDecl,
     VarDecl,
     VarTemplateDecl,
+    VarTemplatePartialSpecializationDecl,
     VarTemplateSpecializationDecl,
     VisibilityAttr,
     WarnUnusedResultAttr,
