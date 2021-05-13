@@ -14,6 +14,14 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
       - run: cargo test --release
 
+  macos:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test --release
+
   check:
     name: Rust ${{matrix.rust}}
     runs-on: ubuntu-latest
