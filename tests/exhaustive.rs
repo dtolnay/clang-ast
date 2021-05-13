@@ -2398,6 +2398,7 @@ pub struct VarTemplateDecl {
 #[non_exhaustive]
 pub struct VarTemplatePartialSpecializationDecl {
     pub loc: SourceLocation,
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
