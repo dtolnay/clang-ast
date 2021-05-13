@@ -65,6 +65,7 @@ kind! {
     ArraySubscriptExpr,
     AsmLabelAttr,
     AtomicExpr,
+    AttributedStmt,
     AvailabilityAttr,
     BinaryOperator,
     BreakStmt,
