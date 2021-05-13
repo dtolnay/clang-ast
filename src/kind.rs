@@ -320,6 +320,12 @@ impl<'de> AnyKind<'de> {
     }
 }
 
+impl<'de> Display for AnyKind<'de> {
+    fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        formatter.write_str(self.as_str())
+    }
+}
+
 impl<'de> Deserialize<'de> for AnyKind<'de> {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where

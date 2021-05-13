@@ -390,6 +390,7 @@
 #![allow(
     clippy::blocks_in_if_conditions,
     clippy::let_underscore_drop,
+    clippy::match_like_matches_macro,
     clippy::must_use_candidate,
     clippy::option_if_let_else,
     clippy::ptr_arg

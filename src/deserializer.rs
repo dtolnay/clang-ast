@@ -2,23 +2,34 @@ use crate::kind::{AnyKind, BorrowedCowStrDeserializer, Kind};
 use crate::Node;
 use serde::de::value::BorrowedStrDeserializer;
 use serde::de::{
-    Deserialize, DeserializeSeed, Deserializer, EnumAccess, Error, Expected, IgnoredAny,
-    IntoDeserializer, MapAccess, Unexpected, VariantAccess, Visitor,
+    Deserialize, DeserializeSeed, Deserializer, EnumAccess, Error, Expected, IgnoredAny, MapAccess,
+    Unexpected, VariantAccess, Visitor,
 };
 use serde::forward_to_deserialize_any;
 use std::borrow::Cow;
-use std::fmt;
+use std::error::Error as StdError;
+use std::fmt::{self, Display};
 use std::marker::PhantomData;
 
 pub(crate) struct NodeDeserializer<'de, 'a, T, M> {
     kind: AnyKind<'de>,
     inner: &'a mut Vec<Node<T>>,
     map: M,
+    has_kind: bool,
 }
 
 impl<'de, 'a, T, M> NodeDeserializer<'de, 'a, T, M> {
     pub(crate) fn new(kind: AnyKind<'de>, inner: &'a mut Vec<Node<T>>, map: M) -> Self {
-        NodeDeserializer { kind, inner, map }
+        let has_kind = match kind {
+            AnyKind::Kind(Kind::null) => false,
+            _ => true,
+        };
+        NodeDeserializer {
+            kind,
+            inner,
+            map,
+            has_kind,
+        }
     }
 }
 
@@ -172,9 +183,15 @@ where
     where
         K: DeserializeSeed<'de>,
     {
-        if let AnyKind::Kind(Kind::null) = &self.kind {
+        if self.has_kind {
+            let deserializer = BorrowedStrDeserializer::new("kind");
+            seed.deserialize(deserializer).map(Some)
+        } else {
             loop {
-                seed = match self.map.next_key_seed(NodeFieldSeed { seed })? {
+                seed = match self.map.next_key_seed(NodeFieldSeed {
+                    kind: &self.kind,
+                    seed,
+                })? {
                     None => return Ok(None),
                     Some(NodeField::Inner(seed)) => {
                         *self.inner = self.map.next_value()?;
@@ -183,9 +200,6 @@ where
                     Some(NodeField::Delegate(value)) => return Ok(Some(value)),
                 };
             }
-        } else {
-            let deserializer = BorrowedStrDeserializer::new("kind");
-            seed.deserialize(deserializer).map(Some)
         }
     }
 
@@ -193,9 +207,7 @@ where
     where
         V: DeserializeSeed<'de>,
     {
-        if let AnyKind::Kind(Kind::null) = &self.kind {
-            self.map.next_value_seed(seed)
-        } else {
+        if self.has_kind {
             let cow;
             let borrowed_kind = match &self.kind {
                 AnyKind::Kind(kind) => {
@@ -206,8 +218,10 @@ where
             };
             let deserializer = BorrowedCowStrDeserializer::new(borrowed_kind);
             let value = seed.deserialize(deserializer);
-            self.kind = AnyKind::Kind(Kind::null);
+            self.has_kind = false;
             value
+        } else {
+            self.map.next_value_seed(seed)
         }
     }
 }
@@ -218,8 +232,10 @@ where
     M: MapAccess<'de>,
 {
     fn ignore(&mut self) -> Result<(), M::Error> {
-        let seed = PhantomData::<IgnoredAny>;
-        while let Some(node_field) = self.map.next_key_seed(NodeFieldSeed { seed })? {
+        while let Some(node_field) = self.map.next_key_seed(NodeFieldSeed {
+            kind: &self.kind,
+            seed: PhantomData::<IgnoredAny>,
+        })? {
             match node_field {
                 NodeField::Inner(PhantomData) => {
                     *self.inner = self.map.next_value()?;
@@ -367,7 +383,10 @@ where
         K: DeserializeSeed<'de>,
     {
         loop {
-            seed = match self.node.map.next_key_seed(NodeFieldSeed { seed })? {
+            seed = match self.node.map.next_key_seed(NodeFieldSeed {
+                kind: &self.node.kind,
+                seed,
+            })? {
                 None => return Ok(None),
                 Some(NodeField::Inner(seed)) => {
                     *self.node.inner = self.node.map.next_value()?;
@@ -404,7 +423,10 @@ where
         V: DeserializeSeed<'de>,
     {
         loop {
-            seed = match self.node.map.next_key_seed(NodeFieldSeed { seed })? {
+            seed = match self.node.map.next_key_seed(NodeFieldSeed {
+                kind: &self.node.kind,
+                seed,
+            })? {
                 None => {
                     let expected = ExpectedEnum { name: self.name };
                     return Err(Error::invalid_type(Unexpected::Map, &expected));
@@ -436,9 +458,11 @@ where
         V: DeserializeSeed<'de>,
     {
         let value = self.node.map.next_value_seed(seed)?;
-        let seed = PhantomData::<UnexpectedField>;
         loop {
-            match self.node.map.next_key_seed(NodeFieldSeed { seed })? {
+            match self.node.map.next_key_seed(NodeFieldSeed {
+                kind: &self.node.kind,
+                seed: PhantomData::<UnexpectedField>,
+            })? {
                 None => return Ok(value),
                 Some(NodeField::Inner(PhantomData)) => {
                     *self.node.inner = self.node.map.next_value()?;
@@ -473,7 +497,8 @@ where
     }
 }
 
-struct NodeFieldSeed<K> {
+struct NodeFieldSeed<'a, K> {
+    kind: &'a AnyKind<'a>,
     seed: K,
 }
 
@@ -482,7 +507,7 @@ enum NodeField<K, X> {
     Delegate(X),
 }
 
-impl<'de, K> DeserializeSeed<'de> for NodeFieldSeed<K>
+impl<'de, 'a, K> DeserializeSeed<'de> for NodeFieldSeed<'a, K>
 where
     K: DeserializeSeed<'de>,
 {
@@ -496,7 +521,7 @@ where
     }
 }
 
-impl<'de, K> Visitor<'de> for NodeFieldSeed<K>
+impl<'de, 'a, K> Visitor<'de> for NodeFieldSeed<'a, K>
 where
     K: DeserializeSeed<'de>,
 {
@@ -512,10 +537,177 @@ where
     {
         match identifier {
             "inner" => Ok(NodeField::Inner(self.seed)),
-            other => self
-                .seed
-                .deserialize(other.into_deserializer())
-                .map(NodeField::Delegate),
+            other => match self.seed.deserialize(FieldOfKindDeserializer {
+                field: other,
+                error: PhantomData,
+            }) {
+                Ok(field) => Ok(NodeField::Delegate(field)),
+                Err(error) => Err(error.with_kind(self.kind)),
+            },
+        }
+    }
+}
+
+struct FieldOfKindDeserializer<'a, E> {
+    field: &'a str,
+    error: PhantomData<E>,
+}
+
+impl<'de, 'a, E> Deserializer<'de> for FieldOfKindDeserializer<'a, E>
+where
+    E: Error,
+{
+    type Error = FieldOfKindError<E>;
+
+    fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error>
+    where
+        V: Visitor<'de>,
+    {
+        visitor.visit_str(self.field)
+    }
+
+    forward_to_deserialize_any! {
+        bool i8 i16 i32 i64 i128 u8 u16 u32 u64 u128 f32 f64 char str string
+        bytes byte_buf option unit unit_struct newtype_struct seq tuple
+        tuple_struct map struct enum identifier ignored_any
+    }
+}
+
+#[derive(Debug)]
+enum FieldOfKindError<E> {
+    UnknownField {
+        field: String,
+        expected: &'static [&'static str],
+    },
+    Other(E),
+}
+
+impl<E> FieldOfKindError<E>
+where
+    E: Error,
+{
+    fn with_kind(self, kind: &AnyKind) -> E {
+        match self {
+            FieldOfKindError::UnknownField { field, expected } => {
+                if let AnyKind::Kind(Kind::null) = kind {
+                    E::unknown_field(&field, expected)
+                } else if expected.is_empty() {
+                    E::custom(format_args!(
+                        "unknown field `{}` in {}, there are no fields",
+                        field, kind,
+                    ))
+                } else {
+                    E::custom(format_args!(
+                        "unknown field `{}` in {}, expected {}",
+                        field,
+                        kind,
+                        OneOf { names: expected },
+                    ))
+                }
+            }
+            FieldOfKindError::Other(error) => error,
+        }
+    }
+}
+
+impl<E> Error for FieldOfKindError<E>
+where
+    E: Error,
+{
+    fn unknown_field(field: &str, expected: &'static [&'static str]) -> Self {
+        FieldOfKindError::UnknownField {
+            field: field.to_owned(),
+            expected,
+        }
+    }
+
+    fn custom<T>(msg: T) -> Self
+    where
+        T: Display,
+    {
+        FieldOfKindError::Other(E::custom(msg))
+    }
+
+    fn invalid_type(unexp: Unexpected, exp: &dyn Expected) -> Self {
+        FieldOfKindError::Other(E::invalid_type(unexp, exp))
+    }
+
+    fn invalid_value(unexp: Unexpected, exp: &dyn Expected) -> Self {
+        FieldOfKindError::Other(E::invalid_value(unexp, exp))
+    }
+
+    fn invalid_length(len: usize, exp: &dyn Expected) -> Self {
+        FieldOfKindError::Other(E::invalid_length(len, exp))
+    }
+
+    fn unknown_variant(variant: &str, expected: &'static [&'static str]) -> Self {
+        FieldOfKindError::Other(E::unknown_variant(variant, expected))
+    }
+
+    fn missing_field(field: &'static str) -> Self {
+        FieldOfKindError::Other(E::missing_field(field))
+    }
+
+    fn duplicate_field(field: &'static str) -> Self {
+        FieldOfKindError::Other(E::duplicate_field(field))
+    }
+}
+
+impl<E> StdError for FieldOfKindError<E>
+where
+    E: StdError,
+{
+    fn source(&self) -> Option<&(dyn StdError + 'static)> {
+        match self {
+            FieldOfKindError::UnknownField { .. } => None,
+            FieldOfKindError::Other(error) => error.source(),
+        }
+    }
+}
+
+impl<E> Display for FieldOfKindError<E>
+where
+    E: Display,
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            FieldOfKindError::UnknownField { field, expected } => {
+                if expected.is_empty() {
+                    write!(formatter, "unknown field `{}`, there are no fields", field)
+                } else {
+                    write!(
+                        formatter,
+                        "unknown field `{}`, expected {}",
+                        field,
+                        OneOf { names: expected },
+                    )
+                }
+            }
+            FieldOfKindError::Other(error) => Display::fmt(error, formatter),
+        }
+    }
+}
+
+struct OneOf {
+    names: &'static [&'static str],
+}
+
+impl Display for OneOf {
+    fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        match self.names.len() {
+            0 => unreachable!(), // special case elsewhere
+            1 => write!(formatter, "`{}`", self.names[0]),
+            2 => write!(formatter, "`{}` or `{}`", self.names[0], self.names[1]),
+            _ => {
+                formatter.write_str("one of ")?;
+                for (i, alt) in self.names.iter().enumerate() {
+                    if i > 0 {
+                        formatter.write_str(", ")?;
+                    }
+                    write!(formatter, "`{}`", alt)?;
+                }
+                Ok(())
+            }
         }
     }
 }
