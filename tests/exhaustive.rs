@@ -1467,6 +1467,12 @@ pub struct FunctionProtoType {
     pub variadic: bool,
     #[serde(rename = "refQualifier", default)]
     pub ref_qualifier: RefQualifier,
+    #[serde(rename = "exceptionSpec", default)]
+    pub exception_spec: ExceptionSpec,
+    #[serde(rename = "exceptionTypes", default)]
+    pub exception_types: Vec<Type>,
+    #[serde(rename = "conditionEvaluatesTo")]
+    pub condition_evaluates_to: Option<bool>,
     pub r#type: Type,
     #[serde(rename = "isDependent", default)]
     pub is_dependent: bool,
@@ -3122,6 +3128,25 @@ pub struct DestructorDefinitionData {
     pub needs_overload_resolution: bool,
     #[serde(rename = "defaultedIsDeleted", default)]
     pub defaulted_is_deleted: bool,
+}
+
+#[derive(Deserialize, Copy, Clone, Eq, PartialEq, Debug)]
+#[non_exhaustive]
+pub enum ExceptionSpec {
+    #[serde(skip_deserializing)]
+    None,
+    #[serde(rename = "throw")]
+    Throw,
+    #[serde(rename = "noexcept")]
+    Noexcept,
+    #[serde(rename = "nothrow")]
+    Nothrow,
+}
+
+impl Default for ExceptionSpec {
+    fn default() -> Self {
+        ExceptionSpec::None
+    }
 }
 
 #[derive(Deserialize, Copy, Clone, Eq, PartialEq, Debug)]
