@@ -25,6 +25,7 @@ pub enum Clang {
     ArraySubscriptExpr(ArraySubscriptExpr),
     AsmLabelAttr(AsmLabelAttr),
     AtomicExpr(AtomicExpr),
+    AvailabilityAttr(AvailabilityAttr),
     BinaryOperator(BinaryOperator),
     BreakStmt(BreakStmt),
     BuiltinTemplateDecl(BuiltinTemplateDecl),
@@ -288,6 +289,11 @@ pub struct AtomicExpr {
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct AvailabilityAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
