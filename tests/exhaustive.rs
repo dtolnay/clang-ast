@@ -2141,8 +2141,8 @@ pub struct UnresolvedMemberExpr {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct UnresolvedUsingValueDecl {
-    pub loc: SourceLocation,
-    pub range: SourceRange,
+    pub loc: Option<SourceLocation>,
+    pub range: Option<SourceRange>,
     pub name: Box<str>,
     pub r#type: Option<Type>,
 }
