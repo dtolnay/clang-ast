@@ -1,4 +1,4 @@
-use crate::kind::{AnyKind, BorrowedCowStrDeserializer, Kind};
+use crate::kind::{AnyKind, Kind, SometimesBorrowedStrDeserializer};
 use crate::Node;
 use serde::de::value::BorrowedStrDeserializer;
 use serde::de::{
@@ -115,15 +115,11 @@ where
     where
         V: DeserializeSeed<'de>,
     {
-        let cow;
-        let borrowed_kind = match self.kind {
-            AnyKind::Kind(kind) => {
-                cow = Cow::Borrowed(kind.as_str());
-                &cow
-            }
-            AnyKind::Other(cow) => cow,
+        let deserializer = match &self.kind {
+            AnyKind::Kind(kind) => SometimesBorrowedStrDeserializer::borrowed(kind.as_str()),
+            AnyKind::Other(Cow::Borrowed(kind)) => SometimesBorrowedStrDeserializer::borrowed(kind),
+            AnyKind::Other(Cow::Owned(kind)) => SometimesBorrowedStrDeserializer::transient(kind),
         };
-        let deserializer = BorrowedCowStrDeserializer::new(borrowed_kind);
         let value = seed.deserialize(deserializer)?;
         Ok((value, self))
     }
@@ -208,15 +204,15 @@ where
         V: DeserializeSeed<'de>,
     {
         if self.has_kind {
-            let cow;
-            let borrowed_kind = match self.kind {
-                AnyKind::Kind(kind) => {
-                    cow = Cow::Borrowed(kind.as_str());
-                    &cow
+            let deserializer = match &self.kind {
+                AnyKind::Kind(kind) => SometimesBorrowedStrDeserializer::borrowed(kind.as_str()),
+                AnyKind::Other(Cow::Borrowed(kind)) => {
+                    SometimesBorrowedStrDeserializer::borrowed(kind)
                 }
-                AnyKind::Other(cow) => cow,
+                AnyKind::Other(Cow::Owned(kind)) => {
+                    SometimesBorrowedStrDeserializer::transient(kind)
+                }
             };
-            let deserializer = BorrowedCowStrDeserializer::new(borrowed_kind);
             let value = seed.deserialize(deserializer);
             self.has_kind = false;
             value

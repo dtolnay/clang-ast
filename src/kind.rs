@@ -437,21 +437,33 @@ impl Display for UnknownVariant {
     }
 }
 
-pub(crate) struct BorrowedCowStrDeserializer<'a, 'de, E> {
-    value: &'a Cow<'de, str>,
+enum SometimesBorrowedStr<'a, 'de> {
+    Transient(&'a str),
+    Borrowed(&'de str),
+}
+
+pub(crate) struct SometimesBorrowedStrDeserializer<'a, 'de, E> {
+    value: SometimesBorrowedStr<'a, 'de>,
     error: PhantomData<E>,
 }
 
-impl<'a, 'de, E> BorrowedCowStrDeserializer<'a, 'de, E> {
-    pub(crate) fn new(value: &'a Cow<'de, str>) -> Self {
-        BorrowedCowStrDeserializer {
-            value,
+impl<'a, 'de, E> SometimesBorrowedStrDeserializer<'a, 'de, E> {
+    pub(crate) fn transient(value: &'a str) -> Self {
+        SometimesBorrowedStrDeserializer {
+            value: SometimesBorrowedStr::Transient(value),
+            error: PhantomData,
+        }
+    }
+
+    pub(crate) fn borrowed(value: &'de str) -> Self {
+        SometimesBorrowedStrDeserializer {
+            value: SometimesBorrowedStr::Borrowed(value),
             error: PhantomData,
         }
     }
 }
 
-impl<'a, 'de, E> Deserializer<'de> for BorrowedCowStrDeserializer<'a, 'de, E>
+impl<'a, 'de, E> Deserializer<'de> for SometimesBorrowedStrDeserializer<'a, 'de, E>
 where
     E: serde::de::Error,
 {
@@ -462,8 +474,8 @@ where
         V: Visitor<'de>,
     {
         match self.value {
-            Cow::Borrowed(string) => visitor.visit_borrowed_str(string),
-            Cow::Owned(string) => visitor.visit_str(string),
+            SometimesBorrowedStr::Transient(string) => visitor.visit_str(string),
+            SometimesBorrowedStr::Borrowed(string) => visitor.visit_borrowed_str(string),
         }
     }
 
@@ -495,7 +507,7 @@ where
     }
 }
 
-impl<'a, 'de, E> EnumAccess<'de> for BorrowedCowStrDeserializer<'a, 'de, E>
+impl<'a, 'de, E> EnumAccess<'de> for SometimesBorrowedStrDeserializer<'a, 'de, E>
 where
     E: serde::de::Error,
 {
