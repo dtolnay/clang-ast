@@ -1629,6 +1629,8 @@ pub struct MaterializeTemporaryExpr {
 #[non_exhaustive]
 pub struct MaxFieldAlignmentAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub implicit: bool,
 }
 
 #[derive(Deserialize, Debug)]
