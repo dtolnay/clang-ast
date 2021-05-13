@@ -87,6 +87,7 @@ pub enum Clang {
     ConstantExpr(ConstantExpr),
     ConstructorUsingShadowDecl(ConstructorUsingShadowDecl),
     ContinueStmt(ContinueStmt),
+    DLLImportAttr(DLLImportAttr),
     DeclRefExpr(DeclRefExpr),
     DeclStmt(DeclStmt),
     DecltypeType(DecltypeType),
@@ -1109,6 +1110,13 @@ pub struct ConstructorUsingShadowDecl {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct ContinueStmt {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct DLLImportAttr {
     pub range: SourceRange,
 }
 

@@ -126,6 +126,7 @@ kind! {
     ConstantExpr,
     ConstructorUsingShadowDecl,
     ContinueStmt,
+    DLLImportAttr,
     DeclRefExpr,
     DeclStmt,
     DecltypeType,
