@@ -233,6 +233,8 @@ pub struct AlignedAttr {
 #[non_exhaustive]
 pub struct AllocAlignAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
