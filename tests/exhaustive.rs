@@ -96,6 +96,7 @@ pub enum Clang {
     DoStmt(DoStmt),
     ElaboratedType(ElaboratedType),
     EmptyDecl(EmptyDecl),
+    EnableIfAttr(EnableIfAttr),
     EnumConstantDecl(EnumConstantDecl),
     EnumDecl(EnumDecl),
     EnumType(EnumType),
@@ -1199,6 +1200,11 @@ pub struct EmptyDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct EnableIfAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

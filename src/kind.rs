@@ -135,6 +135,7 @@ kind! {
     DoStmt,
     ElaboratedType,
     EmptyDecl,
+    EnableIfAttr,
     EnumConstantDecl,
     EnumDecl,
     EnumType,
