@@ -1619,7 +1619,9 @@ pub struct NamespaceDecl {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct NoSanitizeAttr {}
+pub struct NoSanitizeAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
