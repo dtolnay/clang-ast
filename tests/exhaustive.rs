@@ -438,6 +438,8 @@ pub struct CXXConstructorDecl {
     pub explicitly_deleted: bool,
     #[serde(default)]
     pub constexpr: bool,
+    #[serde(default)]
+    pub variadic: bool,
     #[serde(rename = "explicitlyDefaulted", default)]
     pub explicitly_defaulted: ExplicitlyDefaulted,
 }
