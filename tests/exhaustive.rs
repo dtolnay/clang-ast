@@ -126,6 +126,7 @@ pub enum Clang {
     ModeAttr(ModeAttr),
     NamespaceDecl(NamespaceDecl),
     NoThrowAttr(NoThrowAttr),
+    NoUniqueAddressAttr(NoUniqueAddressAttr),
     NonNullAttr(NonNullAttr),
     NonTypeTemplateParmDecl(NonTypeTemplateParmDecl),
     NullStmt(NullStmt),
@@ -1589,6 +1590,13 @@ pub struct NoThrowAttr {
     pub range: SourceRange,
     #[serde(default)]
     pub implicit: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct NoUniqueAddressAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]

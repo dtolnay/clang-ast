@@ -165,6 +165,7 @@ kind! {
     ModeAttr,
     NamespaceDecl,
     NoThrowAttr,
+    NoUniqueAddressAttr,
     NonNullAttr,
     NonTypeTemplateParmDecl,
     NullStmt,
