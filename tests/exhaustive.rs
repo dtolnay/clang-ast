@@ -484,6 +484,7 @@ pub enum CXXCtorInitializer {
 #[non_exhaustive]
 pub struct CXXDeductionGuideDecl {
     pub loc: SourceLocation,
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
