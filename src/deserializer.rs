@@ -587,7 +587,7 @@ where
 #[derive(Debug)]
 enum FieldOfKindError<E> {
     UnknownField {
-        field: String,
+        field: Box<str>,
         expected: &'static [&'static str],
     },
     MissingField {
@@ -637,7 +637,7 @@ where
 {
     fn unknown_field(field: &str, expected: &'static [&'static str]) -> Self {
         FieldOfKindError::UnknownField {
-            field: field.to_owned(),
+            field: Box::from(field),
             expected,
         }
     }
