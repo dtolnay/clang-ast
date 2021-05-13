@@ -99,6 +99,7 @@ pub enum Clang {
     DependentTemplateSpecializationType(DependentTemplateSpecializationType),
     DeprecatedAttr(DeprecatedAttr),
     DiagnoseIfAttr(DiagnoseIfAttr),
+    DisableTailCallsAttr(DisableTailCallsAttr),
     DoStmt(DoStmt),
     ElaboratedType(ElaboratedType),
     EmptyDecl(EmptyDecl),
@@ -1230,6 +1231,13 @@ pub struct DeprecatedAttr {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct DiagnoseIfAttr {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct DisableTailCallsAttr {
     pub range: SourceRange,
 }
 

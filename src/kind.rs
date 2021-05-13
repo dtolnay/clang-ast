@@ -138,6 +138,7 @@ kind! {
     DependentTemplateSpecializationType,
     DeprecatedAttr,
     DiagnoseIfAttr,
+    DisableTailCallsAttr,
     DoStmt,
     ElaboratedType,
     EmptyDecl,
