@@ -2211,6 +2211,8 @@ pub struct TypeTraitExpr {
 #[non_exhaustive]
 pub struct TypeVisibilityAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
