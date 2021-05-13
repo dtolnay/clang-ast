@@ -323,7 +323,9 @@ pub struct AttributedStmt {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct AttributedType {}
+pub struct AttributedType {
+    pub r#type: Type,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
