@@ -117,6 +117,7 @@ pub enum Clang {
     InitListExpr(InitListExpr),
     InjectedClassNameType(InjectedClassNameType),
     IntegerLiteral(IntegerLiteral),
+    InternalLinkageAttr(InternalLinkageAttr),
     LValueReferenceType(LValueReferenceType),
     LambdaExpr(LambdaExpr),
     LinkageSpecDecl(LinkageSpecDecl),
@@ -1481,6 +1482,11 @@ pub struct IntegerLiteral {
     pub value_category: ValueCategory,
     pub value: Box<str>,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct InternalLinkageAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

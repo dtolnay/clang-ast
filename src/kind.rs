@@ -156,6 +156,7 @@ kind! {
     InitListExpr,
     InjectedClassNameType,
     IntegerLiteral,
+    InternalLinkageAttr,
     LValueReferenceType,
     LambdaExpr,
     LinkageSpecDecl,
