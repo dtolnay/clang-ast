@@ -115,6 +115,7 @@ kind! {
     ClassTemplateDecl,
     ClassTemplatePartialSpecializationDecl,
     ClassTemplateSpecializationDecl,
+    ColdAttr,
     ComplexType,
     CompoundAssignOperator,
     CompoundStmt,

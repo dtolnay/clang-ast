@@ -76,6 +76,7 @@ pub enum Clang {
     ClassTemplateDecl(ClassTemplateDecl),
     ClassTemplatePartialSpecializationDecl(ClassTemplatePartialSpecializationDecl),
     ClassTemplateSpecializationDecl(ClassTemplateSpecializationDecl),
+    ColdAttr(ColdAttr),
     ComplexType(ComplexType),
     CompoundAssignOperator(CompoundAssignOperator),
     CompoundStmt(CompoundStmt),
@@ -1001,6 +1002,11 @@ pub struct ClassTemplateSpecializationDecl {
     #[serde(default)]
     pub bases: Vec<CXXBaseSpecifier>,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ColdAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
