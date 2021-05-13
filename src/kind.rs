@@ -4,7 +4,6 @@ use serde::de::{
 };
 use serde::ser::{Serialize, Serializer};
 use serde::{forward_to_deserialize_any, Deserialize};
-use std::borrow::Cow;
 use std::fmt::{self, Debug, Display};
 use std::marker::PhantomData;
 use std::str::FromStr;
@@ -308,14 +307,16 @@ impl std::error::Error for ParseKindError {}
 
 pub(crate) enum AnyKind<'de> {
     Kind(Kind),
-    Other(Cow<'de, str>),
+    Borrowed(&'de str),
+    Owned(String),
 }
 
 impl<'de> AnyKind<'de> {
     pub(crate) fn as_str(&self) -> &str {
         match self {
             AnyKind::Kind(kind) => kind.as_str(),
-            AnyKind::Other(kind) => kind.as_ref(),
+            AnyKind::Borrowed(kind) => kind,
+            AnyKind::Owned(kind) => kind,
         }
     }
 }
@@ -354,7 +355,7 @@ impl<'de> Visitor<'de> for AnyKindVisitor<'de> {
     {
         match Kind::deserialize(kind.into_deserializer()) {
             Ok(kind) => Ok(AnyKind::Kind(kind)),
-            Err(UnknownVariant) => Ok(AnyKind::Other(Cow::Owned(kind.to_owned()))),
+            Err(UnknownVariant) => Ok(AnyKind::Owned(kind.to_owned())),
         }
     }
 
@@ -364,7 +365,7 @@ impl<'de> Visitor<'de> for AnyKindVisitor<'de> {
     {
         match Kind::deserialize(kind.into_deserializer()) {
             Ok(kind) => Ok(AnyKind::Kind(kind)),
-            Err(UnknownVariant) => Ok(AnyKind::Other(Cow::Borrowed(kind))),
+            Err(UnknownVariant) => Ok(AnyKind::Borrowed(kind)),
         }
     }
 
@@ -374,7 +375,7 @@ impl<'de> Visitor<'de> for AnyKindVisitor<'de> {
     {
         match Kind::deserialize(kind.as_str().into_deserializer()) {
             Ok(kind) => Ok(AnyKind::Kind(kind)),
-            Err(UnknownVariant) => Ok(AnyKind::Other(Cow::Owned(kind))),
+            Err(UnknownVariant) => Ok(AnyKind::Owned(kind)),
         }
     }
 }
