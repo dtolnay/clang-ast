@@ -167,6 +167,7 @@ pub enum Clang {
     TypeAliasTemplateDecl(TypeAliasTemplateDecl),
     TypeOfExprType(TypeOfExprType),
     TypeTraitExpr(TypeTraitExpr),
+    TypeVisibilityAttr(TypeVisibilityAttr),
     TypedefDecl(TypedefDecl),
     TypedefType(TypedefType),
     UnaryExprOrTypeTraitExpr(UnaryExprOrTypeTraitExpr),
@@ -2059,6 +2060,13 @@ pub struct TypeTraitExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct TypeVisibilityAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]

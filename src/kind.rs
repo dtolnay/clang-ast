@@ -206,6 +206,7 @@ kind! {
     TypeAliasTemplateDecl,
     TypeOfExprType,
     TypeTraitExpr,
+    TypeVisibilityAttr,
     TypedefDecl,
     TypedefType,
     UnaryExprOrTypeTraitExpr,
