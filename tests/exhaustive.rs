@@ -1438,7 +1438,9 @@ pub struct GCCAsmStmt {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct GNUInlineAttr {}
+pub struct GNUInlineAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
