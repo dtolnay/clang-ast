@@ -143,6 +143,7 @@ kind! {
     EnumDecl,
     EnumType,
     ExprWithCleanups,
+    FallThroughAttr,
     FieldDecl,
     FinalAttr,
     FloatingLiteral,

@@ -104,6 +104,7 @@ pub enum Clang {
     EnumDecl(EnumDecl),
     EnumType(EnumType),
     ExprWithCleanups(ExprWithCleanups),
+    FallThroughAttr(FallThroughAttr),
     FieldDecl(FieldDecl),
     FinalAttr(FinalAttr),
     FloatingLiteral(FloatingLiteral),
@@ -1285,6 +1286,13 @@ pub struct ExprWithCleanups {
     pub value_category: ValueCategory,
     #[serde(rename = "cleanupsHaveSideEffects", default)]
     pub cleanups_have_side_effects: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct FallThroughAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
