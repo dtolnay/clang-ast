@@ -2277,6 +2277,8 @@ pub struct VarTemplateSpecializationDecl {
     #[serde(rename = "mangledName")]
     pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
+    #[serde(default)]
+    pub inline: bool,
     pub init: InitStyle,
 }
 
