@@ -1006,7 +1006,9 @@ pub struct ClassTemplateSpecializationDecl {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct ColdAttr {}
+pub struct ColdAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
