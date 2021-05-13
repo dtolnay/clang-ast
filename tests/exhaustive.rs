@@ -1490,6 +1490,8 @@ pub struct IntegerLiteral {
 #[non_exhaustive]
 pub struct InternalLinkageAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
