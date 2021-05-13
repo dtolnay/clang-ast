@@ -2226,9 +2226,15 @@ pub struct VarDecl {
     #[serde(default)]
     pub nrvo: bool,
     #[serde(default)]
+    pub inline: bool,
+    #[serde(default)]
     pub constexpr: bool,
+    #[serde(rename = "modulePrivate", default)]
+    pub module_private: bool,
     #[serde(default)]
     pub init: InitStyle,
+    #[serde(rename = "isParameterPack", default)]
+    pub is_parameter_pack: bool,
 }
 
 #[derive(Deserialize, Debug)]
