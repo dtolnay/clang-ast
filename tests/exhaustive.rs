@@ -496,6 +496,7 @@ pub struct CXXDeductionGuideDecl {
     #[serde(rename = "isImplicit", default)]
     pub is_implicit: bool,
     pub name: Box<str>,
+    pub r#type: Type,
 }
 
 #[derive(Deserialize, Debug)]
