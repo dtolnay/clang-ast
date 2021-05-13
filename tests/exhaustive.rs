@@ -123,6 +123,7 @@ pub enum Clang {
     GCCAsmStmt(GCCAsmStmt),
     GNUInlineAttr(GNUInlineAttr),
     GNUNullExpr(GNUNullExpr),
+    GotoStmt(GotoStmt),
     IfStmt(IfStmt),
     ImplicitCastExpr(ImplicitCastExpr),
     ImplicitValueInitExpr(ImplicitValueInitExpr),
@@ -1526,6 +1527,14 @@ pub struct GNUNullExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct GotoStmt {
+    #[serde(rename = "targetLabelDeclId")]
+    pub target_label_decl_id: Id,
 }
 
 #[derive(Deserialize, Debug)]

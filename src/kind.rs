@@ -162,6 +162,7 @@ kind! {
     GCCAsmStmt,
     GNUInlineAttr,
     GNUNullExpr,
+    GotoStmt,
     IfStmt,
     ImplicitCastExpr,
     ImplicitValueInitExpr,
