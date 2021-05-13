@@ -66,6 +66,7 @@ kind! {
     AsmLabelAttr,
     AtomicExpr,
     AttributedStmt,
+    AttributedType,
     AvailabilityAttr,
     BinaryOperator,
     BreakStmt,

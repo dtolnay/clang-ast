@@ -27,6 +27,7 @@ pub enum Clang {
     AsmLabelAttr(AsmLabelAttr),
     AtomicExpr(AtomicExpr),
     AttributedStmt(AttributedStmt),
+    AttributedType(AttributedType),
     AvailabilityAttr(AvailabilityAttr),
     BinaryOperator(BinaryOperator),
     BreakStmt(BreakStmt),
@@ -318,6 +319,11 @@ pub struct AtomicExpr {
 pub struct AttributedStmt {
     pub range: SourceRange,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct AttributedType {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
