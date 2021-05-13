@@ -2287,6 +2287,8 @@ pub struct VarTemplateSpecializationDecl {
     pub r#type: Type,
     #[serde(default)]
     pub inline: bool,
+    #[serde(default)]
+    pub constexpr: bool,
     pub init: InitStyle,
 }
 
