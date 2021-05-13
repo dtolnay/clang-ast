@@ -308,7 +308,7 @@ impl std::error::Error for ParseKindError {}
 pub(crate) enum AnyKind<'de> {
     Kind(Kind),
     Borrowed(&'de str),
-    Owned(String),
+    Owned(Box<str>),
 }
 
 impl<'de> AnyKind<'de> {
@@ -355,7 +355,7 @@ impl<'de> Visitor<'de> for AnyKindVisitor<'de> {
     {
         match Kind::deserialize(kind.into_deserializer()) {
             Ok(kind) => Ok(AnyKind::Kind(kind)),
-            Err(UnknownVariant) => Ok(AnyKind::Owned(kind.to_owned())),
+            Err(UnknownVariant) => Ok(AnyKind::Owned(Box::from(kind))),
         }
     }
 
@@ -375,7 +375,7 @@ impl<'de> Visitor<'de> for AnyKindVisitor<'de> {
     {
         match Kind::deserialize(kind.as_str().into_deserializer()) {
             Ok(kind) => Ok(AnyKind::Kind(kind)),
-            Err(UnknownVariant) => Ok(AnyKind::Owned(kind)),
+            Err(UnknownVariant) => Ok(AnyKind::Owned(kind.into_boxed_str())),
         }
     }
 }
