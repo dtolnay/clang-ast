@@ -2254,6 +2254,8 @@ pub struct VarTemplateSpecializationDecl {
     pub range: SourceRange,
     #[serde(rename = "isUsed", default)]
     pub is_used: bool,
+    #[serde(rename = "isReferenced", default)]
+    pub is_referenced: bool,
     pub name: Box<str>,
     #[serde(rename = "mangledName")]
     pub mangled_name: Option<Box<str>>,
