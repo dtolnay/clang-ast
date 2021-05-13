@@ -39,6 +39,7 @@ pub enum Clang {
     CXXConstructorDecl(CXXConstructorDecl),
     CXXConversionDecl(CXXConversionDecl),
     CXXCtorInitializer(CXXCtorInitializer),
+    CXXDeductionGuideDecl(CXXDeductionGuideDecl),
     CXXDefaultArgExpr(CXXDefaultArgExpr),
     CXXDefaultInitExpr(CXXDefaultInitExpr),
     CXXDeleteExpr(CXXDeleteExpr),
@@ -474,6 +475,11 @@ pub enum CXXCtorInitializer {
     #[serde(rename = "delegatingInit")]
     DelegatingInitializer(Type),
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct CXXDeductionGuideDecl {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

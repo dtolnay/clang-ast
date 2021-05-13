@@ -78,6 +78,7 @@ kind! {
     CXXConstructorDecl,
     CXXConversionDecl,
     CXXCtorInitializer,
+    CXXDeductionGuideDecl,
     CXXDefaultArgExpr,
     CXXDefaultInitExpr,
     CXXDeleteExpr,
