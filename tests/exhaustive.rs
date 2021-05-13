@@ -113,6 +113,7 @@ pub enum Clang {
     FunctionProtoType(FunctionProtoType),
     FunctionTemplateDecl(FunctionTemplateDecl),
     GCCAsmStmt(GCCAsmStmt),
+    GNUInlineAttr(GNUInlineAttr),
     GNUNullExpr(GNUNullExpr),
     IfStmt(IfStmt),
     ImplicitCastExpr(ImplicitCastExpr),
@@ -1425,6 +1426,11 @@ pub struct FunctionTemplateDecl {
 pub struct GCCAsmStmt {
     pub range: SourceRange,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct GNUInlineAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

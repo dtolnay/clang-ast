@@ -152,6 +152,7 @@ kind! {
     FunctionProtoType,
     FunctionTemplateDecl,
     GCCAsmStmt,
+    GNUInlineAttr,
     GNUNullExpr,
     IfStmt,
     ImplicitCastExpr,
