@@ -34,6 +34,8 @@ fn main() {
             match Command::new(clang)
                 .arg("-Xclang")
                 .arg("-ast-dump=json")
+                .arg("-Xclang")
+                .arg("-std=c++17")
                 .arg("-fsyntax-only")
                 .arg(&input)
                 .stdout(output)
