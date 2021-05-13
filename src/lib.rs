@@ -488,7 +488,7 @@ where
             match map.next_key()? {
                 None => {
                     let kind = AnyKind::Kind(Kind::null);
-                    let deserializer = NodeDeserializer::new(kind, &mut inner, map);
+                    let deserializer = NodeDeserializer::new(&kind, &mut inner, map);
                     break T::deserialize(deserializer)?;
                 }
                 Some(FirstField::Id) => {
@@ -499,7 +499,7 @@ where
                 }
                 Some(FirstField::Kind) => {
                     let kind: AnyKind = map.next_value()?;
-                    let deserializer = NodeDeserializer::new(kind, &mut inner, map);
+                    let deserializer = NodeDeserializer::new(&kind, &mut inner, map);
                     break T::deserialize(deserializer)?;
                 }
                 Some(FirstField::Inner) => {

@@ -12,14 +12,14 @@ use std::fmt::{self, Display};
 use std::marker::PhantomData;
 
 pub(crate) struct NodeDeserializer<'de, 'a, T, M> {
-    kind: AnyKind<'de>,
+    kind: &'a AnyKind<'de>,
     inner: &'a mut Vec<Node<T>>,
     map: M,
     has_kind: bool,
 }
 
 impl<'de, 'a, T, M> NodeDeserializer<'de, 'a, T, M> {
-    pub(crate) fn new(kind: AnyKind<'de>, inner: &'a mut Vec<Node<T>>, map: M) -> Self {
+    pub(crate) fn new(kind: &'a AnyKind<'de>, inner: &'a mut Vec<Node<T>>, map: M) -> Self {
         let has_kind = match kind {
             AnyKind::Kind(Kind::null) => false,
             _ => true,
@@ -116,7 +116,7 @@ where
         V: DeserializeSeed<'de>,
     {
         let cow;
-        let borrowed_kind = match &self.kind {
+        let borrowed_kind = match self.kind {
             AnyKind::Kind(kind) => {
                 cow = Cow::Borrowed(kind.as_str());
                 &cow
@@ -189,7 +189,7 @@ where
         } else {
             loop {
                 seed = match self.map.next_key_seed(NodeFieldSeed {
-                    kind: &self.kind,
+                    kind: self.kind,
                     seed,
                 })? {
                     None => return Ok(None),
@@ -209,7 +209,7 @@ where
     {
         if self.has_kind {
             let cow;
-            let borrowed_kind = match &self.kind {
+            let borrowed_kind = match self.kind {
                 AnyKind::Kind(kind) => {
                     cow = Cow::Borrowed(kind.as_str());
                     &cow
@@ -233,7 +233,7 @@ where
 {
     fn ignore(&mut self) -> Result<(), M::Error> {
         while let Some(node_field) = self.map.next_key_seed(NodeFieldSeed {
-            kind: &self.kind,
+            kind: self.kind,
             seed: PhantomData::<IgnoredAny>,
         })? {
             match node_field {
@@ -384,7 +384,7 @@ where
     {
         loop {
             seed = match self.node.map.next_key_seed(NodeFieldSeed {
-                kind: &self.node.kind,
+                kind: self.node.kind,
                 seed,
             })? {
                 None => return Ok(None),
@@ -424,7 +424,7 @@ where
     {
         loop {
             seed = match self.node.map.next_key_seed(NodeFieldSeed {
-                kind: &self.node.kind,
+                kind: self.node.kind,
                 seed,
             })? {
                 None => {
@@ -460,7 +460,7 @@ where
         let value = self.node.map.next_value_seed(seed)?;
         loop {
             match self.node.map.next_key_seed(NodeFieldSeed {
-                kind: &self.node.kind,
+                kind: self.node.kind,
                 seed: PhantomData::<UnexpectedField>,
             })? {
                 None => return Ok(value),
