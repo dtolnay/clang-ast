@@ -2351,7 +2351,9 @@ pub struct VarDecl {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct VarTemplateDecl {
+    #[serde(default)]
     pub loc: SourceLocation,
+    #[serde(default)]
     pub range: SourceRange,
     pub name: Box<str>,
 }
