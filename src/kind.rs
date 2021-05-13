@@ -168,6 +168,7 @@ kind! {
     LambdaExpr,
     LinkageSpecDecl,
     MaterializeTemporaryExpr,
+    MaxFieldAlignmentAttr,
     MayAliasAttr,
     MemberExpr,
     MemberPointerType,

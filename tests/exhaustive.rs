@@ -129,6 +129,7 @@ pub enum Clang {
     LambdaExpr(LambdaExpr),
     LinkageSpecDecl(LinkageSpecDecl),
     MaterializeTemporaryExpr(MaterializeTemporaryExpr),
+    MaxFieldAlignmentAttr(MaxFieldAlignmentAttr),
     MayAliasAttr(MayAliasAttr),
     MemberExpr(MemberExpr),
     MemberPointerType(MemberPointerType),
@@ -1612,6 +1613,13 @@ pub struct MaterializeTemporaryExpr {
     pub storage_duration: StorageDuration,
     #[serde(rename = "boundToLValueRef", default)]
     pub bound_to_lvalue_ref: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct MaxFieldAlignmentAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
