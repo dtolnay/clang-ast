@@ -179,6 +179,7 @@ kind! {
     MemberPointerType,
     ModeAttr,
     NamespaceDecl,
+    NoDebugAttr,
     NoEscapeAttr,
     NoSanitizeAttr,
     NoThrowAttr,

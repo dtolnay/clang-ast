@@ -140,6 +140,7 @@ pub enum Clang {
     MemberPointerType(MemberPointerType),
     ModeAttr(ModeAttr),
     NamespaceDecl(NamespaceDecl),
+    NoDebugAttr(NoDebugAttr),
     NoEscapeAttr(NoEscapeAttr),
     NoSanitizeAttr(NoSanitizeAttr),
     NoThrowAttr(NoThrowAttr),
@@ -1727,6 +1728,13 @@ pub struct NamespaceDecl {
     pub is_inline: bool,
     #[serde(rename = "originalNamespace")]
     pub original_namespace: Option<Decl>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct NoDebugAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
