@@ -312,7 +312,9 @@ pub struct AtomicExpr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct AttributedStmt {}
+pub struct AttributedStmt {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
