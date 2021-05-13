@@ -2416,6 +2416,8 @@ pub struct VarTemplatePartialSpecializationDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
     pub name: Box<str>,
+    #[serde(rename = "mangledName")]
+    pub mangled_name: Option<Box<str>>,
 }
 
 #[derive(Deserialize, Debug)]
