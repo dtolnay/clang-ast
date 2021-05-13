@@ -2376,7 +2376,9 @@ pub struct VarTemplateDecl {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct VarTemplatePartialSpecializationDecl {}
+pub struct VarTemplatePartialSpecializationDecl {
+    pub loc: SourceLocation,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
