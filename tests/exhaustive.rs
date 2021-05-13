@@ -2413,6 +2413,7 @@ pub struct VarTemplateDecl {
 pub struct VarTemplatePartialSpecializationDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
