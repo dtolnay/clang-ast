@@ -385,6 +385,8 @@ pub struct CStyleCastExpr {
 #[non_exhaustive]
 pub struct CXX11NoReturnAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
