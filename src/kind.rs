@@ -84,6 +84,7 @@ kind! {
     CXXDependentScopeMemberExpr,
     CXXDestructorDecl,
     CXXDynamicCastExpr,
+    CXXFoldExpr,
     CXXForRangeStmt,
     CXXFunctionalCastExpr,
     CXXInheritedCtorInitExpr,

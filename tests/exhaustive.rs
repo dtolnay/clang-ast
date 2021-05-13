@@ -45,6 +45,7 @@ pub enum Clang {
     CXXDependentScopeMemberExpr(CXXDependentScopeMemberExpr),
     CXXDestructorDecl(CXXDestructorDecl),
     CXXDynamicCastExpr(CXXDynamicCastExpr),
+    CXXFoldExpr(CXXFoldExpr),
     CXXForRangeStmt(CXXForRangeStmt),
     CXXFunctionalCastExpr(CXXFunctionalCastExpr),
     CXXInheritedCtorInitExpr(CXXInheritedCtorInitExpr),
@@ -570,6 +571,11 @@ pub struct CXXDynamicCastExpr {
     #[serde(rename = "castKind")]
     pub cast_kind: CastKind,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct CXXFoldExpr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
