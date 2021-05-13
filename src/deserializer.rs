@@ -163,7 +163,11 @@ where
         V: Visitor<'de>,
     {
         let _ = fields;
-        visitor.visit_map(NodeFieldsDeserializer { node: self })
+        let kind = self.kind;
+        match visitor.visit_map(NodeFieldsDeserializer { node: self }) {
+            Ok(value) => Ok(value),
+            Err(error) => Err(error.with_kind(kind)),
+        }
     }
 }
 
@@ -316,7 +320,11 @@ where
     where
         V: Visitor<'de>,
     {
-        visitor.visit_map(self)
+        let kind = self.node.kind;
+        match visitor.visit_map(self) {
+            Ok(value) => Ok(value),
+            Err(error) => Err(error.with_kind(kind)),
+        }
     }
 
     fn deserialize_enum<V>(
@@ -367,20 +375,29 @@ where
     T: Deserialize<'de>,
     M: MapAccess<'de>,
 {
-    type Error = M::Error;
+    type Error = FieldOfKindError<M::Error>;
 
     fn next_key_seed<K>(&mut self, mut seed: K) -> Result<Option<K::Value>, Self::Error>
     where
         K: DeserializeSeed<'de>,
     {
         loop {
-            seed = match self.node.map.next_key_seed(NodeFieldSeed {
-                kind: self.node.kind,
-                seed,
-            })? {
+            seed = match self
+                .node
+                .map
+                .next_key_seed(NodeFieldSeed {
+                    kind: self.node.kind,
+                    seed,
+                })
+                .map_err(FieldOfKindError::Other)?
+            {
                 None => return Ok(None),
                 Some(NodeField::Inner(seed)) => {
-                    *self.node.inner = self.node.map.next_value()?;
+                    *self.node.inner = self
+                        .node
+                        .map
+                        .next_value()
+                        .map_err(FieldOfKindError::Other)?;
                     seed
                 }
                 Some(NodeField::Delegate(value)) => return Ok(Some(value)),
@@ -392,7 +409,10 @@ where
     where
         V: DeserializeSeed<'de>,
     {
-        self.node.map.next_value_seed(seed)
+        self.node
+            .map
+            .next_value_seed(seed)
+            .map_err(FieldOfKindError::Other)
     }
 }
 
@@ -570,6 +590,9 @@ enum FieldOfKindError<E> {
         field: String,
         expected: &'static [&'static str],
     },
+    MissingField {
+        field: &'static str,
+    },
     Other(E),
 }
 
@@ -596,6 +619,13 @@ where
                     ))
                 }
             }
+            FieldOfKindError::MissingField { field } => {
+                if let AnyKind::Kind(Kind::null) = kind {
+                    E::missing_field(field)
+                } else {
+                    E::custom(format_args!("missing field `{}` in {}", field, kind))
+                }
+            }
             FieldOfKindError::Other(error) => error,
         }
     }
@@ -610,6 +640,10 @@ where
             field: field.to_owned(),
             expected,
         }
+    }
+
+    fn missing_field(field: &'static str) -> Self {
+        FieldOfKindError::MissingField { field }
     }
 
     fn custom<T>(msg: T) -> Self
@@ -635,10 +669,6 @@ where
         FieldOfKindError::Other(E::unknown_variant(variant, expected))
     }
 
-    fn missing_field(field: &'static str) -> Self {
-        FieldOfKindError::Other(E::missing_field(field))
-    }
-
     fn duplicate_field(field: &'static str) -> Self {
         FieldOfKindError::Other(E::duplicate_field(field))
     }
@@ -650,7 +680,7 @@ where
 {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
-            FieldOfKindError::UnknownField { .. } => None,
+            FieldOfKindError::UnknownField { .. } | FieldOfKindError::MissingField { .. } => None,
             FieldOfKindError::Other(error) => error.source(),
         }
     }
@@ -673,6 +703,9 @@ where
                         OneOf { names: expected },
                     )
                 }
+            }
+            FieldOfKindError::MissingField { field } => {
+                write!(formatter, "missing field `{}`", field)
             }
             FieldOfKindError::Other(error) => Display::fmt(error, formatter),
         }
