@@ -150,6 +150,7 @@ kind! {
     FunctionDecl,
     FunctionProtoType,
     FunctionTemplateDecl,
+    GCCAsmStmt,
     GNUNullExpr,
     IfStmt,
     ImplicitCastExpr,

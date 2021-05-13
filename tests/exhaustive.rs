@@ -111,6 +111,7 @@ pub enum Clang {
     FunctionDecl(FunctionDecl),
     FunctionProtoType(FunctionProtoType),
     FunctionTemplateDecl(FunctionTemplateDecl),
+    GCCAsmStmt(GCCAsmStmt),
     GNUNullExpr(GNUNullExpr),
     IfStmt(IfStmt),
     ImplicitCastExpr(ImplicitCastExpr),
@@ -1405,6 +1406,11 @@ pub struct FunctionTemplateDecl {
     pub previous_decl: Option<Id>,
     pub name: Box<str>,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct GCCAsmStmt {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
