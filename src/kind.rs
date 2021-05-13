@@ -137,6 +137,7 @@ kind! {
     DependentSizedArrayType,
     DependentTemplateSpecializationType,
     DeprecatedAttr,
+    DiagnoseIfAttr,
     DoStmt,
     ElaboratedType,
     EmptyDecl,
