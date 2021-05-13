@@ -6,7 +6,6 @@ use serde::de::{
     Unexpected, VariantAccess, Visitor,
 };
 use serde::forward_to_deserialize_any;
-use std::borrow::Cow;
 use std::error::Error as StdError;
 use std::fmt::{self, Display};
 use std::marker::PhantomData;
@@ -117,8 +116,8 @@ where
     {
         let deserializer = match &self.kind {
             AnyKind::Kind(kind) => SometimesBorrowedStrDeserializer::borrowed(kind.as_str()),
-            AnyKind::Other(Cow::Borrowed(kind)) => SometimesBorrowedStrDeserializer::borrowed(kind),
-            AnyKind::Other(Cow::Owned(kind)) => SometimesBorrowedStrDeserializer::transient(kind),
+            AnyKind::Borrowed(kind) => SometimesBorrowedStrDeserializer::borrowed(kind),
+            AnyKind::Owned(kind) => SometimesBorrowedStrDeserializer::transient(kind),
         };
         let value = seed.deserialize(deserializer)?;
         Ok((value, self))
@@ -206,12 +205,8 @@ where
         if self.has_kind {
             let deserializer = match &self.kind {
                 AnyKind::Kind(kind) => SometimesBorrowedStrDeserializer::borrowed(kind.as_str()),
-                AnyKind::Other(Cow::Borrowed(kind)) => {
-                    SometimesBorrowedStrDeserializer::borrowed(kind)
-                }
-                AnyKind::Other(Cow::Owned(kind)) => {
-                    SometimesBorrowedStrDeserializer::transient(kind)
-                }
+                AnyKind::Borrowed(kind) => SometimesBorrowedStrDeserializer::borrowed(kind),
+                AnyKind::Owned(kind) => SometimesBorrowedStrDeserializer::transient(kind),
             };
             let value = seed.deserialize(deserializer);
             self.has_kind = false;
