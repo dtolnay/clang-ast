@@ -354,6 +354,8 @@ pub struct BinaryOperator {
 #[non_exhaustive]
 pub struct BlockPointerType {
     pub r#type: Type,
+    #[serde(rename = "isDependent", default)]
+    pub is_dependent: bool,
 }
 
 #[derive(Deserialize, Debug)]
