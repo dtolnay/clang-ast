@@ -1486,7 +1486,9 @@ pub struct IntegerLiteral {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct InternalLinkageAttr {}
+pub struct InternalLinkageAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
