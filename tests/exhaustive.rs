@@ -2420,6 +2420,7 @@ pub struct VarTemplatePartialSpecializationDecl {
     pub name: Box<str>,
     #[serde(rename = "mangledName")]
     pub mangled_name: Option<Box<str>>,
+    pub r#type: Type,
 }
 
 #[derive(Deserialize, Debug)]
