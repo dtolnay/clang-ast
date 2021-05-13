@@ -30,6 +30,7 @@ pub enum Clang {
     AttributedType(AttributedType),
     AvailabilityAttr(AvailabilityAttr),
     BinaryOperator(BinaryOperator),
+    BlockPointerType(BlockPointerType),
     BreakStmt(BreakStmt),
     BuiltinTemplateDecl(BuiltinTemplateDecl),
     BuiltinType(BuiltinType),
@@ -346,6 +347,13 @@ pub struct BinaryOperator {
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
     pub opcode: BinaryOpcode,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct BlockPointerType {
+    pub r#type: Type,
 }
 
 #[derive(Deserialize, Debug)]

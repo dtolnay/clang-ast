@@ -69,6 +69,7 @@ kind! {
     AttributedType,
     AvailabilityAttr,
     BinaryOperator,
+    BlockPointerType,
     BreakStmt,
     BuiltinTemplateDecl,
     BuiltinType,
