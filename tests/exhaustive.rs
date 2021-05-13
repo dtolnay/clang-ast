@@ -195,6 +195,7 @@ pub enum Clang {
     UnaryTransformType(UnaryTransformType),
     UnresolvedLookupExpr(UnresolvedLookupExpr),
     UnresolvedMemberExpr(UnresolvedMemberExpr),
+    UnresolvedUsingTypenameDecl(UnresolvedUsingTypenameDecl),
     UnresolvedUsingValueDecl(UnresolvedUsingValueDecl),
     UnusedAttr(UnusedAttr),
     UsingDecl(UsingDecl),
@@ -2359,6 +2360,14 @@ pub struct UnresolvedMemberExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct UnresolvedUsingTypenameDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]

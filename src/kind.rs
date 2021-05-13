@@ -234,6 +234,7 @@ kind! {
     UnaryTransformType,
     UnresolvedLookupExpr,
     UnresolvedMemberExpr,
+    UnresolvedUsingTypenameDecl,
     UnresolvedUsingValueDecl,
     UnusedAttr,
     UsingDecl,
