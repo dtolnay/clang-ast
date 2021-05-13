@@ -2144,6 +2144,7 @@ pub struct UnresolvedUsingValueDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
     pub name: Box<str>,
+    pub r#type: Option<Type>,
 }
 
 #[derive(Deserialize, Debug)]
