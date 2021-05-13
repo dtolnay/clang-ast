@@ -1367,6 +1367,8 @@ pub struct FunctionTemplateDecl {
     pub loc: SourceLocation,
     #[serde(default)]
     pub range: SourceRange,
+    #[serde(rename = "isImplicit", default)]
+    pub is_implicit: bool,
     #[serde(rename = "parentDeclContextId")]
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
