@@ -188,6 +188,7 @@ kind! {
     MemberExpr,
     MemberPointerType,
     ModeAttr,
+    NamespaceAliasDecl,
     NamespaceDecl,
     NoDebugAttr,
     NoEscapeAttr,

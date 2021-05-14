@@ -149,6 +149,7 @@ pub enum Clang {
     MemberExpr(MemberExpr),
     MemberPointerType(MemberPointerType),
     ModeAttr(ModeAttr),
+    NamespaceAliasDecl(NamespaceAliasDecl),
     NamespaceDecl(NamespaceDecl),
     NoDebugAttr(NoDebugAttr),
     NoEscapeAttr(NoEscapeAttr),
@@ -1834,6 +1835,17 @@ pub struct MemberPointerType {
 #[non_exhaustive]
 pub struct ModeAttr {
     pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct NamespaceAliasDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub name: Box<str>,
+    #[serde(rename = "aliasedNamespace")]
+    pub aliased_namespace: Decl,
 }
 
 #[derive(Deserialize, Debug)]
