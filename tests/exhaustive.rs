@@ -1310,6 +1310,8 @@ pub struct DependentTemplateSpecializationType {
 #[non_exhaustive]
 pub struct DeprecatedAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
