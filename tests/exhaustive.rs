@@ -31,6 +31,7 @@ pub enum Clang {
     AutoType(AutoType),
     AvailabilityAttr(AvailabilityAttr),
     BinaryOperator(BinaryOperator),
+    BindingDecl(BindingDecl),
     BlockPointerType(BlockPointerType),
     BreakStmt(BreakStmt),
     BuiltinTemplateDecl(BuiltinTemplateDecl),
@@ -367,6 +368,17 @@ pub struct BinaryOperator {
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
     pub opcode: BinaryOpcode,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct BindingDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    #[serde(rename = "isReferenced", default)]
+    pub is_referenced: bool,
+    name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1232,6 +1244,8 @@ pub struct DecompositionDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
     pub r#type: Type,
+    #[serde(default)]
+    pub init: InitStyle,
 }
 
 #[derive(Deserialize, Debug)]

@@ -70,6 +70,7 @@ kind! {
     AutoType,
     AvailabilityAttr,
     BinaryOperator,
+    BindingDecl,
     BlockPointerType,
     BreakStmt,
     BuiltinTemplateDecl,
