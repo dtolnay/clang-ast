@@ -1,6 +1,6 @@
 [package]
 name = "clang-ast"
-version = "0.1.5" # remember to update html_root_url
+version = "0.1.6" # remember to update html_root_url
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
