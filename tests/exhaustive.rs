@@ -3141,7 +3141,7 @@ pub struct CXXBaseSpecifier {
 pub struct CXXRecordDefinitionData {
     #[serde(rename = "isGenericLambda", default)]
     pub is_generic_lambda: bool,
-    #[serde(rename = "isLamdba", default)]
+    #[serde(rename = "isLambda", default)]
     pub is_lambda: bool,
     #[serde(rename = "isEmpty", default)]
     pub is_empty: bool,
