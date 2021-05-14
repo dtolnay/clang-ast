@@ -519,6 +519,8 @@ pub struct CXXConversionDecl {
     pub is_implicit: bool,
     #[serde(rename = "isUsed", default)]
     pub is_used: bool,
+    #[serde(rename = "isReferenced", default)]
+    pub is_referenced: bool,
     #[serde(rename = "parentDeclContextId")]
     pub parent_decl_context_id: Option<Id>,
     #[serde(rename = "previousDecl")]
