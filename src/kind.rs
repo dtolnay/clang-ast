@@ -103,6 +103,7 @@ kind! {
     CXXPseudoDestructorExpr,
     CXXRecordDecl,
     CXXReinterpretCastExpr,
+    CXXRewrittenBinaryOperator,
     CXXScalarValueInitExpr,
     CXXStaticCastExpr,
     CXXTemporaryObjectExpr,

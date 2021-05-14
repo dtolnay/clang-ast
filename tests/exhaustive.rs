@@ -64,6 +64,7 @@ pub enum Clang {
     CXXPseudoDestructorExpr(CXXPseudoDestructorExpr),
     CXXRecordDecl(CXXRecordDecl),
     CXXReinterpretCastExpr(CXXReinterpretCastExpr),
+    CXXRewrittenBinaryOperator(CXXRewrittenBinaryOperator),
     CXXScalarValueInitExpr(CXXScalarValueInitExpr),
     CXXStaticCastExpr(CXXStaticCastExpr),
     CXXTemporaryObjectExpr(CXXTemporaryObjectExpr),
@@ -3161,6 +3162,16 @@ pub struct CXXRecordDefinitionData {
     #[serde(rename = "moveAssign")]
     pub move_assign: MoveAssignmentDefinitionData,
     pub dtor: DestructorDefinitionData,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct CXXRewrittenBinaryOperator {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]
