@@ -122,6 +122,7 @@ kind! {
     ComplexType,
     CompoundAssignOperator,
     CompoundStmt,
+    ConceptDecl,
     ConditionalOperator,
     ConstAttr,
     ConstantArrayType,

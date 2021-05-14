@@ -83,6 +83,7 @@ pub enum Clang {
     ComplexType(ComplexType),
     CompoundAssignOperator(CompoundAssignOperator),
     CompoundStmt(CompoundStmt),
+    ConceptDecl(ConceptDecl),
     ConditionalOperator(ConditionalOperator),
     ConstAttr(ConstAttr),
     ConstantArrayType(ConstantArrayType),
@@ -1085,6 +1086,15 @@ pub struct CompoundAssignOperator {
 #[non_exhaustive]
 pub struct CompoundStmt {
     pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ConceptDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
