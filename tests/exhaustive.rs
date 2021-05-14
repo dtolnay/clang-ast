@@ -2382,6 +2382,7 @@ pub struct UnresolvedUsingTypenameDecl {
     pub range: SourceRange,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
