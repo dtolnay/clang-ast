@@ -584,6 +584,8 @@ pub struct CXXDeductionGuideDecl {
     #[serde(rename = "isImplicit", default)]
     pub is_implicit: bool,
     pub name: Box<str>,
+    #[serde(rename = "mangledName")]
+    pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
 }
 
