@@ -208,6 +208,7 @@ pub enum Clang {
     VarTemplateSpecializationDecl(VarTemplateSpecializationDecl),
     VisibilityAttr(VisibilityAttr),
     WarnUnusedResultAttr(WarnUnusedResultAttr),
+    WeakImportAttr(WeakImportAttr),
     WeakRefAttr(WeakRefAttr),
     WhileStmt(WhileStmt),
     #[serde(rename = "null")]
@@ -2545,6 +2546,13 @@ pub struct VisibilityAttr {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct WarnUnusedResultAttr {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct WeakImportAttr {
     pub range: SourceRange,
 }
 

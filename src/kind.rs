@@ -247,6 +247,7 @@ kind! {
     VarTemplateSpecializationDecl,
     VisibilityAttr,
     WarnUnusedResultAttr,
+    WeakImportAttr,
     WeakRefAttr,
     WhileStmt,
 }
