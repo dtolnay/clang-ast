@@ -1220,6 +1220,8 @@ pub struct DecltypeType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
+    #[serde(rename = "containsUnexpandedPack", default)]
+    pub contains_unexpanded_pack: bool,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1311,6 +1313,8 @@ pub struct ElaboratedType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
+    #[serde(rename = "containsUnexpandedPack", default)]
+    pub contains_unexpanded_pack: bool,
     pub qualifier: Option<Box<str>>,
     #[serde(rename = "ownedTagDecl")]
     pub owned_tag_decl: Option<Decl>,
@@ -2170,6 +2174,8 @@ pub struct SubstTemplateTypeParmType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
+    #[serde(rename = "containsUnexpandedPack", default)]
+    pub contains_unexpanded_pack: bool,
 }
 
 #[derive(Deserialize, Debug)]
