@@ -1534,6 +1534,7 @@ pub struct GNUNullExpr {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct GotoStmt {
+    pub range: SourceRange,
     #[serde(rename = "targetLabelDeclId")]
     pub target_label_decl_id: Id,
 }
