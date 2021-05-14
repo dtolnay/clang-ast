@@ -170,6 +170,7 @@ pub enum Clang {
     QualType(QualType),
     RValueReferenceType(RValueReferenceType),
     RecordType(RecordType),
+    RequiresExpr(RequiresExpr),
     RestrictAttr(RestrictAttr),
     ReturnStmt(ReturnStmt),
     ReturnsNonNullAttr(ReturnsNonNullAttr),
@@ -2058,6 +2059,16 @@ pub struct RecordType {
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
     pub decl: Decl,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct RequiresExpr {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]

@@ -209,6 +209,7 @@ kind! {
     QualType,
     RValueReferenceType,
     RecordType,
+    RequiresExpr,
     RestrictAttr,
     ReturnStmt,
     ReturnsNonNullAttr,
