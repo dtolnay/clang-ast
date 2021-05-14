@@ -134,6 +134,7 @@ pub enum Clang {
     IntegerLiteral(IntegerLiteral),
     InternalLinkageAttr(InternalLinkageAttr),
     LValueReferenceType(LValueReferenceType),
+    LabelStmt(LabelStmt),
     LambdaExpr(LambdaExpr),
     LinkageSpecDecl(LinkageSpecDecl),
     MaterializeTemporaryExpr(MaterializeTemporaryExpr),
@@ -1658,6 +1659,16 @@ pub struct LValueReferenceType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct LabelStmt {
+    pub range: SourceRange,
+    pub name: Box<str>,
+    #[serde(rename = "declId")]
+    pub decl_id: Id,
 }
 
 #[derive(Deserialize, Debug)]

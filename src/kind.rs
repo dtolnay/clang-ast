@@ -173,6 +173,7 @@ kind! {
     IntegerLiteral,
     InternalLinkageAttr,
     LValueReferenceType,
+    LabelStmt,
     LambdaExpr,
     LinkageSpecDecl,
     MaterializeTemporaryExpr,
