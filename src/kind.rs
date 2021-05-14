@@ -136,6 +136,7 @@ kind! {
     DeclRefExpr,
     DeclStmt,
     DecltypeType,
+    DecompositionDecl,
     DefaultStmt,
     DependentNameType,
     DependentScopeDeclRefExpr,

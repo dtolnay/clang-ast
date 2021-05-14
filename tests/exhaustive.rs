@@ -97,6 +97,7 @@ pub enum Clang {
     DeclRefExpr(DeclRefExpr),
     DeclStmt(DeclStmt),
     DecltypeType(DecltypeType),
+    DecompositionDecl(DecompositionDecl),
     DefaultStmt(DefaultStmt),
     DependentNameType(DependentNameType),
     DependentScopeDeclRefExpr(DependentScopeDeclRefExpr),
@@ -1222,6 +1223,15 @@ pub struct DecltypeType {
     pub is_instantiation_dependent: bool,
     #[serde(rename = "containsUnexpandedPack", default)]
     pub contains_unexpanded_pack: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct DecompositionDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub r#type: Type,
 }
 
 #[derive(Deserialize, Debug)]
