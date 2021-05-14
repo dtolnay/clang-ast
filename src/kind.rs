@@ -123,6 +123,7 @@ kind! {
     CompoundAssignOperator,
     CompoundStmt,
     ConceptDecl,
+    ConceptSpecializationExpr,
     ConditionalOperator,
     ConstAttr,
     ConstantArrayType,

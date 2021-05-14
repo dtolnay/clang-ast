@@ -84,6 +84,7 @@ pub enum Clang {
     CompoundAssignOperator(CompoundAssignOperator),
     CompoundStmt(CompoundStmt),
     ConceptDecl(ConceptDecl),
+    ConceptSpecializationExpr(ConceptSpecializationExpr),
     ConditionalOperator(ConditionalOperator),
     ConstAttr(ConstAttr),
     ConstantArrayType(ConstantArrayType),
@@ -1095,6 +1096,16 @@ pub struct ConceptDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
     pub name: Box<str>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ConceptSpecializationExpr {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]
