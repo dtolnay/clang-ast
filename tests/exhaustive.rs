@@ -642,6 +642,8 @@ pub struct CXXDestructorDecl {
     pub r#virtual: bool,
     #[serde(rename = "explicitlyDeleted", default)]
     pub explicitly_deleted: bool,
+    #[serde(default)]
+    pub constexpr: bool,
     #[serde(rename = "explicitlyDefaulted", default)]
     pub explicitly_defaulted: ExplicitlyDefaulted,
 }
