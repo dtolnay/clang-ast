@@ -583,6 +583,8 @@ pub struct CXXDeductionGuideDecl {
     pub range: SourceRange,
     #[serde(rename = "isImplicit", default)]
     pub is_implicit: bool,
+    #[serde(rename = "isUsed", default)]
+    pub is_used: bool,
     pub name: Box<str>,
     #[serde(rename = "mangledName")]
     pub mangled_name: Option<Box<str>>,
