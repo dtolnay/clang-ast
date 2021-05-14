@@ -67,6 +67,7 @@ kind! {
     AtomicExpr,
     AttributedStmt,
     AttributedType,
+    AutoType,
     AvailabilityAttr,
     BinaryOperator,
     BlockPointerType,

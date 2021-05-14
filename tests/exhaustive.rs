@@ -28,6 +28,7 @@ pub enum Clang {
     AtomicExpr(AtomicExpr),
     AttributedStmt(AttributedStmt),
     AttributedType(AttributedType),
+    AutoType(AutoType),
     AvailabilityAttr(AvailabilityAttr),
     BinaryOperator(BinaryOperator),
     BlockPointerType(BlockPointerType),
@@ -337,6 +338,16 @@ pub struct AttributedStmt {
 #[non_exhaustive]
 pub struct AttributedType {
     pub r#type: Type,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct AutoType {
+    pub r#type: Type,
+    pub undeduced: bool,
+    #[serde(rename = "typeKeyword")]
+    pub type_keyword: AutoTypeKeyword,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2638,6 +2649,17 @@ impl Default for ArrayType {
     fn default() -> Self {
         ArrayType::Normal
     }
+}
+
+#[derive(Deserialize, Copy, Clone, Eq, PartialEq, Debug)]
+#[non_exhaustive]
+pub enum AutoTypeKeyword {
+    #[serde(rename = "auto")]
+    Auto,
+    #[serde(rename = "decltype(auto)")]
+    DecltypeAuto,
+    #[serde(rename = "__auto_type")]
+    GNUAutoType,
 }
 
 #[derive(Deserialize, Copy, Clone, Eq, PartialEq, Debug)]
