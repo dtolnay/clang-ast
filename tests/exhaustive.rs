@@ -2369,6 +2369,8 @@ pub struct UnresolvedMemberExpr {
 pub struct UnresolvedUsingTypenameDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
+    #[serde(rename = "isReferenced", default)]
+    pub is_referenced: bool,
 }
 
 #[derive(Deserialize, Debug)]
