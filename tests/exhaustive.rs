@@ -2551,6 +2551,8 @@ pub struct VarTemplateDecl {
 pub struct VarTemplatePartialSpecializationDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
+    #[serde(rename = "parentDeclContextId")]
+    pub parent_decl_context_id: Option<Id>,
     pub name: Box<str>,
     #[serde(rename = "mangledName")]
     pub mangled_name: Option<Box<str>>,
