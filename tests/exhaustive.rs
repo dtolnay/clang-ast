@@ -2516,7 +2516,9 @@ pub struct VarTemplatePartialSpecializationDecl {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct VarTemplateSpecializationDecl {
+    #[serde(default)]
     pub loc: SourceLocation,
+    #[serde(default)]
     pub range: SourceRange,
     #[serde(rename = "isUsed", default)]
     pub is_used: bool,
@@ -2530,6 +2532,7 @@ pub struct VarTemplateSpecializationDecl {
     pub inline: bool,
     #[serde(default)]
     pub constexpr: bool,
+    #[serde(default)]
     pub init: InitStyle,
 }
 
