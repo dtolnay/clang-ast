@@ -407,6 +407,8 @@ pub struct BreakStmt {
 #[non_exhaustive]
 pub struct BuiltinAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub implicit: bool,
 }
 
 #[derive(Deserialize, Debug)]
