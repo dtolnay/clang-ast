@@ -408,6 +408,8 @@ pub struct BreakStmt {
 pub struct BuiltinAttr {
     pub range: SourceRange,
     #[serde(default)]
+    pub inherited: bool,
+    #[serde(default)]
     pub implicit: bool,
 }
 
