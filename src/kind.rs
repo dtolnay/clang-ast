@@ -73,6 +73,7 @@ kind! {
     BindingDecl,
     BlockPointerType,
     BreakStmt,
+    BuiltinAttr,
     BuiltinBitCastExpr,
     BuiltinTemplateDecl,
     BuiltinType,

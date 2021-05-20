@@ -34,6 +34,7 @@ pub enum Clang {
     BindingDecl(BindingDecl),
     BlockPointerType(BlockPointerType),
     BreakStmt(BreakStmt),
+    BuiltinAttr(BuiltinAttr),
     BuiltinBitCastExpr(BuiltinBitCastExpr),
     BuiltinTemplateDecl(BuiltinTemplateDecl),
     BuiltinType(BuiltinType),
@@ -398,6 +399,13 @@ pub struct BlockPointerType {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct BreakStmt {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct BuiltinAttr {
     pub range: SourceRange,
 }
 
