@@ -206,6 +206,7 @@ pub enum Clang {
     UnaryExprOrTypeTraitExpr(UnaryExprOrTypeTraitExpr),
     UnaryOperator(UnaryOperator),
     UnaryTransformType(UnaryTransformType),
+    UnavailableAttr(UnavailableAttr),
     UnresolvedLookupExpr(UnresolvedLookupExpr),
     UnresolvedMemberExpr(UnresolvedMemberExpr),
     UnresolvedUsingTypenameDecl(UnresolvedUsingTypenameDecl),
@@ -2492,6 +2493,11 @@ pub struct UnaryTransformType {
     #[serde(rename = "transformKind")]
     pub transform_kind: UnaryTransformTypeKind,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct UnavailableAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

@@ -245,6 +245,7 @@ kind! {
     UnaryExprOrTypeTraitExpr,
     UnaryOperator,
     UnaryTransformType,
+    UnavailableAttr,
     UnresolvedLookupExpr,
     UnresolvedMemberExpr,
     UnresolvedUsingTypenameDecl,
