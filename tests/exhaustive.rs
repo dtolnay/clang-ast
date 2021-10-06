@@ -2497,7 +2497,9 @@ pub struct UnaryTransformType {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct UnavailableAttr {}
+pub struct UnavailableAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
