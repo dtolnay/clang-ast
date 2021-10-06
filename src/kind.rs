@@ -63,6 +63,7 @@ kind! {
     ArrayInitIndexExpr,
     ArrayInitLoopExpr,
     ArraySubscriptExpr,
+    ArrayTypeTraitExpr,
     AsmLabelAttr,
     AtomicExpr,
     AtomicType,

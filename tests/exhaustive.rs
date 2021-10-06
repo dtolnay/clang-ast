@@ -24,6 +24,7 @@ pub enum Clang {
     ArrayInitIndexExpr(ArrayInitIndexExpr),
     ArrayInitLoopExpr(ArrayInitLoopExpr),
     ArraySubscriptExpr(ArraySubscriptExpr),
+    ArrayTypeTraitExpr(ArrayTypeTraitExpr),
     AsmLabelAttr(AsmLabelAttr),
     AtomicExpr(AtomicExpr),
     AtomicType(AtomicType),
@@ -314,6 +315,11 @@ pub struct ArraySubscriptExpr {
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ArrayTypeTraitExpr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
