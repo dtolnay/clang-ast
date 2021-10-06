@@ -65,6 +65,7 @@ kind! {
     ArraySubscriptExpr,
     AsmLabelAttr,
     AtomicExpr,
+    AtomicType,
     AttributedStmt,
     AttributedType,
     AutoType,
