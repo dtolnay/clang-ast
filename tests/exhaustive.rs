@@ -319,7 +319,9 @@ pub struct ArraySubscriptExpr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct ArrayTypeTraitExpr {}
+pub struct ArrayTypeTraitExpr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
