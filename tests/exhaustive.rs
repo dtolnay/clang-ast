@@ -321,6 +321,7 @@ pub struct ArraySubscriptExpr {
 #[non_exhaustive]
 pub struct ArrayTypeTraitExpr {
     pub range: SourceRange,
+    pub r#type: Type,
 }
 
 #[derive(Deserialize, Debug)]
