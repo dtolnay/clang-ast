@@ -3650,6 +3650,8 @@ pub enum ValueCategory {
     XValue,
     #[serde(rename = "rvalue")]
     RValue,
+    #[serde(rename = "prvalue")]
+    PRValue,
 }
 
 fn default_true() -> bool {
