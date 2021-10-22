@@ -401,7 +401,7 @@ pub struct BindingDecl {
     pub range: SourceRange,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
-    name: Box<str>,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
