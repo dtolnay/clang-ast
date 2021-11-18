@@ -253,6 +253,7 @@ kind! {
     UnusedAttr,
     UsingDecl,
     UsingDirectiveDecl,
+    UsingIfExistsAttr,
     UsingShadowDecl,
     VarDecl,
     VarTemplateDecl,

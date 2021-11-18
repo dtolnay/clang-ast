@@ -214,6 +214,7 @@ pub enum Clang {
     UnusedAttr(UnusedAttr),
     UsingDecl(UsingDecl),
     UsingDirectiveDecl(UsingDirectiveDecl),
+    UsingIfExistsAttr(UsingIfExistsAttr),
     UsingShadowDecl(UsingShadowDecl),
     VarDecl(VarDecl),
     VarTemplateDecl(VarTemplateDecl),
@@ -2577,6 +2578,11 @@ pub struct UsingDirectiveDecl {
     #[serde(rename = "nominatedNamespace")]
     pub nominated_namespace: Decl,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct UsingIfExistsAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
