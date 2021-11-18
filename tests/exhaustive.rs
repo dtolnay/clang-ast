@@ -2582,7 +2582,9 @@ pub struct UsingDirectiveDecl {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct UsingIfExistsAttr {}
+pub struct UsingIfExistsAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
