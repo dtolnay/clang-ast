@@ -2131,6 +2131,8 @@ pub struct PredefinedExpr {
 #[non_exhaustive]
 pub struct PreferredNameAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
