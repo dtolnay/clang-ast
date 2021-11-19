@@ -2129,7 +2129,9 @@ pub struct PredefinedExpr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct PreferredNameAttr {}
+pub struct PreferredNameAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
