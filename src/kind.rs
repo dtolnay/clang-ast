@@ -214,6 +214,7 @@ kind! {
     PointerAttr,
     PointerType,
     PredefinedExpr,
+    PreferredNameAttr,
     PureAttr,
     QualType,
     RValueReferenceType,

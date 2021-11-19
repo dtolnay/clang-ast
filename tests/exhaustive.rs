@@ -175,6 +175,7 @@ pub enum Clang {
     PointerAttr(PointerAttr),
     PointerType(PointerType),
     PredefinedExpr(PredefinedExpr),
+    PreferredNameAttr(PreferredNameAttr),
     PureAttr(PureAttr),
     QualType(QualType),
     RValueReferenceType(RValueReferenceType),
@@ -2124,6 +2125,11 @@ pub struct PredefinedExpr {
     pub value_category: ValueCategory,
     pub name: Box<str>,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct PreferredNameAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
