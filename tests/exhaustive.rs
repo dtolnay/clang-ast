@@ -1,7 +1,6 @@
 #![allow(
     clippy::large_enum_variant,
     clippy::let_underscore_drop,
-    clippy::pub_enum_variant_names,
     clippy::struct_excessive_bools
 )]
 
