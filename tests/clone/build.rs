@@ -7,7 +7,7 @@ use std::path::Path;
 use std::process::Command;
 
 // Executable names to try.
-static CLANG: &[&str] = &["clang++-12", "clang++-11", "clang++"];
+static CLANG: &[&str] = &["clang++-13", "clang++-12", "clang++-11", "clang++"];
 
 fn main() {
     let out_dir = env::var_os("OUT_DIR").unwrap();
