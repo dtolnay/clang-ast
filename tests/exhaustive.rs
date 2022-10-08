@@ -2643,6 +2643,8 @@ pub struct UnusedAttr {
 pub struct UserDefinedLiteral {
     pub range: SourceRange,
     pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]
