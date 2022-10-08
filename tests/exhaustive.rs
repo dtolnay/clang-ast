@@ -216,6 +216,7 @@ pub enum Clang {
     UsingDirectiveDecl(UsingDirectiveDecl),
     UsingIfExistsAttr(UsingIfExistsAttr),
     UsingShadowDecl(UsingShadowDecl),
+    UsingType(UsingType),
     VarDecl(VarDecl),
     VarTemplateDecl(VarTemplateDecl),
     VarTemplatePartialSpecializationDecl(VarTemplatePartialSpecializationDecl),
@@ -2612,6 +2613,11 @@ pub struct UsingShadowDecl {
     pub target: Option<Decl>,
     pub name: Option<Box<str>>,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct UsingType {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

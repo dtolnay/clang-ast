@@ -256,6 +256,7 @@ kind! {
     UsingDirectiveDecl,
     UsingIfExistsAttr,
     UsingShadowDecl,
+    UsingType,
     VarDecl,
     VarTemplateDecl,
     VarTemplatePartialSpecializationDecl,
