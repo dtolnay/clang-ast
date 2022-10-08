@@ -1169,7 +1169,10 @@ pub struct CompoundAssignOperator {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct CompoundRequirement {}
+pub struct CompoundRequirement {
+    #[serde(rename = "isDependent", default)]
+    pub is_dependent: bool,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
