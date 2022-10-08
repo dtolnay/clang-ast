@@ -219,6 +219,7 @@ pub enum Clang {
     UnresolvedUsingTypenameDecl(UnresolvedUsingTypenameDecl),
     UnresolvedUsingValueDecl(UnresolvedUsingValueDecl),
     UnusedAttr(UnusedAttr),
+    UserDefinedLiteral(UserDefinedLiteral),
     UsingDecl(UsingDecl),
     UsingDirectiveDecl(UsingDirectiveDecl),
     UsingEnumDecl(UsingEnumDecl),
@@ -2635,6 +2636,11 @@ pub struct UnresolvedUsingValueDecl {
 pub struct UnusedAttr {
     pub range: SourceRange,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct UserDefinedLiteral {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

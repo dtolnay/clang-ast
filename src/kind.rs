@@ -259,6 +259,7 @@ kind! {
     UnresolvedUsingTypenameDecl,
     UnresolvedUsingValueDecl,
     UnusedAttr,
+    UserDefinedLiteral,
     UsingDecl,
     UsingDirectiveDecl,
     UsingEnumDecl,
