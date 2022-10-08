@@ -2640,7 +2640,9 @@ pub struct UsingDirectiveDecl {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct UsingEnumDecl {}
+pub struct UsingEnumDecl {
+    pub loc: SourceLocation,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
