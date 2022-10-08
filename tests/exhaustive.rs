@@ -2723,6 +2723,8 @@ pub struct VisibilityAttr {
 #[non_exhaustive]
 pub struct WarnUnusedResultAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
