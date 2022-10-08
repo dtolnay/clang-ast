@@ -242,6 +242,7 @@ kind! {
     TypeAliasDecl,
     TypeAliasTemplateDecl,
     TypeOfExprType,
+    TypeRequirement,
     TypeTraitExpr,
     TypeVisibilityAttr,
     TypedefDecl,

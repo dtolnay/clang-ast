@@ -202,6 +202,7 @@ pub enum Clang {
     TypeAliasDecl(TypeAliasDecl),
     TypeAliasTemplateDecl(TypeAliasTemplateDecl),
     TypeOfExprType(TypeOfExprType),
+    TypeRequirement(TypeRequirement),
     TypeTraitExpr(TypeTraitExpr),
     TypeVisibilityAttr(TypeVisibilityAttr),
     TypedefDecl(TypedefDecl),
@@ -2449,6 +2450,11 @@ pub struct TypeOfExprType {
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct TypeRequirement {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
