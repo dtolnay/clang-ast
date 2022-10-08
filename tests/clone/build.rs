@@ -45,7 +45,7 @@ fn main() {
                 .arg("-Xclang")
                 .arg("-ast-dump=json")
                 .arg("-Xclang")
-                .arg("-std=c++17")
+                .arg("-std=c++20")
                 .arg("-fsyntax-only")
                 .arg(&input)
                 .stdout(output)
