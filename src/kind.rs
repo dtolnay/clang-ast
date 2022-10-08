@@ -186,6 +186,7 @@ kind! {
     LValueReferenceType,
     LabelStmt,
     LambdaExpr,
+    LikelyAttr,
     LinkageSpecDecl,
     MaterializeTemporaryExpr,
     MaxFieldAlignmentAttr,

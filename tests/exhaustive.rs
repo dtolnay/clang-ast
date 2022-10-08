@@ -146,6 +146,7 @@ pub enum Clang {
     LValueReferenceType(LValueReferenceType),
     LabelStmt(LabelStmt),
     LambdaExpr(LambdaExpr),
+    LikelyAttr(LikelyAttr),
     LinkageSpecDecl(LinkageSpecDecl),
     MaterializeTemporaryExpr(MaterializeTemporaryExpr),
     MaxFieldAlignmentAttr(MaxFieldAlignmentAttr),
@@ -1823,6 +1824,11 @@ pub struct LambdaExpr {
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct LikelyAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
