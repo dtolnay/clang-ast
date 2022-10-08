@@ -2778,6 +2778,8 @@ pub struct VarTemplateSpecializationDecl {
     pub is_used: bool,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
+    #[serde(rename = "parentDeclContextId")]
+    pub parent_decl_context_id: Option<Id>,
     pub name: Box<str>,
     #[serde(rename = "mangledName")]
     pub mangled_name: Option<Box<str>>,
