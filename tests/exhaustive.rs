@@ -2642,6 +2642,7 @@ pub struct UnusedAttr {
 #[non_exhaustive]
 pub struct UserDefinedLiteral {
     pub range: SourceRange,
+    pub r#type: Type,
 }
 
 #[derive(Deserialize, Debug)]
