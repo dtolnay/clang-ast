@@ -2451,6 +2451,8 @@ pub struct TypeAliasDecl {
     pub range: SourceRange,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
+    #[serde(rename = "previousDecl")]
+    pub previous_decl: Option<Id>,
     pub name: Box<str>,
     pub r#type: Type,
 }
