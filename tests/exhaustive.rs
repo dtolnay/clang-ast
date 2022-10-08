@@ -1936,7 +1936,9 @@ pub struct NoEscapeAttr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct NoInlineAttr {}
+pub struct NoInlineAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
