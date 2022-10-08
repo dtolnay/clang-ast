@@ -195,6 +195,7 @@ kind! {
     ModeAttr,
     NamespaceAliasDecl,
     NamespaceDecl,
+    NestedRequirement,
     NoDebugAttr,
     NoEscapeAttr,
     NoInlineAttr,

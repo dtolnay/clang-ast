@@ -155,6 +155,7 @@ pub enum Clang {
     ModeAttr(ModeAttr),
     NamespaceAliasDecl(NamespaceAliasDecl),
     NamespaceDecl(NamespaceDecl),
+    NestedRequirement(NestedRequirement),
     NoDebugAttr(NoDebugAttr),
     NoEscapeAttr(NoEscapeAttr),
     NoInlineAttr(NoInlineAttr),
@@ -1931,6 +1932,11 @@ pub struct NamespaceDecl {
     #[serde(rename = "originalNamespace")]
     pub original_namespace: Option<Decl>,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct NestedRequirement {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
