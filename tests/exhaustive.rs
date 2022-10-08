@@ -2530,7 +2530,9 @@ pub struct UnavailableAttr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct UnlikelyAttr {}
+pub struct UnlikelyAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
