@@ -2642,6 +2642,7 @@ pub struct UsingDirectiveDecl {
 #[non_exhaustive]
 pub struct UsingEnumDecl {
     pub loc: SourceLocation,
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
