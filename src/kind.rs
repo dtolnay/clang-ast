@@ -225,6 +225,7 @@ kind! {
     ReturnStmt,
     ReturnsNonNullAttr,
     ReturnsTwiceAttr,
+    SimpleRequirement,
     SizeOfPackExpr,
     StaticAssertDecl,
     StringLiteral,

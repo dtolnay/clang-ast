@@ -185,6 +185,7 @@ pub enum Clang {
     ReturnStmt(ReturnStmt),
     ReturnsNonNullAttr(ReturnsNonNullAttr),
     ReturnsTwiceAttr(ReturnsTwiceAttr),
+    SimpleRequirement(SimpleRequirement),
     SizeOfPackExpr(SizeOfPackExpr),
     StaticAssertDecl(StaticAssertDecl),
     StringLiteral(StringLiteral),
@@ -2239,6 +2240,11 @@ pub struct ReturnsTwiceAttr {
     #[serde(default)]
     pub implicit: bool,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct SimpleRequirement {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
