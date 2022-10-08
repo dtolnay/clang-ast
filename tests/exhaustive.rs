@@ -1936,7 +1936,10 @@ pub struct NamespaceDecl {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct NestedRequirement {}
+pub struct NestedRequirement {
+    #[serde(rename = "isDependent", default)]
+    pub is_dependent: bool,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
