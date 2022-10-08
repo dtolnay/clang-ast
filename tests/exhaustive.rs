@@ -2640,7 +2640,9 @@ pub struct UnusedAttr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct UserDefinedLiteral {}
+pub struct UserDefinedLiteral {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
