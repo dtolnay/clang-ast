@@ -2643,6 +2643,7 @@ pub struct UsingDirectiveDecl {
 pub struct UsingEnumDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
+    pub target: Decl,
 }
 
 #[derive(Deserialize, Debug)]
