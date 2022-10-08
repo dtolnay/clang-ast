@@ -2770,6 +2770,8 @@ pub struct VarTemplatePartialSpecializationDecl {
     #[serde(rename = "mangledName")]
     pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
+    #[serde(rename = "storageClass", default)]
+    pub storage_class: StorageClass,
     #[serde(default)]
     pub inline: bool,
     #[serde(default)]
