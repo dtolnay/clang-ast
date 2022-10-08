@@ -636,6 +636,8 @@ pub struct CXXDeductionGuideDecl {
     #[serde(rename = "mangledName")]
     pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
+    #[serde(default)]
+    pub variadic: bool,
 }
 
 #[derive(Deserialize, Debug)]
