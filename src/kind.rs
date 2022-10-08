@@ -248,6 +248,7 @@ kind! {
     UnaryOperator,
     UnaryTransformType,
     UnavailableAttr,
+    UnlikelyAttr,
     UnresolvedLookupExpr,
     UnresolvedMemberExpr,
     UnresolvedUsingTypenameDecl,

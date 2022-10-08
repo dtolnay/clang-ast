@@ -208,6 +208,7 @@ pub enum Clang {
     UnaryOperator(UnaryOperator),
     UnaryTransformType(UnaryTransformType),
     UnavailableAttr(UnavailableAttr),
+    UnlikelyAttr(UnlikelyAttr),
     UnresolvedLookupExpr(UnresolvedLookupExpr),
     UnresolvedMemberExpr(UnresolvedMemberExpr),
     UnresolvedUsingTypenameDecl(UnresolvedUsingTypenameDecl),
@@ -2525,6 +2526,11 @@ pub struct UnaryTransformType {
 pub struct UnavailableAttr {
     pub range: SourceRange,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct UnlikelyAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
