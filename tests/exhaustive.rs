@@ -156,6 +156,7 @@ pub enum Clang {
     NamespaceDecl(NamespaceDecl),
     NoDebugAttr(NoDebugAttr),
     NoEscapeAttr(NoEscapeAttr),
+    NoInlineAttr(NoInlineAttr),
     NoSanitizeAttr(NoSanitizeAttr),
     NoThrowAttr(NoThrowAttr),
     NoUniqueAddressAttr(NoUniqueAddressAttr),
@@ -1931,6 +1932,11 @@ pub struct NoDebugAttr {
 pub struct NoEscapeAttr {
     pub range: SourceRange,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct NoInlineAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

@@ -196,6 +196,7 @@ kind! {
     NamespaceDecl,
     NoDebugAttr,
     NoEscapeAttr,
+    NoInlineAttr,
     NoSanitizeAttr,
     NoThrowAttr,
     NoUniqueAddressAttr,
