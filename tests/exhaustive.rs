@@ -2221,6 +2221,7 @@ pub struct RequiresExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
+    pub satisfied: Option<bool>,
 }
 
 #[derive(Deserialize, Debug)]
