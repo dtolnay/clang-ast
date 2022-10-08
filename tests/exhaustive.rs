@@ -1962,6 +1962,8 @@ pub struct NoUniqueAddressAttr {
 #[non_exhaustive]
 pub struct NonNullAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
