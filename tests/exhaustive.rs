@@ -296,6 +296,8 @@ pub struct AllocSizeAttr {
 #[non_exhaustive]
 pub struct AlwaysInlineAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
