@@ -1828,7 +1828,9 @@ pub struct LambdaExpr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct LikelyAttr {}
+pub struct LikelyAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
