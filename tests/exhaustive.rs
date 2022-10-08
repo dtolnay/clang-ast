@@ -88,6 +88,7 @@ pub enum Clang {
     ColdAttr(ColdAttr),
     ComplexType(ComplexType),
     CompoundAssignOperator(CompoundAssignOperator),
+    CompoundRequirement(CompoundRequirement),
     CompoundStmt(CompoundStmt),
     ConceptDecl(ConceptDecl),
     ConceptSpecializationExpr(ConceptSpecializationExpr),
@@ -1164,6 +1165,11 @@ pub struct CompoundAssignOperator {
     #[serde(rename = "computeResultType")]
     pub compute_result_type: Type,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct CompoundRequirement {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

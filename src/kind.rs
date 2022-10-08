@@ -128,6 +128,7 @@ kind! {
     ColdAttr,
     ComplexType,
     CompoundAssignOperator,
+    CompoundRequirement,
     CompoundStmt,
     ConceptDecl,
     ConceptSpecializationExpr,
