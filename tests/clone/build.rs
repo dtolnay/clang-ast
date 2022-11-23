@@ -1,8 +1,4 @@
-#![allow(
-    clippy::let_underscore_drop,
-    clippy::redundant_else,
-    clippy::uninlined_format_args
-)]
+#![allow(clippy::redundant_else, clippy::uninlined_format_args)]
 
 use std::env;
 use std::fs::{self, File};

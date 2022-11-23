@@ -1,8 +1,4 @@
-#![allow(
-    clippy::large_enum_variant,
-    clippy::let_underscore_drop,
-    clippy::struct_excessive_bools
-)]
+#![allow(clippy::large_enum_variant, clippy::struct_excessive_bools)]
 
 use clang_ast::{Id, Kind, SourceLocation, SourceRange};
 use serde::de::IgnoredAny;

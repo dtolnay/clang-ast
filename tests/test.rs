@@ -1,5 +1,3 @@
-#![allow(clippy::let_underscore_drop)]
-
 use serde::Deserialize;
 
 pub type Node = clang_ast::Node<Clang>;

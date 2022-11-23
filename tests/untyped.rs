@@ -1,5 +1,3 @@
-#![allow(clippy::let_underscore_drop)]
-
 use serde::Deserialize;
 use serde_json::{Map, Value};
 
