@@ -223,6 +223,7 @@ kind! {
     QualType,
     RValueReferenceType,
     RecordType,
+    RecoveryExpr,
     RequiresExpr,
     RestrictAttr,
     ReturnStmt,
