@@ -213,6 +213,7 @@ pub enum Clang {
     UnlikelyAttr(UnlikelyAttr),
     UnresolvedLookupExpr(UnresolvedLookupExpr),
     UnresolvedMemberExpr(UnresolvedMemberExpr),
+    UnresolvedUsingIfExistsDecl(UnresolvedUsingIfExistsDecl),
     UnresolvedUsingTypenameDecl(UnresolvedUsingTypenameDecl),
     UnresolvedUsingValueDecl(UnresolvedUsingValueDecl),
     UnusedAttr(UnusedAttr),
@@ -2617,6 +2618,11 @@ pub struct UnresolvedMemberExpr {
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct UnresolvedUsingIfExistsDecl {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

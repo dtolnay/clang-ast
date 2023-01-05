@@ -257,6 +257,7 @@ kind! {
     UnlikelyAttr,
     UnresolvedLookupExpr,
     UnresolvedMemberExpr,
+    UnresolvedUsingIfExistsDecl,
     UnresolvedUsingTypenameDecl,
     UnresolvedUsingValueDecl,
     UnusedAttr,
