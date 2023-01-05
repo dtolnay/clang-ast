@@ -2402,6 +2402,8 @@ pub struct TemplateTemplateParmDecl {
     pub name: Option<Box<str>>,
     pub depth: usize,
     pub index: usize,
+    #[serde(rename = "defaultArg")]
+    pub default_arg: Option<TemplateArgument>,
 }
 
 #[derive(Deserialize, Debug)]
