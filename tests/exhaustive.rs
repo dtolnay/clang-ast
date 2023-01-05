@@ -2471,6 +2471,8 @@ pub struct TypeAliasDecl {
 pub struct TypeAliasTemplateDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
+    #[serde(rename = "previousDecl")]
+    pub previous_decl: Option<Id>,
     pub name: Box<str>,
 }
 
