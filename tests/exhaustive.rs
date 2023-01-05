@@ -169,9 +169,9 @@ pub enum Clang {
     OpaqueValueExpr(OpaqueValueExpr),
     OverrideAttr(OverrideAttr),
     OwnerAttr(OwnerAttr),
-    PackedAttr(PackedAttr),
     PackExpansionExpr(PackExpansionExpr),
     PackExpansionType(PackExpansionType),
+    PackedAttr(PackedAttr),
     ParagraphComment(ParagraphComment),
     ParenExpr(ParenExpr),
     ParenListExpr(ParenListExpr),
@@ -233,11 +233,11 @@ pub enum Clang {
     UsingIfExistsAttr(UsingIfExistsAttr),
     UsingShadowDecl(UsingShadowDecl),
     UsingType(UsingType),
+    VTablePointerAuthenticationAttr(VTablePointerAuthenticationAttr),
     VarDecl(VarDecl),
     VarTemplateDecl(VarTemplateDecl),
     VarTemplatePartialSpecializationDecl(VarTemplatePartialSpecializationDecl),
     VarTemplateSpecializationDecl(VarTemplateSpecializationDecl),
-    VTablePointerAuthenticationAttr(VTablePointerAuthenticationAttr),
     VisibilityAttr(VisibilityAttr),
     WarnUnusedResultAttr(WarnUnusedResultAttr),
     WeakImportAttr(WeakImportAttr),
@@ -2106,13 +2106,6 @@ pub struct OwnerAttr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct PackedAttr {
-    pub range: SourceRange,
-}
-
-#[derive(Deserialize, Debug)]
-#[serde(deny_unknown_fields)]
-#[non_exhaustive]
 pub struct PackExpansionExpr {
     pub range: SourceRange,
     pub r#type: Type,
@@ -2129,6 +2122,13 @@ pub struct PackExpansionType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct PackedAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2529,6 +2529,7 @@ pub struct TextComment {
     pub range: SourceRange,
     pub text: Box<str>,
 }
+
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
@@ -2815,6 +2816,13 @@ pub struct UsingType {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
+pub struct VTablePointerAuthenticationAttr {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
 pub struct VarDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
@@ -2882,13 +2890,6 @@ pub struct VarTemplatePartialSpecializationDecl {
     #[serde(default)]
     pub constexpr: bool,
     pub init: InitStyle,
-}
-
-#[derive(Deserialize, Debug)]
-#[serde(deny_unknown_fields)]
-#[non_exhaustive]
-pub struct VTablePointerAuthenticationAttr {
-    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
