@@ -95,6 +95,7 @@ pub enum Clang {
     ConstructorUsingShadowDecl(ConstructorUsingShadowDecl),
     ContinueStmt(ContinueStmt),
     DLLImportAttr(DLLImportAttr),
+    DecayedType(DecayedType),
     DeclRefExpr(DeclRefExpr),
     DeclStmt(DeclStmt),
     DecltypeType(DecltypeType),
@@ -123,6 +124,7 @@ pub enum Clang {
     FormatArgAttr(FormatArgAttr),
     FormatAttr(FormatAttr),
     FriendDecl(FriendDecl),
+    FullComment(FullComment),
     FunctionDecl(FunctionDecl),
     FunctionProtoType(FunctionProtoType),
     FunctionTemplateDecl(FunctionTemplateDecl),
@@ -163,11 +165,14 @@ pub enum Clang {
     NonNullAttr(NonNullAttr),
     NonTypeTemplateParmDecl(NonTypeTemplateParmDecl),
     NullStmt(NullStmt),
+    OffsetOfExpr(OffsetOfExpr),
     OpaqueValueExpr(OpaqueValueExpr),
     OverrideAttr(OverrideAttr),
     OwnerAttr(OwnerAttr),
+    PackedAttr(PackedAttr),
     PackExpansionExpr(PackExpansionExpr),
     PackExpansionType(PackExpansionType),
+    ParagraphComment(ParagraphComment),
     ParenExpr(ParenExpr),
     ParenListExpr(ParenListExpr),
     ParenType(ParenType),
@@ -179,6 +184,7 @@ pub enum Clang {
     PureAttr(PureAttr),
     QualType(QualType),
     RValueReferenceType(RValueReferenceType),
+    RecordDecl(RecordDecl),
     RecordType(RecordType),
     RecoveryExpr(RecoveryExpr),
     RequiresExpr(RequiresExpr),
@@ -192,12 +198,14 @@ pub enum Clang {
     StringLiteral(StringLiteral),
     SubstNonTypeTemplateParmExpr(SubstNonTypeTemplateParmExpr),
     SubstTemplateTypeParmType(SubstTemplateTypeParmType),
+    SwiftAttrAttr(SwiftAttrAttr),
     SwitchStmt(SwitchStmt),
     TemplateArgument(TemplateArgument),
     TemplateSpecializationType(TemplateSpecializationType),
     TemplateTemplateParmDecl(TemplateTemplateParmDecl),
     TemplateTypeParmDecl(TemplateTypeParmDecl),
     TemplateTypeParmType(TemplateTypeParmType),
+    TextComment(TextComment),
     TranslationUnitDecl(TranslationUnitDecl),
     TypeAliasDecl(TypeAliasDecl),
     TypeAliasTemplateDecl(TypeAliasTemplateDecl),
@@ -229,6 +237,7 @@ pub enum Clang {
     VarTemplateDecl(VarTemplateDecl),
     VarTemplatePartialSpecializationDecl(VarTemplatePartialSpecializationDecl),
     VarTemplateSpecializationDecl(VarTemplateSpecializationDecl),
+    VTablePointerAuthenticationAttr(VTablePointerAuthenticationAttr),
     VisibilityAttr(VisibilityAttr),
     WarnUnusedResultAttr(WarnUnusedResultAttr),
     WeakImportAttr(WeakImportAttr),
@@ -1277,6 +1286,13 @@ pub struct DLLImportAttr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
+pub struct DecayedType {
+    pub r#type: Type,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
 pub struct DeclRefExpr {
     pub range: SourceRange,
     pub r#type: Type,
@@ -1562,6 +1578,14 @@ pub struct FriendDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
     pub r#type: Option<Type>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct FullComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2042,6 +2066,16 @@ pub struct NullStmt {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
+pub struct OffsetOfExpr {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
 pub struct OpaqueValueExpr {
     pub range: SourceRange,
     pub r#type: Type,
@@ -2072,6 +2106,13 @@ pub struct OwnerAttr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
+pub struct PackedAttr {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
 pub struct PackExpansionExpr {
     pub range: SourceRange,
     pub r#type: Type,
@@ -2088,6 +2129,14 @@ pub struct PackExpansionType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ParagraphComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2215,6 +2264,20 @@ pub struct RValueReferenceType {
     pub contains_unexpanded_pack: bool,
     #[serde(rename = "spelledAsLValue", default)]
     pub spelled_as_lvalue: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct RecordDecl {
+    pub range: SourceRange,
+    pub name: Box<str>,
+    #[serde(rename = "tagUsed")]
+    pub tag_used: Option<TagTypeKind>,
+    #[serde(rename = "previousDecl")]
+    pub previous_decl: Option<Id>,
+    #[serde(rename = "completeDefinition", default)]
+    pub complete_definition: bool,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2353,6 +2416,13 @@ pub struct SubstTemplateTypeParmType {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
+pub struct SwiftAttrAttr {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
 pub struct SwitchStmt {
     pub range: SourceRange,
 }
@@ -2451,6 +2521,14 @@ pub struct TemplateTypeParmType {
     pub decl: Decl,
 }
 
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct TextComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub text: Box<str>,
+}
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
@@ -2804,6 +2882,13 @@ pub struct VarTemplatePartialSpecializationDecl {
     #[serde(default)]
     pub constexpr: bool,
     pub init: InitStyle,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct VTablePointerAuthenticationAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
