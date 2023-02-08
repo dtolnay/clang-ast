@@ -132,6 +132,8 @@ pub enum Clang {
     GNUInlineAttr(GNUInlineAttr),
     GNUNullExpr(GNUNullExpr),
     GotoStmt(GotoStmt),
+    HTMLEndTagComment(HTMLEndTagComment),
+    HTMLStartTagComment(HTMLStartTagComment),
     IfStmt(IfStmt),
     ImplicitCastExpr(ImplicitCastExpr),
     ImplicitValueInitExpr(ImplicitValueInitExpr),
@@ -1706,6 +1708,24 @@ pub struct GotoStmt {
     pub range: SourceRange,
     #[serde(rename = "targetLabelDeclId")]
     pub target_label_decl_id: Id,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct HTMLStartTagComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub name: Box<str>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct HTMLEndTagComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub name: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
