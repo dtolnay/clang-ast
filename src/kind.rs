@@ -176,6 +176,8 @@ kind! {
     GNUInlineAttr,
     GNUNullExpr,
     GotoStmt,
+    HTMLEndTagComment,
+    HTMLStartTagComment,
     IfStmt,
     ImplicitCastExpr,
     ImplicitValueInitExpr,
