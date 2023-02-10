@@ -292,6 +292,8 @@ kind! {
     VarTemplatePartialSpecializationDecl,
     VarTemplateSpecializationDecl,
     VectorType,
+    VerbatimBlockComment,
+    VerbatimBlockLineComment,
     VerbatimLineComment,
     VisibilityAttr,
     WarnUnusedResultAttr,
