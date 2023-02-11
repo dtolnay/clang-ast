@@ -3,7 +3,7 @@
 use std::env;
 use std::fs::{self, File};
 use std::io::ErrorKind;
-use std::path::Path;
+use std::path::PathBuf;
 use std::process::Command;
 
 // Executable names to try.
@@ -17,57 +17,64 @@ static CLANG: &[&str] = &[
 ];
 
 fn main() {
-    let out_dir = env::var_os("OUT_DIR").unwrap();
+    let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
+    let out_ast_json = out_dir.join("ast.json");
 
-    let cxx_dir = Path::new(&out_dir).join("cxx");
-    if !cxx_dir.exists() {
-        let status = Command::new("git")
-            .arg("clone")
-            .arg("--depth")
-            .arg("1")
-            .arg("https://github.com/dtolnay/cxx")
-            .arg(&cxx_dir)
-            .status()
-            .unwrap();
-        assert!(status.success());
+    let manifest_dir = PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").unwrap());
+    let override_ast_json = manifest_dir.join("ast.json");
+    if override_ast_json.exists() {
+        fs::copy(&override_ast_json, &out_ast_json).unwrap();
+        return;
     }
 
-    let ast_json = Path::new(&out_dir).join("ast.json");
-    if !ast_json.exists() {
-        let input = cxx_dir.join("src").join("cxx.cc");
-        let mut clangs = CLANG.iter();
-        while let Some(&clang) = clangs.next() {
-            let output = File::create(&ast_json).unwrap();
-            match Command::new(clang)
-                .arg("-Xclang")
-                .arg("-ast-dump=json")
-                .arg("-Xclang")
-                .arg("-std=c++20")
-                .arg("-fsyntax-only")
-                .arg(&input)
-                .stdout(output)
+    let override_ast_cc = manifest_dir.join("ast.cc");
+    let input = if override_ast_cc.exists() {
+        override_ast_cc
+    } else {
+        let cxx_dir = out_dir.join("cxx");
+        if !cxx_dir.exists() {
+            let status = Command::new("git")
+                .arg("clone")
+                .arg("--depth")
+                .arg("1")
+                .arg("https://github.com/dtolnay/cxx")
+                .arg(&cxx_dir)
                 .status()
-            {
-                Ok(status) => {
-                    if status.success() {
-                        break;
-                    } else {
-                        let _ = fs::remove_file(&ast_json);
-                        assert!(status.success());
-                    }
+                .unwrap();
+            assert!(status.success());
+        }
+        cxx_dir.join("src").join("cxx.cc")
+    };
+
+    let mut clangs = CLANG.iter();
+    while let Some(&clang) = clangs.next() {
+        let output = File::create(&out_ast_json).unwrap();
+        match Command::new(clang)
+            .arg("-Xclang")
+            .arg("-ast-dump=json")
+            .arg("-Xclang")
+            .arg("-std=c++20")
+            .arg("-fsyntax-only")
+            .arg(&input)
+            .stdout(output)
+            .status()
+        {
+            Ok(status) => {
+                if status.success() {
+                    break;
+                } else {
+                    let _ = fs::remove_file(&out_ast_json);
+                    assert!(status.success());
                 }
-                Err(error) => {
-                    let _ = fs::remove_file(&ast_json);
-                    if error.kind() == ErrorKind::NotFound && !clangs.as_slice().is_empty() {
-                        continue;
-                    } else {
-                        panic!("{:?}", error);
-                    }
+            }
+            Err(error) => {
+                let _ = fs::remove_file(&out_ast_json);
+                if error.kind() == ErrorKind::NotFound && !clangs.as_slice().is_empty() {
+                    continue;
+                } else {
+                    panic!("{:?}", error);
                 }
             }
         }
     }
-
-    // Disable rerun on changes to Cargo.toml and lib.rs.
-    println!("cargo:rerun-if-changed=build.rs");
 }
