@@ -252,6 +252,7 @@ kind! {
     SubstTemplateTypeParmType,
     SwiftAttrAttr,
     SwitchStmt,
+    TParamCommandComment,
     TargetAttr,
     TemplateArgument,
     TemplateSpecializationType,
