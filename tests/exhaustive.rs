@@ -254,6 +254,7 @@ pub enum Clang {
     VerbatimLineComment(VerbatimLineComment),
     VisibilityAttr(VisibilityAttr),
     WarnUnusedResultAttr(WarnUnusedResultAttr),
+    WeakAttr(WeakAttr),
     WeakImportAttr(WeakImportAttr),
     WeakRefAttr(WeakRefAttr),
     WhileStmt(WhileStmt),
@@ -3088,6 +3089,13 @@ pub struct WarnUnusedResultAttr {
     pub range: SourceRange,
     #[serde(default)]
     pub inherited: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct WeakAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
