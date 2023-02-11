@@ -73,6 +73,7 @@ kind! {
     AvailabilityAttr,
     BinaryOperator,
     BindingDecl,
+    BlockCommandComment,
     BlockPointerType,
     BreakStmt,
     BuiltinAttr,

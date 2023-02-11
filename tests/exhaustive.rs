@@ -29,6 +29,7 @@ pub enum Clang {
     AvailabilityAttr(AvailabilityAttr),
     BinaryOperator(BinaryOperator),
     BindingDecl(BindingDecl),
+    BlockCommandComment(BlockCommandComment),
     BlockPointerType(BlockPointerType),
     BreakStmt(BreakStmt),
     BuiltinAttr(BuiltinAttr),
@@ -437,6 +438,15 @@ pub struct BindingDecl {
     pub range: SourceRange,
     #[serde(rename = "isReferenced", default)]
     pub is_referenced: bool,
+    pub name: Box<str>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct BlockCommandComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
     pub name: Box<str>,
 }
 
