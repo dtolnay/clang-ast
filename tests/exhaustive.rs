@@ -207,6 +207,7 @@ pub enum Clang {
     SubstTemplateTypeParmType(SubstTemplateTypeParmType),
     SwiftAttrAttr(SwiftAttrAttr),
     SwitchStmt(SwitchStmt),
+    TParamCommandComment(TParamCommandComment),
     TemplateArgument(TemplateArgument),
     TemplateSpecializationType(TemplateSpecializationType),
     TemplateTemplateParmDecl(TemplateTemplateParmDecl),
@@ -2505,6 +2506,17 @@ pub struct SwiftAttrAttr {
 #[non_exhaustive]
 pub struct SwitchStmt {
     pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct TParamCommandComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub param: Box<str>,
+    #[serde(default)]
+    pub positions: Vec<usize>,
 }
 
 #[derive(Deserialize, Debug)]
