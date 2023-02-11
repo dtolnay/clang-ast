@@ -143,6 +143,7 @@ pub enum Clang {
     IndirectFieldDecl(IndirectFieldDecl),
     InitListExpr(InitListExpr),
     InjectedClassNameType(InjectedClassNameType),
+    InlineCommandComment(InlineCommandComment),
     IntegerLiteral(IntegerLiteral),
     InternalLinkageAttr(InternalLinkageAttr),
     LValueReferenceType(LValueReferenceType),
@@ -1839,6 +1840,19 @@ pub struct InjectedClassNameType {
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
     pub decl: Decl,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct InlineCommandComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub name: Box<str>,
+    #[serde(rename = "renderKind")]
+    pub render_kind: RenderKind,
+    #[serde(default)]
+    pub args: Vec<Box<str>>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -3781,6 +3795,21 @@ impl Default for RefQualifier {
     fn default() -> Self {
         RefQualifier::None
     }
+}
+
+#[derive(Deserialize, Copy, Clone, Eq, PartialEq, Debug)]
+#[non_exhaustive]
+pub enum RenderKind {
+    #[serde(rename = "anchor")]
+    Anchor,
+    #[serde(rename = "bold")]
+    Bold,
+    #[serde(rename = "emphasized")]
+    Emphasized,
+    #[serde(rename = "monospaced")]
+    Monospaced,
+    #[serde(rename = "normal")]
+    Normal,
 }
 
 #[derive(Deserialize, Copy, Clone, Eq, PartialEq, Debug)]
