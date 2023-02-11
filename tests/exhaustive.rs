@@ -156,6 +156,7 @@ pub enum Clang {
     MayAliasAttr(MayAliasAttr),
     MemberExpr(MemberExpr),
     MemberPointerType(MemberPointerType),
+    MinVectorWidthAttr(MinVectorWidthAttr),
     ModeAttr(ModeAttr),
     NamespaceAliasDecl(NamespaceAliasDecl),
     NamespaceDecl(NamespaceDecl),
@@ -1990,6 +1991,13 @@ pub struct MemberPointerType {
     pub is_data: bool,
     #[serde(rename = "isFunction", default)]
     pub is_function: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct MinVectorWidthAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
