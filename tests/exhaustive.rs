@@ -249,6 +249,9 @@ pub enum Clang {
     VarTemplatePartialSpecializationDecl(VarTemplatePartialSpecializationDecl),
     VarTemplateSpecializationDecl(VarTemplateSpecializationDecl),
     VectorType(VectorType),
+    VerbatimBlockComment(VerbatimBlockComment),
+    VerbatimBlockLineComment(VerbatimBlockLineComment),
+    VerbatimLineComment(VerbatimLineComment),
     VisibilityAttr(VisibilityAttr),
     WarnUnusedResultAttr(WarnUnusedResultAttr),
     WeakImportAttr(WeakImportAttr),
@@ -3036,6 +3039,35 @@ pub struct VectorType {
     pub r#type: Type,
     #[serde(rename = "numElements")]
     pub num_elements: usize,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct VerbatimBlockComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub name: Box<str>,
+    #[serde(rename = "closeName")]
+    pub close_name: Box<str>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct VerbatimBlockLineComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub text: Box<str>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct VerbatimLineComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub text: Box<str>,
 }
 
 #[derive(Deserialize, Debug)]
