@@ -95,6 +95,7 @@ pub enum Clang {
     ConstantExpr(ConstantExpr),
     ConstructorUsingShadowDecl(ConstructorUsingShadowDecl),
     ContinueStmt(ContinueStmt),
+    ConvertVectorExpr(ConvertVectorExpr),
     DLLImportAttr(DLLImportAttr),
     DecayedType(DecayedType),
     DeclRefExpr(DeclRefExpr),
@@ -1288,6 +1289,16 @@ pub struct ConstructorUsingShadowDecl {
 #[non_exhaustive]
 pub struct ContinueStmt {
     pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ConvertVectorExpr {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]
