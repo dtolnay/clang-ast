@@ -241,6 +241,7 @@ pub enum Clang {
     VarTemplateDecl(VarTemplateDecl),
     VarTemplatePartialSpecializationDecl(VarTemplatePartialSpecializationDecl),
     VarTemplateSpecializationDecl(VarTemplateSpecializationDecl),
+    VectorType(VectorType),
     VisibilityAttr(VisibilityAttr),
     WarnUnusedResultAttr(WarnUnusedResultAttr),
     WeakImportAttr(WeakImportAttr),
@@ -2947,6 +2948,15 @@ pub struct VarTemplateSpecializationDecl {
     pub constexpr: bool,
     #[serde(default)]
     pub init: InitStyle,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct VectorType {
+    pub r#type: Type,
+    #[serde(rename = "numElements")]
+    pub num_elements: usize,
 }
 
 #[derive(Deserialize, Debug)]
