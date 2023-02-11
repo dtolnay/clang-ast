@@ -1760,6 +1760,10 @@ pub struct HTMLStartTagComment {
     pub loc: SourceLocation,
     pub range: SourceRange,
     pub name: Box<str>,
+    #[serde(default, rename = "selfClosing")]
+    pub self_closing: bool,
+    #[serde(default)]
+    pub malformed: bool,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2233,7 +2237,7 @@ pub struct ParamCommandComment {
     pub explicit: bool,
     pub param: Box<str>,
     #[serde(rename = "paramIdx")]
-    pub param_idx: usize,
+    pub param_idx: Option<usize>,
 }
 
 #[derive(Deserialize, Debug)]
