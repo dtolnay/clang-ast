@@ -23,12 +23,14 @@ fn main() {
     let manifest_dir = PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").unwrap());
     let override_ast_json = manifest_dir.join("ast.json");
     if override_ast_json.exists() {
+        println!("cargo:rerun-if-changed=ast.json");
         fs::copy(&override_ast_json, &out_ast_json).unwrap();
         return;
     }
 
     let override_ast_cc = manifest_dir.join("ast.cc");
     let input = if override_ast_cc.exists() {
+        println!("cargo:rerun-if-changed=ast.cc");
         override_ast_cc
     } else {
         let cxx_dir = out_dir.join("cxx");
