@@ -199,6 +199,7 @@ pub enum Clang {
     ReturnStmt(ReturnStmt),
     ReturnsNonNullAttr(ReturnsNonNullAttr),
     ReturnsTwiceAttr(ReturnsTwiceAttr),
+    ShuffleVectorExpr(ShuffleVectorExpr),
     SimpleRequirement(SimpleRequirement),
     SizeOfPackExpr(SizeOfPackExpr),
     StaticAssertDecl(StaticAssertDecl),
@@ -2430,6 +2431,16 @@ pub struct ReturnsTwiceAttr {
     pub inherited: bool,
     #[serde(default)]
     pub implicit: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ShuffleVectorExpr {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]
