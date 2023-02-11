@@ -84,6 +84,7 @@ pub enum Clang {
     ColdAttr(ColdAttr),
     ComplexType(ComplexType),
     CompoundAssignOperator(CompoundAssignOperator),
+    CompoundLiteralExpr(CompoundLiteralExpr),
     CompoundRequirement(CompoundRequirement),
     CompoundStmt(CompoundStmt),
     ConceptDecl(ConceptDecl),
@@ -1181,6 +1182,16 @@ pub struct CompoundAssignOperator {
     pub compute_lhs_type: Type,
     #[serde(rename = "computeResultType")]
     pub compute_result_type: Type,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct CompoundLiteralExpr {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]
