@@ -179,6 +179,7 @@ pub enum Clang {
     PackExpansionType(PackExpansionType),
     PackedAttr(PackedAttr),
     ParagraphComment(ParagraphComment),
+    ParamCommandComment(ParamCommandComment),
     ParenExpr(ParenExpr),
     ParenListExpr(ParenListExpr),
     ParenType(ParenType),
@@ -2207,6 +2208,20 @@ pub struct ParagraphComment {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
+pub struct ParamCommandComment {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+    pub direction: ParamDirection,
+    #[serde(default)]
+    pub explicit: bool,
+    pub param: Box<str>,
+    #[serde(rename = "paramIdx")]
+    pub param_idx: usize,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
 pub struct ParenExpr {
     pub range: SourceRange,
     pub r#type: Type,
@@ -3786,6 +3801,17 @@ impl Default for NonOdrUseReason {
     fn default() -> Self {
         NonOdrUseReason::None
     }
+}
+
+#[derive(Deserialize, Copy, Clone, Eq, PartialEq, Debug)]
+#[non_exhaustive]
+pub enum ParamDirection {
+    #[serde(rename = "in")]
+    In,
+    #[serde(rename = "out")]
+    Out,
+    #[serde(rename = "in,out")]
+    InOut,
 }
 
 #[derive(Deserialize, Copy, Clone, Eq, PartialEq, Debug)]
