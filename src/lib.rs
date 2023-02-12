@@ -386,7 +386,7 @@
 //! and comparible more cheaply than a string. You may find yourself with lots
 //! of hashtables keyed on `Id`.
 
-#![doc(html_root_url = "https://docs.rs/clang-ast/0.1.15")]
+#![doc(html_root_url = "https://docs.rs/clang-ast/0.1.16")]
 #![allow(
     clippy::blocks_in_if_conditions,
     clippy::match_like_matches_macro,
