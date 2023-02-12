@@ -5,19 +5,19 @@ use std::cell::{Cell, RefCell};
 use std::fmt::{self, Debug};
 use std::sync::Arc;
 
-#[derive(Default)]
+#[derive(Default, Clone, Eq, PartialEq, Hash)]
 pub struct SourceRange {
     pub begin: SourceLocation,
     pub end: SourceLocation,
 }
 
-#[derive(Default)]
+#[derive(Default, Clone, Eq, PartialEq, Hash)]
 pub struct SourceLocation {
     pub spelling_loc: Option<BareSourceLocation>,
     pub expansion_loc: Option<BareSourceLocation>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct BareSourceLocation {
     pub offset: usize,
     pub file: Arc<str>,
@@ -30,7 +30,7 @@ pub struct BareSourceLocation {
     pub is_macro_arg_expansion: bool,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct IncludedFrom {
     pub included_from: Option<Box<IncludedFrom>>,
     pub file: Arc<str>,

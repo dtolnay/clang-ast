@@ -419,7 +419,7 @@ pub use crate::kind::Kind;
 pub use crate::loc::{BareSourceLocation, IncludedFrom, SourceLocation, SourceRange};
 
 /// <font style="font-variant:small-caps">syntax tree root</font>
-#[derive(Debug)]
+#[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Node<T> {
     pub id: Id,
     pub kind: T,
