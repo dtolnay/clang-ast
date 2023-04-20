@@ -194,6 +194,7 @@ kind! {
     LValueReferenceType,
     LabelStmt,
     LambdaExpr,
+    LifetimeBoundAttr,
     LikelyAttr,
     LinkageSpecDecl,
     MaterializeTemporaryExpr,
