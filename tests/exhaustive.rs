@@ -150,6 +150,7 @@ pub enum Clang {
     LValueReferenceType(LValueReferenceType),
     LabelStmt(LabelStmt),
     LambdaExpr(LambdaExpr),
+    LifetimeBoundAttr(LifetimeBoundAttr),
     LikelyAttr(LikelyAttr),
     LinkageSpecDecl(LinkageSpecDecl),
     MaterializeTemporaryExpr(MaterializeTemporaryExpr),
@@ -1929,6 +1930,15 @@ pub struct LambdaExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct LifetimeBoundAttr {
+    pub range: SourceRange,
+    #[serde(default)]
+    pub implicit: bool,
 }
 
 #[derive(Deserialize, Debug)]
