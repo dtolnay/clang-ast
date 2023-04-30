@@ -4101,7 +4101,8 @@ fn default_true() -> bool {
 }
 
 #[cfg(target_pointer_width = "64")]
-const _: [(); std::mem::size_of::<Node>()] = [(); 1480];
+#[rustversion::since(2023-04-29)]
+const _: [(); std::mem::size_of::<Node>()] = [(); 1472];
 
 #[test]
 fn test() {
