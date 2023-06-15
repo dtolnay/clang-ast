@@ -1,4 +1,4 @@
-use serde::Deserialize;
+use serde_derive::Deserialize;
 use serde_json::{Map, Value};
 
 pub type Node = clang_ast::Node<Clang>;

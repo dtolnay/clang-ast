@@ -2,7 +2,7 @@
 
 use clang_ast::{Id, Kind, SourceLocation, SourceRange};
 use serde::de::IgnoredAny;
-use serde::Deserialize;
+use serde_derive::Deserialize;
 
 pub type Node = clang_ast::Node<Clang>;
 
