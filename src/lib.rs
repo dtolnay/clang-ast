@@ -130,6 +130,7 @@
 //!
 //! ```no_run
 //! use serde::Deserialize;
+//! # use serde_derive::Deserialize;
 //!
 //! pub type Node = clang_ast::Node<Clang>;
 //!
@@ -159,6 +160,7 @@
 //!
 //! ```
 //! use serde::Deserialize;
+//! # use serde_derive::Deserialize;
 //!
 //! pub type Node = clang_ast::Node<Clang>;
 //!
@@ -201,6 +203,7 @@
 //!
 //! ```
 //! use serde::Deserialize;
+//! # use serde_derive::Deserialize;
 //!
 //! pub type Node = clang_ast::Node<Clang>;
 //!
@@ -218,6 +221,7 @@
 //!
 //! ```
 //! use serde::Deserialize;
+//! # use serde_derive::Deserialize;
 //! use serde_json::{Map, Value};
 //!
 //! #[derive(Deserialize)]
@@ -239,6 +243,7 @@
 //!
 //! ```
 //! use serde::Deserialize;
+//! # use serde_derive::Deserialize;
 //!
 //! pub type Node = clang_ast::Node<Clang>;
 //!
@@ -319,6 +324,7 @@
 //!
 //! ```
 //! use serde::Deserialize;
+//! # use serde_derive::Deserialize;
 //!
 //! pub type Node = clang_ast::Node<Clang>;
 //!
