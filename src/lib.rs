@@ -395,6 +395,7 @@
 #![doc(html_root_url = "https://docs.rs/clang-ast/0.1.17")]
 #![allow(
     clippy::blocks_in_if_conditions,
+    clippy::derivable_impls,
     clippy::let_underscore_untyped,
     clippy::match_like_matches_macro,
     clippy::must_use_candidate,
