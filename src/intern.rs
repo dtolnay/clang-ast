@@ -1,12 +1,12 @@
+use fxhash::FxHashSet as HashSet;
 use serde::de::{DeserializeSeed, Deserializer, Error, Visitor};
 use std::cell::{Cell, RefCell};
-use std::collections::HashSet;
 use std::fmt;
 use std::sync::Arc;
 
 thread_local! {
     static REFCOUNT: Cell<usize> = Cell::new(0);
-    static INTERN: RefCell<HashSet<Arc<str>>> = RefCell::new(HashSet::new());
+    static INTERN: RefCell<HashSet<Arc<str>>> = RefCell::new(HashSet::default());
 }
 
 fn borrowed(string: &str) -> Arc<str> {
