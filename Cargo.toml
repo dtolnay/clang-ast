@@ -11,6 +11,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/dtolnay/clang-ast"
 
 [dependencies]
+fxhash = "0.2"
 serde = "1.0.166"
 
 [dev-dependencies]
