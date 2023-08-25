@@ -1,4 +1,4 @@
-use fxhash::FxHashSet as HashSet;
+use rustc_hash::FxHashSet as HashSet;
 use serde::de::{DeserializeSeed, Deserializer, Error, Visitor};
 use std::cell::{Cell, RefCell};
 use std::fmt;
