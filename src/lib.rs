@@ -396,6 +396,7 @@
 #![allow(
     clippy::blocks_in_if_conditions,
     clippy::derivable_impls,
+    clippy::doc_markdown,
     clippy::let_underscore_untyped,
     clippy::match_like_matches_macro,
     clippy::must_use_candidate,
