@@ -211,6 +211,7 @@ pub enum Clang {
     StaticAssertDecl(StaticAssertDecl),
     StringLiteral(StringLiteral),
     SubstNonTypeTemplateParmExpr(SubstNonTypeTemplateParmExpr),
+    SubstTemplateTypeParmPackType(SubstTemplateTypeParmPackType),
     SubstTemplateTypeParmType(SubstTemplateTypeParmType),
     SwiftAttrAttr(SwiftAttrAttr),
     SwitchStmt(SwitchStmt),
@@ -2528,6 +2529,11 @@ pub struct SubstNonTypeTemplateParmExpr {
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct SubstTemplateTypeParmPackType {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
