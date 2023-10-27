@@ -2537,6 +2537,8 @@ pub struct SubstTemplateTypeParmPackType {
     pub r#type: Type,
     #[serde(rename = "isDependent", default)]
     pub is_dependent: bool,
+    #[serde(rename = "isInstantiationDependent", default)]
+    pub is_instantiation_dependent: bool,
 }
 
 #[derive(Deserialize, Debug)]
