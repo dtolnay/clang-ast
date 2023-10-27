@@ -2225,6 +2225,8 @@ pub struct PackExpansionType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
+    #[serde(rename = "numExpansions")]
+    pub num_expansions: Option<usize>,
 }
 
 #[derive(Deserialize, Debug)]
