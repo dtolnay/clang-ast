@@ -1587,6 +1587,7 @@ pub struct FieldDecl {
 #[non_exhaustive]
 pub struct FileScopeAsmDecl {
     pub loc: SourceLocation,
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
