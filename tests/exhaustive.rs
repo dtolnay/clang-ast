@@ -1225,6 +1225,8 @@ pub struct CompoundLiteralExpr {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct CompoundRequirement {
+    #[serde(default)]
+    pub noexcept: bool,
     #[serde(rename = "isDependent", default)]
     pub is_dependent: bool,
     pub satisfied: Option<bool>,
