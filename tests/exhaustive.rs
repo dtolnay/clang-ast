@@ -2539,6 +2539,8 @@ pub struct SubstTemplateTypeParmPackType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
+    #[serde(rename = "containsUnexpandedPack", default)]
+    pub contains_unexpanded_pack: bool,
 }
 
 #[derive(Deserialize, Debug)]
