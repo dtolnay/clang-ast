@@ -1585,7 +1585,9 @@ pub struct FieldDecl {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct FileScopeAsmDecl {}
+pub struct FileScopeAsmDecl {
+    pub loc: SourceLocation,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
