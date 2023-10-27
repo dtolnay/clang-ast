@@ -125,6 +125,7 @@ pub enum Clang {
     ExprWithCleanups(ExprWithCleanups),
     FallThroughAttr(FallThroughAttr),
     FieldDecl(FieldDecl),
+    FileScopeAsmDecl(FileScopeAsmDecl),
     FinalAttr(FinalAttr),
     FloatingLiteral(FloatingLiteral),
     ForStmt(ForStmt),
@@ -1580,6 +1581,11 @@ pub struct FieldDecl {
     #[serde(rename = "hasInClassInitializer", default)]
     pub has_in_class_initializer: bool,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct FileScopeAsmDecl {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
