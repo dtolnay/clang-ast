@@ -2535,6 +2535,8 @@ pub struct SubstNonTypeTemplateParmExpr {
 #[non_exhaustive]
 pub struct SubstTemplateTypeParmPackType {
     pub r#type: Type,
+    #[serde(rename = "isDependent", default)]
+    pub is_dependent: bool,
 }
 
 #[derive(Deserialize, Debug)]
