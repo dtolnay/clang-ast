@@ -2533,7 +2533,9 @@ pub struct SubstNonTypeTemplateParmExpr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct SubstTemplateTypeParmPackType {}
+pub struct SubstTemplateTypeParmPackType {
+    pub r#type: Type,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
