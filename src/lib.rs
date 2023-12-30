@@ -400,7 +400,6 @@
     clippy::let_underscore_untyped,
     clippy::match_like_matches_macro,
     clippy::must_use_candidate,
-    clippy::option_if_let_else,
     clippy::ptr_arg,
     clippy::uninlined_format_args
 )]
