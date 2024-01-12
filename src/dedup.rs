@@ -1,7 +1,7 @@
 use std::cell::Cell;
 
 thread_local! {
-    static REFCOUNT: Cell<usize> = Cell::new(0);
+    static REFCOUNT: Cell<usize> = const { Cell::new(0) };
 }
 
 pub(crate) struct Guard {

@@ -38,7 +38,7 @@ pub struct IncludedFrom {
 
 thread_local! {
     static LAST_LOC_FILENAME: RefCell<Arc<str>> = RefCell::new(Arc::from(""));
-    static LAST_LOC_LINE: Cell<usize> = Cell::new(0);
+    static LAST_LOC_LINE: Cell<usize> = const { Cell::new(0) };
 }
 
 pub(crate) fn thread_local_reset() {

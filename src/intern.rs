@@ -5,7 +5,7 @@ use std::fmt;
 use std::sync::Arc;
 
 thread_local! {
-    static REFCOUNT: Cell<usize> = Cell::new(0);
+    static REFCOUNT: Cell<usize> = const { Cell::new(0) };
     static INTERN: RefCell<HashSet<Arc<str>>> = RefCell::new(HashSet::default());
 }
 
