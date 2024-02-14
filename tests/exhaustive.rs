@@ -7,6 +7,7 @@
 use clang_ast::{Id, Kind, SourceLocation, SourceRange};
 use serde::de::IgnoredAny;
 use serde_derive::Deserialize;
+use std::thread::Builder as ThreadBuilder;
 
 pub type Node = clang_ast::Node<Clang>;
 
@@ -4135,8 +4136,19 @@ fn default_true() -> bool {
 #[rustversion::since(2023-04-29)]
 const _: [(); std::mem::size_of::<Node>()] = [(); 1472];
 
+fn with_much_stack(test: impl FnOnce() + Send + 'static) {
+    ThreadBuilder::new()
+        .stack_size(4 * 1024 * 1024)
+        .spawn(test)
+        .unwrap()
+        .join()
+        .unwrap();
+}
+
 #[test]
 fn test() {
-    let json = clang_ast_test_suite::cxx_ast_json();
-    let _: Node = serde_json::from_slice(&json).unwrap();
+    with_much_stack(|| {
+        let json = clang_ast_test_suite::cxx_ast_json();
+        let _: Node = serde_json::from_slice(&json).unwrap();
+    });
 }
