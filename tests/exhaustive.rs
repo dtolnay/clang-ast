@@ -215,6 +215,7 @@ pub enum Clang {
     SimpleRequirement(SimpleRequirement),
     SizeOfPackExpr(SizeOfPackExpr),
     StaticAssertDecl(StaticAssertDecl),
+    StmtExpr(StmtExpr),
     StringLiteral(StringLiteral),
     SubstNonTypeTemplateParmExpr(SubstNonTypeTemplateParmExpr),
     SubstTemplateTypeParmPackType(SubstTemplateTypeParmPackType),
@@ -2548,6 +2549,16 @@ pub struct SizeOfPackExpr {
 pub struct StaticAssertDecl {
     pub loc: SourceLocation,
     pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct StmtExpr {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]
