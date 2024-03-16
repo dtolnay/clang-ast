@@ -151,6 +151,7 @@ pub enum Clang {
     ImplicitValueInitExpr(ImplicitValueInitExpr),
     IncompleteArrayType(IncompleteArrayType),
     IndirectFieldDecl(IndirectFieldDecl),
+    IndirectGotoStmt(IndirectGotoStmt),
     InitListExpr(InitListExpr),
     InjectedClassNameType(InjectedClassNameType),
     InlineCommandComment(InlineCommandComment),
@@ -1879,6 +1880,13 @@ pub struct IndirectFieldDecl {
     #[serde(rename = "isImplicit", default)]
     pub is_implicit: bool,
     pub name: Box<str>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct IndirectGotoStmt {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
