@@ -116,6 +116,7 @@ pub enum Clang {
     DependentSizedArrayType(DependentSizedArrayType),
     DependentTemplateSpecializationType(DependentTemplateSpecializationType),
     DeprecatedAttr(DeprecatedAttr),
+    DesignatedInitExpr(DesignatedInitExpr),
     DiagnoseIfAttr(DiagnoseIfAttr),
     DisableTailCallsAttr(DisableTailCallsAttr),
     DoStmt(DoStmt),
@@ -1465,6 +1466,16 @@ pub struct DeprecatedAttr {
     pub range: SourceRange,
     #[serde(default)]
     pub inherited: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct DesignatedInitExpr {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]
