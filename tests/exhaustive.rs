@@ -33,6 +33,7 @@ pub enum Clang {
     AttributedType(AttributedType),
     AutoType(AutoType),
     AvailabilityAttr(AvailabilityAttr),
+    BinaryConditionalOperator(BinaryConditionalOperator),
     BinaryOperator(BinaryOperator),
     BindingDecl(BindingDecl),
     BlockCommandComment(BlockCommandComment),
@@ -426,6 +427,16 @@ pub struct AutoType {
 #[non_exhaustive]
 pub struct AvailabilityAttr {
     pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct BinaryConditionalOperator {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]
