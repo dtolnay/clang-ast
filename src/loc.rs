@@ -400,22 +400,8 @@ where
         }
     }
 
-    let file = LAST_LOC_FILENAME.with(|last_loc_filename| match file {
-        Some(file) => {
-            *last_loc_filename.borrow_mut() = Arc::clone(&file);
-            file
-        }
-        None => Arc::clone(&last_loc_filename.borrow()),
-    });
-
-    let line = LAST_LOC_LINE.with(|last_loc_line| match line {
-        Some(line) => {
-            last_loc_line.set(line);
-            line
-        }
-        None => last_loc_line.get(),
-    });
-
+    let file = file.ok_or_else(|| Error::missing_field("file"))?;
+    let line = line.ok_or_else(|| Error::missing_field("line"))?;
     let col = col.ok_or_else(|| Error::missing_field("col"))?;
     let tok_len = tok_len.ok_or_else(|| Error::missing_field("tokLen"))?;
 

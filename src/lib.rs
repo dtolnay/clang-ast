@@ -395,18 +395,23 @@
 #![doc(html_root_url = "https://docs.rs/clang-ast/0.1.23")]
 #![allow(
     clippy::blocks_in_conditions,
+    clippy::cast_possible_truncation,
+    clippy::cast_sign_loss,
     clippy::derivable_impls,
     clippy::doc_markdown,
     clippy::let_underscore_untyped,
     clippy::match_like_matches_macro,
+    clippy::match_same_arms,
     clippy::must_use_candidate,
     clippy::ptr_arg,
     clippy::uninlined_format_args
 )]
 
+mod adapter;
 mod dedup;
 mod deserializer;
 mod id;
+mod inner;
 mod intern;
 mod kind;
 mod loc;
@@ -417,7 +422,7 @@ extern crate serde;
 use crate::deserializer::NodeDeserializer;
 use crate::kind::AnyKind;
 use crate::serializer::NodeSerializer;
-use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
+use serde::de::{Deserialize, DeserializeSeed, Deserializer, MapAccess, Visitor};
 use serde::ser::{Serialize, SerializeMap, Serializer};
 use std::fmt;
 use std::marker::PhantomData;
@@ -434,11 +439,40 @@ pub struct Node<T> {
     pub inner: Vec<Node<T>>,
 }
 
-struct NodeVisitor<T> {
+struct NodeVisitor<'a, T> {
     marker: PhantomData<fn() -> T>,
+    last_loc: &'a mut LastLocation,
 }
 
-impl<'de, T> Visitor<'de> for NodeVisitor<T>
+struct LastLocation {
+    file: String,
+    line: usize,
+}
+
+impl<'a, T> NodeVisitor<'a, T> {
+    fn new(last_loc: &'a mut LastLocation) -> Self {
+        NodeVisitor {
+            marker: PhantomData,
+            last_loc,
+        }
+    }
+}
+
+impl<'de, 'a, T> DeserializeSeed<'de> for NodeVisitor<'a, T>
+where
+    T: Deserialize<'de>,
+{
+    type Value = Node<T>;
+
+    fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        deserializer.deserialize_map(self)
+    }
+}
+
+impl<'de, 'a, T> Visitor<'de> for NodeVisitor<'a, T>
 where
     T: Deserialize<'de>,
 {
@@ -496,7 +530,7 @@ where
             match map.next_key()? {
                 None => {
                     let kind = AnyKind::Kind(Kind::null);
-                    let deserializer = NodeDeserializer::new(&kind, &mut inner, map);
+                    let deserializer = NodeDeserializer::new(&kind, self.last_loc, &mut inner, map);
                     break T::deserialize(deserializer)?;
                 }
                 Some(FirstField::Id) => {
@@ -507,7 +541,7 @@ where
                 }
                 Some(FirstField::Kind) => {
                     let kind: AnyKind = map.next_value()?;
-                    let deserializer = NodeDeserializer::new(&kind, &mut inner, map);
+                    let deserializer = NodeDeserializer::new(&kind, self.last_loc, &mut inner, map);
                     break T::deserialize(deserializer)?;
                 }
                 Some(FirstField::Inner) => {
@@ -531,8 +565,14 @@ where
         D: Deserializer<'de>,
     {
         let _intern = intern::activate();
-        let marker = PhantomData;
-        let visitor = NodeVisitor { marker };
+        let mut last_loc = LastLocation {
+            file: String::new(),
+            line: 0,
+        };
+        let visitor = NodeVisitor {
+            marker: PhantomData,
+            last_loc: &mut last_loc,
+        };
         deserializer.deserialize_map(visitor)
     }
 }

@@ -1,5 +1,7 @@
+use crate::adapter::{NodeField, NodeFieldValueAdapter};
+use crate::inner::Inner;
 use crate::kind::{AnyKind, Kind, SometimesBorrowedStrDeserializer};
-use crate::Node;
+use crate::{LastLocation, Node};
 use serde::de::value::BorrowedStrDeserializer;
 use serde::de::{
     Deserialize, DeserializeSeed, Deserializer, EnumAccess, Error, Expected, IgnoredAny, MapAccess,
@@ -9,25 +11,33 @@ use serde::forward_to_deserialize_any;
 use std::error::Error as StdError;
 use std::fmt::{self, Display};
 use std::marker::PhantomData;
+use std::mem;
 
 pub(crate) struct NodeDeserializer<'de, 'a, T, M> {
     kind: &'a AnyKind<'de>,
+    last_loc: &'a mut LastLocation,
     inner: &'a mut Vec<Node<T>>,
     map: M,
-    has_kind: bool,
+    next_field: NodeField,
 }
 
 impl<'de, 'a, T, M> NodeDeserializer<'de, 'a, T, M> {
-    pub(crate) fn new(kind: &'a AnyKind<'de>, inner: &'a mut Vec<Node<T>>, map: M) -> Self {
-        let has_kind = match kind {
-            AnyKind::Kind(Kind::null) => false,
-            _ => true,
+    pub(crate) fn new(
+        kind: &'a AnyKind<'de>,
+        last_loc: &'a mut LastLocation,
+        inner: &'a mut Vec<Node<T>>,
+        map: M,
+    ) -> Self {
+        let next_field = match kind {
+            AnyKind::Kind(Kind::null) => NodeField::Other,
+            _ => NodeField::Kind,
         };
         NodeDeserializer {
             kind,
+            last_loc,
             inner,
             map,
-            has_kind,
+            next_field,
         }
     }
 }
@@ -182,7 +192,7 @@ where
     where
         K: DeserializeSeed<'de>,
     {
-        if self.has_kind {
+        if let NodeField::Kind = self.next_field {
             let deserializer = BorrowedStrDeserializer::new("kind");
             seed.deserialize(deserializer).map(Some)
         } else {
@@ -192,11 +202,19 @@ where
                     seed,
                 })? {
                     None => return Ok(None),
-                    Some(NodeField::Inner(seed)) => {
-                        *self.inner = self.map.next_value()?;
+                    Some(NodeFieldValue::Inner(seed)) => {
+                        *self.inner = self.map.next_value_seed(Inner::new(self.last_loc))?;
                         seed
                     }
-                    Some(NodeField::Delegate(value)) => return Ok(Some(value)),
+                    Some(NodeFieldValue::Loc(value)) => {
+                        self.next_field = NodeField::Loc;
+                        return Ok(Some(value));
+                    }
+                    Some(NodeFieldValue::Range(value)) => {
+                        self.next_field = NodeField::Range;
+                        return Ok(Some(value));
+                    }
+                    Some(NodeFieldValue::Delegate(value)) => return Ok(Some(value)),
                 };
             }
         }
@@ -206,17 +224,19 @@ where
     where
         V: DeserializeSeed<'de>,
     {
-        if self.has_kind {
-            let deserializer = match &self.kind {
+        let field = mem::replace(&mut self.next_field, NodeField::Other);
+        if let NodeField::Kind = field {
+            seed.deserialize(match &self.kind {
                 AnyKind::Kind(kind) => SometimesBorrowedStrDeserializer::borrowed(kind.as_str()),
                 AnyKind::Borrowed(kind) => SometimesBorrowedStrDeserializer::borrowed(kind),
                 AnyKind::Owned(kind) => SometimesBorrowedStrDeserializer::transient(kind),
-            };
-            let value = seed.deserialize(deserializer);
-            self.has_kind = false;
-            value
+            })
         } else {
-            self.map.next_value_seed(seed)
+            self.map.next_value_seed(NodeFieldValueAdapter {
+                delegate: seed,
+                field,
+                last_loc: self.last_loc,
+            })
         }
     }
 }
@@ -227,18 +247,24 @@ where
     M: MapAccess<'de>,
 {
     fn ignore(&mut self) -> Result<(), M::Error> {
-        while let Some(node_field) = self.map.next_key_seed(NodeFieldSeed {
+        while let Some(field_value) = self.map.next_key_seed(NodeFieldSeed {
             kind: self.kind,
             seed: PhantomData::<IgnoredAny>,
         })? {
-            match node_field {
-                NodeField::Inner(PhantomData) => {
-                    *self.inner = self.map.next_value()?;
+            let field = match field_value {
+                NodeFieldValue::Inner(PhantomData) => {
+                    *self.inner = self.map.next_value_seed(Inner::new(self.last_loc))?;
+                    continue;
                 }
-                NodeField::Delegate(IgnoredAny) => {
-                    let _: IgnoredAny = self.map.next_value()?;
-                }
-            }
+                NodeFieldValue::Loc(IgnoredAny) => NodeField::Loc,
+                NodeFieldValue::Range(IgnoredAny) => NodeField::Range,
+                NodeFieldValue::Delegate(IgnoredAny) => NodeField::Other,
+            };
+            self.map.next_value_seed(NodeFieldValueAdapter {
+                delegate: PhantomData::<IgnoredAny>,
+                field,
+                last_loc: self.last_loc,
+            })?;
         }
         Ok(())
     }
@@ -392,15 +418,26 @@ where
                 .map_err(FieldOfKindError::Other)?
             {
                 None => return Ok(None),
-                Some(NodeField::Inner(seed)) => {
+                Some(NodeFieldValue::Inner(seed)) => {
                     *self.node.inner = self
                         .node
                         .map
-                        .next_value()
+                        .next_value_seed(Inner::new(self.node.last_loc))
                         .map_err(FieldOfKindError::Other)?;
                     seed
                 }
-                Some(NodeField::Delegate(value)) => return Ok(Some(value)),
+                Some(NodeFieldValue::Loc(value)) => {
+                    self.node.next_field = NodeField::Loc;
+                    return Ok(Some(value));
+                }
+                Some(NodeFieldValue::Range(value)) => {
+                    self.node.next_field = NodeField::Range;
+                    return Ok(Some(value));
+                }
+                Some(NodeFieldValue::Delegate(value)) => {
+                    self.node.next_field = NodeField::Other;
+                    return Ok(Some(value));
+                }
             };
         }
     }
@@ -411,7 +448,11 @@ where
     {
         self.node
             .map
-            .next_value_seed(seed)
+            .next_value_seed(NodeFieldValueAdapter {
+                delegate: seed,
+                field: self.node.next_field,
+                last_loc: self.node.last_loc,
+            })
             .map_err(FieldOfKindError::Other)
     }
 }
@@ -442,11 +483,18 @@ where
                     let expected = ExpectedEnum { name: self.name };
                     return Err(Error::invalid_type(Unexpected::Map, &expected));
                 }
-                Some(NodeField::Inner(seed)) => {
-                    *self.node.inner = self.node.map.next_value()?;
+                Some(NodeFieldValue::Inner(seed)) => {
+                    *self.node.inner = self
+                        .node
+                        .map
+                        .next_value_seed(Inner::new(self.node.last_loc))?;
                     seed
                 }
-                Some(NodeField::Delegate(value)) => return Ok((value, self)),
+                Some(
+                    NodeFieldValue::Loc(value)
+                    | NodeFieldValue::Range(value)
+                    | NodeFieldValue::Delegate(value),
+                ) => return Ok((value, self)),
             }
         }
     }
@@ -475,10 +523,17 @@ where
                 seed: PhantomData::<UnexpectedField>,
             })? {
                 None => return Ok(value),
-                Some(NodeField::Inner(PhantomData)) => {
-                    *self.node.inner = self.node.map.next_value()?;
+                Some(NodeFieldValue::Inner(PhantomData)) => {
+                    *self.node.inner = self
+                        .node
+                        .map
+                        .next_value_seed(Inner::new(self.node.last_loc))?;
                 }
-                Some(NodeField::Delegate(unexpected)) => match unexpected {},
+                Some(
+                    NodeFieldValue::Loc(unexpected)
+                    | NodeFieldValue::Range(unexpected)
+                    | NodeFieldValue::Delegate(unexpected),
+                ) => match unexpected {},
             }
         }
     }
@@ -513,8 +568,10 @@ struct NodeFieldSeed<'a, K> {
     seed: K,
 }
 
-enum NodeField<K, X> {
+enum NodeFieldValue<K, X> {
     Inner(K),
+    Loc(X),
+    Range(X),
     Delegate(X),
 }
 
@@ -522,7 +579,7 @@ impl<'de, 'a, K> DeserializeSeed<'de> for NodeFieldSeed<'a, K>
 where
     K: DeserializeSeed<'de>,
 {
-    type Value = NodeField<K, K::Value>;
+    type Value = NodeFieldValue<K, K::Value>;
 
     fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
     where
@@ -536,7 +593,7 @@ impl<'de, 'a, K> Visitor<'de> for NodeFieldSeed<'a, K>
 where
     K: DeserializeSeed<'de>,
 {
-    type Value = NodeField<K, K::Value>;
+    type Value = NodeFieldValue<K, K::Value>;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
         formatter.write_str("field of syntax tree node")
@@ -546,15 +603,18 @@ where
     where
         E: Error,
     {
-        match identifier {
-            "inner" => Ok(NodeField::Inner(self.seed)),
-            other => match self.seed.deserialize(FieldOfKindDeserializer {
-                field: other,
-                error: PhantomData,
-            }) {
-                Ok(field) => Ok(NodeField::Delegate(field)),
-                Err(error) => Err(error.with_kind(self.kind)),
-            },
+        let node_field = match identifier {
+            "inner" => return Ok(NodeFieldValue::Inner(self.seed)),
+            "loc" => NodeFieldValue::Loc,
+            "range" => NodeFieldValue::Range,
+            _other => NodeFieldValue::Delegate,
+        };
+        match self.seed.deserialize(FieldOfKindDeserializer {
+            field: identifier,
+            error: PhantomData,
+        }) {
+            Ok(field) => Ok(node_field(field)),
+            Err(error) => Err(error.with_kind(self.kind)),
         }
     }
 }
