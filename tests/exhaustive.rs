@@ -9,6 +9,9 @@
 use clang_ast::{Id, Kind, SourceLocation, SourceRange};
 use serde::de::IgnoredAny;
 use serde_derive::Deserialize;
+use std::env;
+use std::io::{self, Write as _};
+use std::str;
 use std::thread::{self, Builder as ThreadBuilder};
 
 pub type Node = clang_ast::Node<Clang>;
@@ -4195,9 +4198,20 @@ where
 }
 
 #[test]
-fn test() {
-    with_much_stack(|| {
-        let json = clang_ast_test_suite::cxx_ast_json();
-        let _: Node = serde_json::from_slice(&json).unwrap();
-    });
+fn test() -> Result<(), serde_json::Error> {
+    let json = clang_ast_test_suite::cxx_ast_json();
+    let result = with_much_stack(|| serde_json::from_slice::<Node>(&json).map(drop));
+
+    if let Err(error) = &result {
+        if env::var_os("CI").is_some() {
+            if let Ok(json) = str::from_utf8(&json) {
+                let mut stderr = io::stderr().lock();
+                for line in json.lines().skip(error.line().saturating_sub(30)).take(60) {
+                    let _ = writeln!(stderr, "{}", line);
+                }
+            }
+        }
+    }
+
+    result
 }
