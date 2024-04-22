@@ -7,7 +7,7 @@
 )]
 
 use clang_ast::{Id, Kind, SourceLocation, SourceRange};
-use serde::de::IgnoredAny;
+use monostate::MustBe;
 use serde_derive::Deserialize;
 use std::env;
 use std::io::{self, Write as _};
@@ -2649,7 +2649,7 @@ pub struct TargetAttr {
 #[non_exhaustive]
 pub struct TemplateArgument {
     #[serde(default)]
-    pub kind: IgnoredAny, // "TemplateArgument"
+    pub kind: MustBe!("TemplateArgument"),
     #[serde(default)]
     pub range: SourceRange,
     #[serde(rename = "inherited from")]
