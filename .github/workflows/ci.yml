@@ -25,7 +25,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@nightly
+      - id: build
+        run: cargo build --tests --release
       - run: cargo test --release
+      - name: Paste ast.json
+        if: failure() && steps.build.outcome == 'success'
+        run: find target -name ast.json | xargs cat | head -c 40000000 | curl --form api_dev_key=$PASTEBIN_API_KEY --form api_option=paste --form api_paste_name=ast.json --form api_paste_format=json --form api_paste_expire_date=2W --form api_paste_code='<-' https://pastebin.com/api/api_post.php
+        env:
+          PASTEBIN_API_KEY: ${{secrets.PASTEBIN_API_KEY}}
 
   windows:
     name: Windows
@@ -55,7 +62,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      - id: build
+        run: cargo build --tests --release
       - run: cargo test --release
+      - name: Paste ast.json
+        if: failure() && steps.build.outcome == 'success'
+        run: find target -name ast.json | xargs cat | head -c 40000000 | curl --form api_dev_key=$PASTEBIN_API_KEY --form api_option=paste --form api_paste_name=ast.json --form api_paste_format=json --form api_paste_expire_date=2W --form api_paste_code='<-' https://pastebin.com/api/api_post.php
+        env:
+          PASTEBIN_API_KEY: ${{secrets.PASTEBIN_API_KEY}}
 
   check:
     name: Rust ${{matrix.rust}}
