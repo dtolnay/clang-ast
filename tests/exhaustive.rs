@@ -4179,15 +4179,19 @@ fn default_true() -> bool {
 #[rustversion::since(2023-04-29)]
 const _: [(); std::mem::size_of::<Node>()] = [(); 1472];
 
-fn with_much_stack(test: impl FnOnce() + Send) {
+fn with_much_stack<F, T>(test: F) -> T
+where
+    F: FnOnce() -> T + Send,
+    T: Send,
+{
     thread::scope(|scope| {
         ThreadBuilder::new()
             .stack_size(4 * 1024 * 1024)
             .spawn_scoped(scope, test)
             .unwrap()
             .join()
-            .unwrap();
-    });
+            .unwrap()
+    })
 }
 
 #[test]
