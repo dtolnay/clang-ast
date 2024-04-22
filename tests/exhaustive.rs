@@ -2,7 +2,8 @@
     clippy::derivable_impls,
     clippy::doc_markdown,
     clippy::large_enum_variant,
-    clippy::struct_excessive_bools
+    clippy::struct_excessive_bools,
+    clippy::uninlined_format_args
 )]
 
 use clang_ast::{Id, Kind, SourceLocation, SourceRange};
