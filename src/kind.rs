@@ -164,6 +164,7 @@ kind! {
     EnumConstantDecl,
     EnumDecl,
     EnumType,
+    ExcludeFromExplicitInstantiationAttr,
     ExprWithCleanups,
     FallThroughAttr,
     FieldDecl,

@@ -130,6 +130,7 @@ pub enum Clang {
     EnumConstantDecl(EnumConstantDecl),
     EnumDecl(EnumDecl),
     EnumType(EnumType),
+    ExcludeFromExplicitInstantiationAttr(ExcludeFromExplicitInstantiationAttr),
     ExprWithCleanups(ExprWithCleanups),
     FallThroughAttr(FallThroughAttr),
     FieldDecl(FieldDecl),
@@ -1571,6 +1572,13 @@ pub struct EnumDecl {
 pub struct EnumType {
     pub r#type: Type,
     pub decl: Decl,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ExcludeFromExplicitInstantiationAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
