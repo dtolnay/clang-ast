@@ -3036,6 +3036,7 @@ pub struct UsingShadowDecl {
 #[non_exhaustive]
 pub struct UsingType {
     pub r#type: Type,
+    pub decl: Option<Decl>,
 }
 
 #[derive(Deserialize, Debug)]
