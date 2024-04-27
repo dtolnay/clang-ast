@@ -1579,6 +1579,8 @@ pub struct EnumType {
 #[non_exhaustive]
 pub struct ExcludeFromExplicitInstantiationAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
