@@ -4165,6 +4165,36 @@ pub enum UnaryOpcode {
 #[derive(Deserialize, Copy, Clone, Eq, PartialEq, Debug)]
 #[non_exhaustive]
 pub enum UnaryTransformTypeKind {
+    #[serde(rename = "add_lvalue_reference")]
+    AddLvalueReference,
+    #[serde(rename = "add_pointer")]
+    AddPointer,
+    #[serde(rename = "add_rvalue_reference")]
+    AddRvalueReference,
+    #[serde(rename = "decay")]
+    Decay,
+    #[serde(rename = "make_signed")]
+    MakeSigned,
+    #[serde(rename = "make_unsigned")]
+    MakeUnsigned,
+    #[serde(rename = "remove_all_extents")]
+    RemoveAllExtents,
+    #[serde(rename = "remove_const")]
+    RemoveConst,
+    #[serde(rename = "remove_cv")]
+    RemoveCV,
+    #[serde(rename = "remove_cvref")]
+    RemoveCVRef,
+    #[serde(rename = "remove_extent")]
+    RemoveExtent,
+    #[serde(rename = "remove_pointer")]
+    RemovePointer,
+    #[serde(rename = "remove_reference_t")]
+    RemoveReference,
+    #[serde(rename = "remove_restrict")]
+    RemoveRestrict,
+    #[serde(rename = "remove_volatile")]
+    RemoveVolatile,
     #[serde(rename = "underlying_type")]
     EnumUnderlyingType,
 }
