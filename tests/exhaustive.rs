@@ -4233,7 +4233,7 @@ where
 {
     thread::scope(|scope| {
         ThreadBuilder::new()
-            .stack_size(4 * 1024 * 1024)
+            .stack_size(6 * 1024 * 1024)
             .spawn_scoped(scope, test)
             .unwrap()
             .join()
