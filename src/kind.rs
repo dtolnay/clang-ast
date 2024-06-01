@@ -253,6 +253,7 @@ kind! {
     ShuffleVectorExpr,
     SimpleRequirement,
     SizeOfPackExpr,
+    StandaloneDebugAttr,
     StaticAssertDecl,
     StmtExpr,
     StringLiteral,
