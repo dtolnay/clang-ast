@@ -478,6 +478,7 @@ where
                 Some(NodeField::Inner(PhantomData)) => {
                     *self.node.inner = self.node.map.next_value()?;
                 }
+                #[allow(unreachable_patterns)]
                 Some(NodeField::Delegate(unexpected)) => match unexpected {},
             }
         }
