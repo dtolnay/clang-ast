@@ -526,9 +526,9 @@ impl Serialize for SourceLocation {
             spelling_included_from: Option<&IncludedFrom>,
             expansion_included_from: Option<&IncludedFrom>,
         ) -> bool {
-            spelling_included_from.zip(expansion_included_from).map_or(
-                false,
-                |(spelling_included_from, expansion_included_from)| {
+            spelling_included_from
+                .zip(expansion_included_from)
+                .is_some_and(|(spelling_included_from, expansion_included_from)| {
                     let IncludedFrom {
                         included_from: spelling_included_from,
                         file: spelling_file,
@@ -541,8 +541,7 @@ impl Serialize for SourceLocation {
                         spelling_included_from.as_ref().map(Box::as_ref),
                         expansion_included_from.as_ref().map(Box::as_ref),
                     ) && spelling_file == expansion_file
-                },
-            )
+                })
         }
 
         let serialize_separately = self
