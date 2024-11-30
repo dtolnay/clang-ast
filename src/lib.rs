@@ -402,7 +402,8 @@
     clippy::must_use_candidate,
     clippy::needless_lifetimes,
     clippy::ptr_arg,
-    clippy::uninlined_format_args
+    clippy::uninlined_format_args,
+    clippy::unnecessary_map_or
 )]
 
 mod dedup;
