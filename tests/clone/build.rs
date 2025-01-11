@@ -1,5 +1,6 @@
 #![allow(
     clippy::let_underscore_untyped,
+    clippy::manual_assert,
     clippy::redundant_else,
     clippy::uninlined_format_args
 )]
