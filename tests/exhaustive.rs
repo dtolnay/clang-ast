@@ -3238,6 +3238,8 @@ pub struct VisibilityAttr {
     pub inherited: bool,
     #[serde(default)]
     pub implicit: bool,
+    #[serde(default)]
+    pub visibility: Visibility,
 }
 
 #[derive(Deserialize, Debug)]
@@ -4258,6 +4260,14 @@ pub enum ValueCategory {
     RValue,
     #[serde(rename = "prvalue")]
     PRValue,
+}
+
+#[derive(Deserialize, Default, Copy, Clone, Eq, PartialEq, Debug)]
+#[non_exhaustive]
+pub enum Visibility {
+    #[default]
+    #[serde(rename = "default")]
+    Default,
 }
 
 fn default_true() -> bool {
