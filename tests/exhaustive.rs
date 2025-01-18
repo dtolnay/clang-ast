@@ -1486,6 +1486,7 @@ pub struct DeprecatedAttr {
     pub range: SourceRange,
     #[serde(default)]
     pub inherited: bool,
+    pub message: Option<Box<str>>,
 }
 
 #[derive(Deserialize, Debug)]
