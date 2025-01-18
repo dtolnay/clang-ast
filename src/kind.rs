@@ -144,6 +144,7 @@ kind! {
     ConvertVectorExpr,
     DLLImportAttr,
     DecayedType,
+    Decl,
     DeclRefExpr,
     DeclStmt,
     DecltypeType,
