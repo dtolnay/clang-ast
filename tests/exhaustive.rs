@@ -221,6 +221,7 @@ pub enum Clang {
     ShuffleVectorExpr(ShuffleVectorExpr),
     SimpleRequirement(SimpleRequirement),
     SizeOfPackExpr(SizeOfPackExpr),
+    SourceLocExpr(SourceLocExpr),
     StandaloneDebugAttr(StandaloneDebugAttr),
     StaticAssertDecl(StaticAssertDecl),
     StmtExpr(StmtExpr),
@@ -2571,6 +2572,16 @@ pub struct SizeOfPackExpr {
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
     pub name: Box<str>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct SourceLocExpr {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
 }
 
 #[derive(Deserialize, Debug)]

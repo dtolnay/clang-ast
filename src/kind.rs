@@ -256,6 +256,7 @@ kind! {
     ShuffleVectorExpr,
     SimpleRequirement,
     SizeOfPackExpr,
+    SourceLocExpr,
     StandaloneDebugAttr,
     StaticAssertDecl,
     StmtExpr,
