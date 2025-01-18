@@ -2145,6 +2145,8 @@ pub struct NamespaceDecl {
     pub name: Option<Box<str>>,
     #[serde(rename = "isInline", default)]
     pub is_inline: bool,
+    #[serde(rename = "isNested", default)]
+    pub is_nested: bool,
     #[serde(rename = "originalNamespace")]
     pub original_namespace: Option<Decl>,
 }
