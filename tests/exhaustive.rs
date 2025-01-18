@@ -401,6 +401,7 @@ pub struct AtomicExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
+    pub name: Option<Box<str>>,
 }
 
 #[derive(Deserialize, Debug)]
