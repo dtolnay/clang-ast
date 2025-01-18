@@ -90,6 +90,7 @@ pub enum Clang {
     CallbackAttr(CallbackAttr),
     CaseStmt(CaseStmt),
     CharacterLiteral(CharacterLiteral),
+    ClassScopeFunctionSpecializationDecl(ClassScopeFunctionSpecializationDecl),
     ClassTemplateDecl(ClassTemplateDecl),
     ClassTemplatePartialSpecializationDecl(ClassTemplatePartialSpecializationDecl),
     ClassTemplateSpecializationDecl(ClassTemplateSpecializationDecl),
@@ -153,6 +154,7 @@ pub enum Clang {
     HTMLStartTagComment(HTMLStartTagComment),
     IfStmt(IfStmt),
     ImplicitCastExpr(ImplicitCastExpr),
+    ImplicitConceptSpecializationDecl(ImplicitConceptSpecializationDecl),
     ImplicitValueInitExpr(ImplicitValueInitExpr),
     IncompleteArrayType(IncompleteArrayType),
     IndirectFieldDecl(IndirectFieldDecl),
@@ -219,6 +221,7 @@ pub enum Clang {
     ShuffleVectorExpr(ShuffleVectorExpr),
     SimpleRequirement(SimpleRequirement),
     SizeOfPackExpr(SizeOfPackExpr),
+    SourceLocExpr(SourceLocExpr),
     StandaloneDebugAttr(StandaloneDebugAttr),
     StaticAssertDecl(StaticAssertDecl),
     StmtExpr(StmtExpr),
@@ -398,6 +401,7 @@ pub struct AtomicExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
+    pub name: Option<Box<str>>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -655,6 +659,8 @@ pub struct CXXConstructorDecl {
     pub constexpr: bool,
     #[serde(default)]
     pub variadic: bool,
+    #[serde(default)]
+    pub immediate: bool,
     #[serde(rename = "explicitlyDefaulted", default)]
     pub explicitly_defaulted: ExplicitlyDefaulted,
 }
@@ -902,6 +908,8 @@ pub struct CXXMethodDecl {
     pub constexpr: bool,
     #[serde(default)]
     pub variadic: bool,
+    #[serde(default)]
+    pub immediate: bool,
     #[serde(rename = "explicitlyDefaulted", default)]
     pub explicitly_defaulted: ExplicitlyDefaulted,
 }
@@ -1148,6 +1156,11 @@ pub struct CharacterLiteral {
     pub value_category: ValueCategory,
     pub value: u32,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ClassScopeFunctionSpecializationDecl {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
@@ -1474,6 +1487,7 @@ pub struct DeprecatedAttr {
     pub range: SourceRange,
     #[serde(default)]
     pub inherited: bool,
+    pub message: Option<Box<str>>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -1869,6 +1883,14 @@ pub struct ImplicitCastExpr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
+pub struct ImplicitConceptSpecializationDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
 pub struct ImplicitValueInitExpr {
     pub range: SourceRange,
     pub r#type: Type,
@@ -2125,6 +2147,8 @@ pub struct NamespaceDecl {
     pub name: Option<Box<str>>,
     #[serde(rename = "isInline", default)]
     pub is_inline: bool,
+    #[serde(rename = "isNested", default)]
+    pub is_nested: bool,
     #[serde(rename = "originalNamespace")]
     pub original_namespace: Option<Decl>,
 }
@@ -2561,6 +2585,16 @@ pub struct SizeOfPackExpr {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
+pub struct SourceLocExpr {
+    pub range: SourceRange,
+    pub r#type: Type,
+    #[serde(rename = "valueCategory")]
+    pub value_category: ValueCategory,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
 pub struct StandaloneDebugAttr {
     pub range: SourceRange,
 }
@@ -2615,6 +2649,7 @@ pub struct SubstTemplateTypeParmPackType {
     pub is_instantiation_dependent: bool,
     #[serde(rename = "containsUnexpandedPack", default)]
     pub contains_unexpanded_pack: bool,
+    pub index: Option<usize>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2622,6 +2657,7 @@ pub struct SubstTemplateTypeParmPackType {
 #[non_exhaustive]
 pub struct SubstTemplateTypeParmType {
     pub r#type: Type,
+    pub index: Option<usize>,
     #[serde(rename = "isDependent", default)]
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
@@ -3204,6 +3240,8 @@ pub struct VisibilityAttr {
     pub inherited: bool,
     #[serde(default)]
     pub implicit: bool,
+    #[serde(default)]
+    pub visibility: Visibility,
 }
 
 #[derive(Deserialize, Debug)]
@@ -4224,6 +4262,14 @@ pub enum ValueCategory {
     RValue,
     #[serde(rename = "prvalue")]
     PRValue,
+}
+
+#[derive(Deserialize, Default, Copy, Clone, Eq, PartialEq, Debug)]
+#[non_exhaustive]
+pub enum Visibility {
+    #[default]
+    #[serde(rename = "default")]
+    Default,
 }
 
 fn default_true() -> bool {
