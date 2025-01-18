@@ -90,6 +90,7 @@ pub enum Clang {
     CallbackAttr(CallbackAttr),
     CaseStmt(CaseStmt),
     CharacterLiteral(CharacterLiteral),
+    ClassScopeFunctionSpecializationDecl(ClassScopeFunctionSpecializationDecl),
     ClassTemplateDecl(ClassTemplateDecl),
     ClassTemplatePartialSpecializationDecl(ClassTemplatePartialSpecializationDecl),
     ClassTemplateSpecializationDecl(ClassTemplateSpecializationDecl),
@@ -1148,6 +1149,11 @@ pub struct CharacterLiteral {
     pub value_category: ValueCategory,
     pub value: u32,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ClassScopeFunctionSpecializationDecl {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

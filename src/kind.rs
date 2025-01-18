@@ -124,6 +124,7 @@ kind! {
     CallbackAttr,
     CaseStmt,
     CharacterLiteral,
+    ClassScopeFunctionSpecializationDecl,
     ClassTemplateDecl,
     ClassTemplatePartialSpecializationDecl,
     ClassTemplateSpecializationDecl,
