@@ -658,6 +658,8 @@ pub struct CXXConstructorDecl {
     pub constexpr: bool,
     #[serde(default)]
     pub variadic: bool,
+    #[serde(default)]
+    pub immediate: bool,
     #[serde(rename = "explicitlyDefaulted", default)]
     pub explicitly_defaulted: ExplicitlyDefaulted,
 }
@@ -905,6 +907,8 @@ pub struct CXXMethodDecl {
     pub constexpr: bool,
     #[serde(default)]
     pub variadic: bool,
+    #[serde(default)]
+    pub immediate: bool,
     #[serde(rename = "explicitlyDefaulted", default)]
     pub explicitly_defaulted: ExplicitlyDefaulted,
 }
