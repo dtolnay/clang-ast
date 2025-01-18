@@ -189,6 +189,7 @@ kind! {
     HTMLStartTagComment,
     IfStmt,
     ImplicitCastExpr,
+    ImplicitConceptSpecializationDecl,
     ImplicitValueInitExpr,
     IncompleteArrayType,
     IndirectFieldDecl,

@@ -154,6 +154,7 @@ pub enum Clang {
     HTMLStartTagComment(HTMLStartTagComment),
     IfStmt(IfStmt),
     ImplicitCastExpr(ImplicitCastExpr),
+    ImplicitConceptSpecializationDecl(ImplicitConceptSpecializationDecl),
     ImplicitValueInitExpr(ImplicitValueInitExpr),
     IncompleteArrayType(IncompleteArrayType),
     IndirectFieldDecl(IndirectFieldDecl),
@@ -1870,6 +1871,14 @@ pub struct ImplicitCastExpr {
     pub conversion_func: Option<Decl>,
     #[serde(rename = "isPartOfExplicitCast", default)]
     pub is_part_of_explicit_cast: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct ImplicitConceptSpecializationDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
