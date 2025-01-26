@@ -344,6 +344,18 @@ impl Debug for Kind {
     }
 }
 
+impl PartialEq<Kind> for str {
+    fn eq(&self, kind: &Kind) -> bool {
+        self == kind.as_str()
+    }
+}
+
+impl PartialEq<Kind> for String {
+    fn eq(&self, kind: &Kind) -> bool {
+        self == kind.as_str()
+    }
+}
+
 impl<'de> Deserialize<'de> for Kind {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
