@@ -20,27 +20,21 @@ macro_rules! kind {
             null,
         }
 
-        impl Kind {
-            pub fn as_str(&self) -> &'static str {
-                match self {
-                    $(
-                        Kind::$kind => stringify!($kind),
-                    )*
-                    Kind::null => "null",
-                }
+        fn as_str(kind: &Kind) -> &'static str {
+            match kind {
+                $(
+                    Kind::$kind => stringify!($kind),
+                )*
+                Kind::null => "null",
             }
         }
 
-        impl FromStr for Kind {
-            type Err = ParseKindError;
-
-            fn from_str(kind: &str) -> Result<Self, Self::Err> {
-                match kind {
-                    $(
-                        stringify!($kind) => Ok(Kind::$kind),
-                    )*
-                    _other => Err(ParseKindError { _private: () }),
-                }
+        fn from_str(kind: &str) -> Result<Kind, ParseKindError> {
+            match kind {
+                $(
+                    stringify!($kind) => Ok(Kind::$kind),
+                )*
+                _other => Err(ParseKindError { _private: () }),
             }
         }
 
@@ -316,6 +310,20 @@ kind! {
     WeakImportAttr,
     WeakRefAttr,
     WhileStmt,
+}
+
+impl Kind {
+    pub fn as_str(&self) -> &'static str {
+        as_str(self)
+    }
+}
+
+impl FromStr for Kind {
+    type Err = ParseKindError;
+
+    fn from_str(kind: &str) -> Result<Self, Self::Err> {
+        from_str(kind)
+    }
 }
 
 impl Default for Kind {
