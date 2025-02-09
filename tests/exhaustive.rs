@@ -3250,6 +3250,7 @@ pub struct VarTemplatePartialSpecializationDecl {
     pub inline: bool,
     #[serde(default)]
     pub constexpr: bool,
+    #[serde(default)]
     pub init: InitStyle,
 }
 
