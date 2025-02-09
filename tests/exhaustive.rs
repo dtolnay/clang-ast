@@ -2212,6 +2212,8 @@ pub struct NoSanitizeAttr {
 pub struct NoThrowAttr {
     pub range: SourceRange,
     #[serde(default)]
+    pub inherited: bool,
+    #[serde(default)]
     pub implicit: bool,
 }
 
