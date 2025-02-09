@@ -201,6 +201,7 @@ kind! {
     LikelyAttr,
     LinkageSpecDecl,
     MSAllocatorAttr,
+    MSConstexprAttr,
     MaterializeTemporaryExpr,
     MaxFieldAlignmentAttr,
     MayAliasAttr,
