@@ -56,7 +56,7 @@ jobs:
     name: macOS
     needs: pre_ci
     if: needs.pre_ci.outputs.continue
-    runs-on: macos-latest
+    runs-on: macos-15
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4

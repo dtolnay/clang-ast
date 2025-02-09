@@ -37,6 +37,7 @@ pub enum Clang {
     AttributedType(AttributedType),
     AutoType(AutoType),
     AvailabilityAttr(AvailabilityAttr),
+    AvailableOnlyInDefaultEvalMethodAttr(AvailableOnlyInDefaultEvalMethodAttr),
     BinaryConditionalOperator(BinaryConditionalOperator),
     BinaryOperator(BinaryOperator),
     BindingDecl(BindingDecl),
@@ -439,6 +440,13 @@ pub struct AutoType {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct AvailabilityAttr {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct AvailableOnlyInDefaultEvalMethodAttr {
     pub range: SourceRange,
 }
 
@@ -1741,6 +1749,8 @@ pub struct FunctionDecl {
     pub constexpr: bool,
     #[serde(default)]
     pub variadic: bool,
+    #[serde(default)]
+    pub immediate: bool,
     #[serde(rename = "explicitlyDefaulted", default)]
     pub explicitly_defaulted: ExplicitlyDefaulted,
 }
