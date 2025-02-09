@@ -65,6 +65,7 @@ kind! {
     AttributedType,
     AutoType,
     AvailabilityAttr,
+    AvailableOnlyInDefaultEvalMethodAttr,
     BinaryConditionalOperator,
     BinaryOperator,
     BindingDecl,
