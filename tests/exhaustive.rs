@@ -2215,6 +2215,8 @@ pub struct NestedRequirement {
 #[non_exhaustive]
 pub struct NoDebugAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
