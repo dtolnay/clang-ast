@@ -174,6 +174,7 @@ pub enum Clang {
     LinkageSpecDecl(LinkageSpecDecl),
     MSAllocatorAttr(MSAllocatorAttr),
     MSConstexprAttr(MSConstexprAttr),
+    MSVtorDispAttr(MSVtorDispAttr),
     MaterializeTemporaryExpr(MaterializeTemporaryExpr),
     MaxFieldAlignmentAttr(MaxFieldAlignmentAttr),
     MayAliasAttr(MayAliasAttr),
@@ -2085,6 +2086,15 @@ pub struct MSAllocatorAttr {
 #[non_exhaustive]
 pub struct MSConstexprAttr {
     pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct MSVtorDispAttr {
+    pub range: SourceRange,
+    #[serde(default)]
+    pub implicit: bool,
 }
 
 #[derive(Deserialize, Debug)]
