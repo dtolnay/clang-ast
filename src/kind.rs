@@ -200,6 +200,7 @@ kind! {
     LifetimeBoundAttr,
     LikelyAttr,
     LinkageSpecDecl,
+    MSAllocatorAttr,
     MaterializeTemporaryExpr,
     MaxFieldAlignmentAttr,
     MayAliasAttr,

@@ -171,6 +171,7 @@ pub enum Clang {
     LifetimeBoundAttr(LifetimeBoundAttr),
     LikelyAttr(LikelyAttr),
     LinkageSpecDecl(LinkageSpecDecl),
+    MSAllocatorAttr(MSAllocatorAttr),
     MaterializeTemporaryExpr(MaterializeTemporaryExpr),
     MaxFieldAlignmentAttr(MaxFieldAlignmentAttr),
     MayAliasAttr(MayAliasAttr),
@@ -2055,6 +2056,13 @@ pub struct LinkageSpecDecl {
     pub language: Language,
     #[serde(rename = "hasBraces", default)]
     pub has_braces: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct MSAllocatorAttr {
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
