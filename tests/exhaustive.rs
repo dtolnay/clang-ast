@@ -264,6 +264,7 @@ pub enum Clang {
     UnresolvedLookupExpr(UnresolvedLookupExpr),
     UnresolvedMemberExpr(UnresolvedMemberExpr),
     UnresolvedUsingIfExistsDecl(UnresolvedUsingIfExistsDecl),
+    UnresolvedUsingType(UnresolvedUsingType),
     UnresolvedUsingTypenameDecl(UnresolvedUsingTypenameDecl),
     UnresolvedUsingValueDecl(UnresolvedUsingValueDecl),
     UnusedAttr(UnusedAttr),
@@ -3072,6 +3073,18 @@ pub struct UnresolvedMemberExpr {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct UnresolvedUsingIfExistsDecl {}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct UnresolvedUsingType {
+    pub r#type: Type,
+    #[serde(rename = "isDependent", default)]
+    pub is_dependent: bool,
+    #[serde(rename = "isInstantiationDependent", default)]
+    pub is_instantiation_dependent: bool,
+    pub decl: Option<Decl>,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

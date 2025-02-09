@@ -293,6 +293,7 @@ kind! {
     UnresolvedLookupExpr,
     UnresolvedMemberExpr,
     UnresolvedUsingIfExistsDecl,
+    UnresolvedUsingType,
     UnresolvedUsingTypenameDecl,
     UnresolvedUsingValueDecl,
     UnusedAttr,
