@@ -1,6 +1,6 @@
 [package]
 name = "clang-ast"
-version = "0.1.29"
+version = "0.1.30"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 categories = ["compilers", "encoding"]
 description = "Data structures for processing Clang's `-ast-dump=json` format"
