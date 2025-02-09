@@ -1325,6 +1325,8 @@ pub struct ConditionalOperator {
 pub struct ConstAttr {
     pub range: SourceRange,
     #[serde(default)]
+    pub inherited: bool,
+    #[serde(default)]
     pub implicit: bool,
 }
 
