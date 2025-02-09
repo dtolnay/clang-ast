@@ -50,6 +50,7 @@ kind! {
     AbiTagAttr,
     AccessSpecDecl,
     AliasAttr,
+    AlignValueAttr,
     AlignedAttr,
     AllocAlignAttr,
     AllocSizeAttr,
