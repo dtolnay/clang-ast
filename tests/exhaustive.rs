@@ -2761,6 +2761,8 @@ pub struct TParamCommandComment {
 #[non_exhaustive]
 pub struct TargetAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
