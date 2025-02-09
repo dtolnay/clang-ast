@@ -79,6 +79,9 @@ fn main() {
             }
             Err(error) => {
                 let _ = fs::remove_file(&out_ast_json);
+                if error.kind() == ErrorKind::NotFound {
+                    println!("cargo:warning={} not found", clang);
+                }
                 if error.kind() != ErrorKind::NotFound || clangs.as_slice().is_empty() {
                     panic!("{:?}", error);
                 }
