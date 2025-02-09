@@ -2881,6 +2881,8 @@ pub struct TypeVisibilityAttr {
     pub range: SourceRange,
     #[serde(default)]
     pub inherited: bool,
+    #[serde(default)]
+    pub implicit: bool,
 }
 
 #[derive(Deserialize, Debug)]
