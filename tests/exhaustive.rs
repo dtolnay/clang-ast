@@ -22,6 +22,7 @@ pub enum Clang {
     AbiTagAttr(AbiTagAttr),
     AccessSpecDecl(AccessSpecDecl),
     AliasAttr(AliasAttr),
+    AlignValueAttr(AlignValueAttr),
     AlignedAttr(AlignedAttr),
     AllocAlignAttr(AllocAlignAttr),
     AllocSizeAttr(AllocSizeAttr),
@@ -171,6 +172,10 @@ pub enum Clang {
     LifetimeBoundAttr(LifetimeBoundAttr),
     LikelyAttr(LikelyAttr),
     LinkageSpecDecl(LinkageSpecDecl),
+    MSAllocatorAttr(MSAllocatorAttr),
+    MSConstexprAttr(MSConstexprAttr),
+    MSNoVTableAttr(MSNoVTableAttr),
+    MSVtorDispAttr(MSVtorDispAttr),
     MaterializeTemporaryExpr(MaterializeTemporaryExpr),
     MaxFieldAlignmentAttr(MaxFieldAlignmentAttr),
     MayAliasAttr(MayAliasAttr),
@@ -206,6 +211,8 @@ pub enum Clang {
     ParmVarDecl(ParmVarDecl),
     PointerAttr(PointerAttr),
     PointerType(PointerType),
+    PragmaCommentDecl(PragmaCommentDecl),
+    PragmaDetectMismatchDecl(PragmaDetectMismatchDecl),
     PredefinedExpr(PredefinedExpr),
     PreferredNameAttr(PreferredNameAttr),
     PureAttr(PureAttr),
@@ -257,6 +264,7 @@ pub enum Clang {
     UnresolvedLookupExpr(UnresolvedLookupExpr),
     UnresolvedMemberExpr(UnresolvedMemberExpr),
     UnresolvedUsingIfExistsDecl(UnresolvedUsingIfExistsDecl),
+    UnresolvedUsingType(UnresolvedUsingType),
     UnresolvedUsingTypenameDecl(UnresolvedUsingTypenameDecl),
     UnresolvedUsingValueDecl(UnresolvedUsingValueDecl),
     UnusedAttr(UnusedAttr),
@@ -306,6 +314,13 @@ pub struct AccessSpecDecl {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct AliasAttr {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct AlignValueAttr {
     pub range: SourceRange,
 }
 
@@ -720,6 +735,8 @@ pub struct CXXDeductionGuideDecl {
     pub is_implicit: bool,
     #[serde(rename = "isUsed", default)]
     pub is_used: bool,
+    #[serde(rename = "isReferenced", default)]
+    pub is_referenced: bool,
     pub name: Box<str>,
     #[serde(rename = "mangledName")]
     pub mangled_name: Option<Box<str>>,
@@ -1318,6 +1335,8 @@ pub struct ConditionalOperator {
 #[non_exhaustive]
 pub struct ConstAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
     #[serde(default)]
     pub implicit: bool,
 }
@@ -2060,6 +2079,36 @@ pub struct LinkageSpecDecl {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
+pub struct MSAllocatorAttr {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct MSConstexprAttr {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct MSNoVTableAttr {
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct MSVtorDispAttr {
+    pub range: SourceRange,
+    #[serde(default)]
+    pub implicit: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
 pub struct MaterializeTemporaryExpr {
     pub range: SourceRange,
     pub r#type: Type,
@@ -2078,6 +2127,8 @@ pub struct MaterializeTemporaryExpr {
 #[non_exhaustive]
 pub struct MaxFieldAlignmentAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
     #[serde(default)]
     pub implicit: bool,
 }
@@ -2166,7 +2217,9 @@ pub struct NamespaceDecl {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct NoAliasAttr {}
+pub struct NoAliasAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
@@ -2181,6 +2234,8 @@ pub struct NestedRequirement {
 #[non_exhaustive]
 pub struct NoDebugAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2211,6 +2266,8 @@ pub struct NoSanitizeAttr {
 #[non_exhaustive]
 pub struct NoThrowAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
     #[serde(default)]
     pub implicit: bool,
 }
@@ -2423,6 +2480,22 @@ pub struct PointerType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct PragmaCommentDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct PragmaDetectMismatchDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2707,6 +2780,8 @@ pub struct TParamCommandComment {
 #[non_exhaustive]
 pub struct TargetAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2881,6 +2956,8 @@ pub struct TypeVisibilityAttr {
     pub range: SourceRange,
     #[serde(default)]
     pub inherited: bool,
+    #[serde(default)]
+    pub implicit: bool,
 }
 
 #[derive(Deserialize, Debug)]
@@ -2996,6 +3073,18 @@ pub struct UnresolvedMemberExpr {
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
 pub struct UnresolvedUsingIfExistsDecl {}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct UnresolvedUsingType {
+    pub r#type: Type,
+    #[serde(rename = "isDependent", default)]
+    pub is_dependent: bool,
+    #[serde(rename = "isInstantiationDependent", default)]
+    pub is_instantiation_dependent: bool,
+    pub decl: Option<Decl>,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
@@ -3174,6 +3263,7 @@ pub struct VarTemplatePartialSpecializationDecl {
     pub inline: bool,
     #[serde(default)]
     pub constexpr: bool,
+    #[serde(default)]
     pub init: InitStyle,
 }
 
@@ -3195,6 +3285,8 @@ pub struct VarTemplateSpecializationDecl {
     #[serde(rename = "mangledName")]
     pub mangled_name: Option<Box<str>>,
     pub r#type: Type,
+    #[serde(rename = "storageClass", default)]
+    pub storage_class: StorageClass,
     #[serde(default)]
     pub inline: bool,
     #[serde(default)]
