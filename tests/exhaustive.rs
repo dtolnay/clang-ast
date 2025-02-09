@@ -208,6 +208,7 @@ pub enum Clang {
     ParmVarDecl(ParmVarDecl),
     PointerAttr(PointerAttr),
     PointerType(PointerType),
+    PragmaCommentDecl(PragmaCommentDecl),
     PragmaDetectMismatchDecl(PragmaDetectMismatchDecl),
     PredefinedExpr(PredefinedExpr),
     PreferredNameAttr(PreferredNameAttr),
@@ -2442,6 +2443,14 @@ pub struct PointerType {
     pub is_dependent: bool,
     #[serde(rename = "isInstantiationDependent", default)]
     pub is_instantiation_dependent: bool,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct PragmaCommentDecl {
+    pub loc: SourceLocation,
+    pub range: SourceRange,
 }
 
 #[derive(Deserialize, Debug)]
