@@ -203,6 +203,7 @@ kind! {
     LinkageSpecDecl,
     MSAllocatorAttr,
     MSConstexprAttr,
+    MSNoVTableAttr,
     MSVtorDispAttr,
     MaterializeTemporaryExpr,
     MaxFieldAlignmentAttr,
