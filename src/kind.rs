@@ -237,6 +237,7 @@ kind! {
     ParmVarDecl,
     PointerAttr,
     PointerType,
+    PragmaDetectMismatchDecl,
     PredefinedExpr,
     PreferredNameAttr,
     PureAttr,
