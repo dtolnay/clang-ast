@@ -1741,6 +1741,8 @@ pub struct FunctionDecl {
     pub constexpr: bool,
     #[serde(default)]
     pub variadic: bool,
+    #[serde(default)]
+    pub immediate: bool,
     #[serde(rename = "explicitlyDefaulted", default)]
     pub explicitly_defaulted: ExplicitlyDefaulted,
 }
