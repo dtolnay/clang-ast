@@ -2937,6 +2937,7 @@ pub struct TypeOfExprType {
 pub struct TypeRequirement {
     #[serde(rename = "isDependent", default)]
     pub is_dependent: bool,
+    pub satisfied: Option<bool>,
 }
 
 #[derive(Deserialize, Debug)]
