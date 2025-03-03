@@ -255,6 +255,7 @@ kind! {
     ReturnStmt,
     ReturnsNonNullAttr,
     ReturnsTwiceAttr,
+    SelectAnyAttr,
     ShuffleVectorExpr,
     SimpleRequirement,
     SizeOfPackExpr,
