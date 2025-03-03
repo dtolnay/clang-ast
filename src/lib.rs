@@ -397,6 +397,7 @@
     clippy::blocks_in_conditions,
     clippy::derivable_impls,
     clippy::doc_markdown,
+    clippy::elidable_lifetime_names,
     clippy::let_underscore_untyped,
     clippy::match_like_matches_macro,
     clippy::must_use_candidate,
