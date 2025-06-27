@@ -13,6 +13,8 @@ use std::process::Command;
 
 // Executable names to try.
 static CLANG: &[&str] = &[
+    "clang++-20",
+    "clang++-19",
     "clang++-18",
     "clang++-17",
     "clang++-16",
