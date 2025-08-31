@@ -4381,6 +4381,8 @@ pub enum Visibility {
     #[default]
     #[serde(rename = "default")]
     Default,
+    #[serde(rename = "hidden")]
+    Hidden,
 }
 
 fn default_true() -> bool {
