@@ -251,6 +251,7 @@ pub enum Clang {
     TranslationUnitDecl(TranslationUnitDecl),
     TypeAliasDecl(TypeAliasDecl),
     TypeAliasTemplateDecl(TypeAliasTemplateDecl),
+    TypeNullableAttr(TypeNullableAttr),
     TypeOfExprType(TypeOfExprType),
     TypeRequirement(TypeRequirement),
     TypeTraitExpr(TypeTraitExpr),
@@ -2928,6 +2929,17 @@ pub struct TypeAliasTemplateDecl {
     #[serde(rename = "previousDecl")]
     pub previous_decl: Option<Id>,
     pub name: Box<str>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct TypeNullableAttr {
+    pub range: SourceRange,
+    #[serde(default)]
+    pub inherited: bool,
+    #[serde(default)]
+    pub implicit: bool,
 }
 
 #[derive(Deserialize, Debug)]

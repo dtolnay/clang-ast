@@ -280,6 +280,7 @@ kind! {
     TranslationUnitDecl,
     TypeAliasDecl,
     TypeAliasTemplateDecl,
+    TypeNullableAttr,
     TypeOfExprType,
     TypeRequirement,
     TypeTraitExpr,
