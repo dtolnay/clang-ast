@@ -764,6 +764,8 @@ pub struct CXXDefaultInitExpr {
     pub r#type: Type,
     #[serde(rename = "valueCategory")]
     pub value_category: ValueCategory,
+    #[serde(rename = "hasRewrittenInit", default)]
+    pub has_rewritten_init: bool,
 }
 
 #[derive(Deserialize, Debug)]
