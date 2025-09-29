@@ -415,7 +415,7 @@ mod kind;
 mod loc;
 mod serializer;
 
-extern crate serde;
+extern crate serde_core as serde;
 
 use crate::deserializer::NodeDeserializer;
 use crate::kind::AnyKind;

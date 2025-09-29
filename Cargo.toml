@@ -12,13 +12,14 @@ repository = "https://github.com/dtolnay/clang-ast"
 
 [dependencies]
 foldhash = "0.2"
-serde = "1.0.194"
+serde_core = "1.0.220"
 
 [dev-dependencies]
 clang-ast-test-suite = { version = "0", path = "tests/clone" }
 monostate = "1"
 rustversion = "1.0.13"
-serde_derive = "1.0.194"
+serde = "1.0.220"
+serde_derive = "1.0.220"
 serde_json = "1.0.99"
 
 [package.metadata.docs.rs]
