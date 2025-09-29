@@ -16,7 +16,7 @@ serde = "1.0.194"
 
 [dev-dependencies]
 clang-ast-test-suite = { version = "0", path = "tests/clone" }
-monostate = "0.1"
+monostate = "1"
 rustversion = "1.0.13"
 serde_derive = "1.0.194"
 serde_json = "1.0.99"
