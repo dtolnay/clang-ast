@@ -14,6 +14,9 @@ repository = "https://github.com/dtolnay/clang-ast"
 foldhash = "0.2"
 serde_core = "1.0.220"
 
+[target.'cfg(any())'.dependencies]
+serde = { version = "1.0.220", optional = true, default-features = false }
+
 [dev-dependencies]
 clang-ast-test-suite = { version = "0", path = "tests/clone" }
 monostate = "1"
