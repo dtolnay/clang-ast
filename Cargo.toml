@@ -9,6 +9,7 @@ edition = "2021"
 keywords = ["clang", "c++"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/dtolnay/clang-ast"
+rust-version = "1.70"
 
 [dependencies]
 foldhash = "0.2"
