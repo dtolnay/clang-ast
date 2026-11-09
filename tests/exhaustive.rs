@@ -172,6 +172,7 @@ pub enum Clang {
     LifetimeBoundAttr(LifetimeBoundAttr),
     LikelyAttr(LikelyAttr),
     LinkageSpecDecl(LinkageSpecDecl),
+    LoopHintAttr(LoopHintAttr),
     MSAllocatorAttr(MSAllocatorAttr),
     MSConstexprAttr(MSConstexprAttr),
     MSNoVTableAttr(MSNoVTableAttr),
@@ -2079,6 +2080,11 @@ pub struct LinkageSpecDecl {
     #[serde(rename = "hasBraces", default)]
     pub has_braces: bool,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct LoopHintAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]

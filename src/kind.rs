@@ -201,6 +201,7 @@ kind! {
     LifetimeBoundAttr,
     LikelyAttr,
     LinkageSpecDecl,
+    LoopHintAttr,
     MSAllocatorAttr,
     MSConstexprAttr,
     MSNoVTableAttr,
