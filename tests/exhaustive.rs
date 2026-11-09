@@ -2241,6 +2241,7 @@ pub struct NoAliasAttr {
 pub struct NestedRequirement {
     #[serde(rename = "isDependent", default)]
     pub is_dependent: bool,
+    pub satisfied: Option<bool>,
 }
 
 #[derive(Deserialize, Debug)]
