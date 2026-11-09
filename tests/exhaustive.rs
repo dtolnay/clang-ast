@@ -2970,6 +2970,8 @@ pub struct TypeOfExprType {
 pub struct TypeRequirement {
     #[serde(rename = "isDependent", default)]
     pub is_dependent: bool,
+    #[serde(rename = "containsUnexpandedPack", default)]
+    pub contains_unexpanded_pack: bool,
     pub satisfied: Option<bool>,
 }
 
