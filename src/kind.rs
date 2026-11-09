@@ -168,6 +168,7 @@ kind! {
     FieldDecl,
     FileScopeAsmDecl,
     FinalAttr,
+    FlagEnumAttr,
     FloatingLiteral,
     ForStmt,
     FormatArgAttr,

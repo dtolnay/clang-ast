@@ -139,6 +139,7 @@ pub enum Clang {
     FieldDecl(FieldDecl),
     FileScopeAsmDecl(FileScopeAsmDecl),
     FinalAttr(FinalAttr),
+    FlagEnumAttr(FlagEnumAttr),
     FloatingLiteral(FloatingLiteral),
     ForStmt(ForStmt),
     FormatArgAttr(FormatArgAttr),
@@ -1683,6 +1684,11 @@ pub struct FileScopeAsmDecl {
 pub struct FinalAttr {
     pub range: SourceRange,
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+#[non_exhaustive]
+pub struct FlagEnumAttr {}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
