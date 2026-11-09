@@ -4446,7 +4446,11 @@ where
 #[test]
 fn test() -> Result<(), serde_json::Error> {
     let json = clang_ast_test_suite::cxx_ast_json();
-    let result = with_much_stack(|| serde_json::from_slice::<Node>(&json).map(drop));
+    let result = with_much_stack(|| {
+        let mut de = serde_json::Deserializer::from_slice(&json);
+        de.disable_recursion_limit();
+        <Node as serde::Deserialize>::deserialize(&mut de).map(drop)
+    });
 
     if let Err(error) = &result {
         if env::var_os("CI").is_some() {

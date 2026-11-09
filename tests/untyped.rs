@@ -18,5 +18,7 @@ pub struct Clang {
 #[test]
 fn test() {
     let json = clang_ast_test_suite::cxx_ast_json();
-    let _: Node = serde_json::from_slice(&json).unwrap();
+    let mut de = serde_json::Deserializer::from_slice(&json);
+    de.disable_recursion_limit();
+    let _: Node = serde::Deserialize::deserialize(&mut de).unwrap();
 }
