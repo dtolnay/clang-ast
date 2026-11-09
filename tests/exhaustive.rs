@@ -2084,7 +2084,9 @@ pub struct LinkageSpecDecl {
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[non_exhaustive]
-pub struct LoopHintAttr {}
+pub struct LoopHintAttr {
+    pub range: SourceRange,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
