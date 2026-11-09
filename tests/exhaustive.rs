@@ -2086,6 +2086,8 @@ pub struct LinkageSpecDecl {
 #[non_exhaustive]
 pub struct LoopHintAttr {
     pub range: SourceRange,
+    #[serde(default)]
+    pub implicit: bool,
 }
 
 #[derive(Deserialize, Debug)]
